@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="SpringBoot基础">
+<meta name="description" content="分层开发Web应用程序">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot之SpringBoot基础">
-<meta property="og:url" content="https://eh1999.github.io/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="SpringBoot之分层开发Web应用程序">
+<meta property="og:url" content="https://eh1999.github.io/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="SpringBoot基础">
-<meta property="article:published_time" content="2020-07-03T02:29:30.000Z">
-<meta property="article:modified_time" content="2020-07-04T00:24:06.232Z">
+<meta property="og:description" content="分层开发Web应用程序">
+<meta property="article:published_time" content="2020-07-04T00:25:18.000Z">
+<meta property="article:modified_time" content="2020-07-06T02:28:43.582Z">
 <meta property="article:author" content="eh">
 <meta property="article:tag" content="SpringBoot">
 <meta name="twitter:card" content="summary">
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://eh1999.github.io/2020/07/03/SpringBoot之SpringBoot基础/"/>
+  <link rel="canonical" href="https://eh1999.github.io/2020/07/04/SpringBoot之分层开发Web应用程序/"/>
 
 
 
 
 
-  <title>SpringBoot之SpringBoot基础 | Blog</title>
+  <title>SpringBoot之分层开发Web应用程序 | Blog</title>
   
 
 
@@ -296,7 +296,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://eh1999.github.io/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://eh1999.github.io/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="eh">
@@ -313,7 +313,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SpringBoot之SpringBoot基础</h1>
+          <h1 class="post-title" itemprop="name headline">SpringBoot之分层开发Web应用程序</h1>
         
 
         <div class="post-meta">
@@ -325,8 +325,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-03T10:29:30+08:00">
-                2020-07-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-04T08:25:18+08:00">
+                2020-07-04
               </time>
             
 
@@ -350,7 +350,7 @@
 
           
               <div class="post-description">
-                  SpringBoot基础
+                  分层开发Web应用程序
               </div>
           
 
@@ -367,349 +367,317 @@
       
 
       
-        <h1 id="SpringBoot项目结构"><a href="#SpringBoot项目结构" class="headerlink" title="SpringBoot项目结构"></a>SpringBoot项目结构</h1><ol>
-<li><font color=red>src/main/java</font>:入口（启动）类及程序的开发目录。在这个目录下进行业务开发、创建实体层、控制器层、数据连接层等</li>
-<li>
-<font color=red>src/main/resources</font>:资源文件目录，主要用于存放静态文件和配置文件。
+        <h1 id="了解MVC模式"><a href="#了解MVC模式" class="headerlink" title="了解MVC模式"></a>了解MVC模式</br></h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot开发Web应用程序主要使用<font color=red>MVC模式</font>。MVC是Model（模型）、View（视图）、Controller（控制器）的简写。</br></p>
 <ul>
-<li><font color=red>static</font>:用于存放静态资源，如层叠样式表 CSS文件（Cascading Style Sheets）文件、JavaScript文件、图片等</li>
-<li><font color=red>templates</font>:用于存放模板文件</li>
-<li><font color=red>application.properties</font>:用于配置项目运行所需的配置数据。如果用YAML方式管理配置，则YAML文件也放在这个目录中</li>
+<li><font color=red>Model</font>:是Java的实体Bean，代表可存取数据的对象或POJO（Plain Ordinary Java Objects，简单的Java对象），也可以带有逻辑。其作用是在内存中暂时存储数据，并在数据变化时更新控制器（如果要持久化，则需要把它写入数据库或者磁盘文件中）。</li>
+<li><font color=red>View</font>:主要用来解析、处理、显示内容，并进行模板的渲染。</li>
+<li><font color=red>Controller</font>:主要用来处理视图中的响应。它决定如何调用Model（模型）的实体Bean、如何调用业务层的数据增加、删除、修改和查询等业务操作，以及如何将结果返给视图进行渲染。建议在控制器中尽量不放业务逻辑代码。</li>
+</ul>
+&#8194;&#8194;&#8194;&#8194;这样分层的好处是：将应用程序的用户界面和业务逻辑分离，使得代码具备良好的可扩展性、可复用性、可维护性和灵活性。</br>
+&#8194;&#8194;&#8194;&#8194;在整个SpringMVC框架中，<font color=red>DispatcherServlet处于核心位置，继承自HttpServlet</font>。它负责协调和组织不同组件，以完成请求处理并返回相应工作。</br>
+&#8194;&#8194;&#8194;&#8194;整个工程流程如下：</br>
+<ol>
+<li>客户端（用户）发出的请求由Tomcat（服务器）接收，然后Tomcat将请求转交给DispatcherServlet处理。</li>
+<li>DispatcherServlet匹配控制器中配置的映射路径，进行下一步处理。</li>
+<li>ViewResolver将ModelAndView或Exception解析成View。然后View会调用render()方法，并根据ModelAndView中的数据渲染出页面。</li>
+</ol>
+
+<h1 id="MVC和三层架构的关系"><a href="#MVC和三层架构的关系" class="headerlink" title="MVC和三层架构的关系"></a>MVC和三层架构的关系</br></h1><p>&#8194;&#8194;&#8194;&#8194;三层架构，就是将整个应用程序划分为表现层（UI）、业务逻辑层（Service）、数据访问层（DAO/Repository）。</p>
+<ul>
+<li><font color=red>表现层</font>：用于展示界面。主要对用户的请求进行接收，以及进行数据的返回。它为客户端（用户）提供应用程序的访问接口（界面）。</li>
+<li><font color=red>业务逻辑层</font>：是三层架构的服务层，负责业务逻辑处理，主要是调用DAO层对数据进行增加、删除、修改和查询等操作。</li>
+<li><font color=red>数据访问层</font>：与数据库进行交互的持久层，被Service调用。在SpringDataJPA中由Hibernate来实现。</li>
+</ul>
+&#8194;&#8194;&#8194;&#8194;MVC是三层架构中的UI层。通过MVC把三层架构中的UI层又进行分层。由此可见，三层架构是基于业务逻辑或功能来划分的，而MVC是基于页面或功能来划分的。</br>
+
+<h1 id="使用视图技术Thymeleaf"><a href="#使用视图技术Thymeleaf" class="headerlink" title="使用视图技术Thymeleaf"></a>使用视图技术Thymeleaf</br></h1><p><font size=4>认识Thymeleaf</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot主要支持Thymeleaf、FreeMarker、Mustache、Groovy Templates等模板引擎。<br>&#8194;&#8194;&#8194;&#8194;Thymeleaf可以轻易地与SpringMVC等Web框架进行集成。</br><br><font size=4>使用Thymeleaf</font></p>
+<ol>
+<li>
+要使用Thymeleaf，首先需要引如依赖。直接在pom.xml文件中加入以下依赖即可。
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.dpringframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;dependency&gt;</code></pre></li>
+<li>在模板中加入解析</br>再加入依赖后，还需要再HTML文件中加入“<font color=red>&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;</font>”命名空间。这样就能完成Thymeleaf的标签的渲染</li>
+</ol>
+
+<p><font size=4>配置视图解析器</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot默认的页面映射路径（即模板文件存放的位置）为“<font color=red>classpath:/templates/*.html</font>”。静态文件路径为“<font color=red>classpath:/statics/</font>”，其中可以存放层叠样式表CSS、JS等模板公用的静态文件。<br>&#8194;&#8194;&#8194;&#8194;在application.properties文件中，可以配置Thymeleaf模板解析器属性。</p>
+<h1 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</br></h1><ol>
+<li>
+引用命名空间</br>
+要使用Thymeleaf，则需要引入依赖，然后在模板文件中引用命名空间，如下：
+
+<pre><code>&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</code></pre><p>之后，会进行Thymeleaf模板标签的渲染。如果用SpringSecurity作为安全认证，且需要显示登录用户的信息，则可以现在视图中加入额外的thymeleaf-extras-springsecurity依赖，然后在模板文件中加入thymeleaf-extras-springsecurity命名空间，具体见以下代码：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;
+        xmlns:sec=&quot;http://www.thymeleaf,org/thymeleaf-extras-springsecurity5&quot;&gt;
+//省略部分HTML标签
+&lt;span sec:authentivation=&quot;name&quot;&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;
+&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_ADMIN&apos;)&quot;&gt;管理员&lt;/span&gt;
+&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_USER&apos;)&quot;&gt;普通用户&lt;/span&gt;
+//省略部分HTML标签</code></pre><p>这里特别要注意查看<font color=red>spring-boot-starter-thymeleaf依赖和thymeleaf-extras-springsecurity依赖的版本是否兼容。如果不兼容，则无法调用登录用户的信息</font>。</p>
+</li>
+<li>
+常用th标签
+<ol>
+<li>
+<font color=red>th:text</font>
+
+<pre><code>&lt;div th:text=&quot;${name}&quot;&gt;name&lt;/div&gt;</code></pre><p>它用于显示控制器传入的name值。<br>如果name不存在，要显示默认值，则使用以下代码：</p>
+<pre><code>&lt;span th:text=&quot;${name}?:&apos;默认值&apos;&quot;&gt;&lt;/span&gt;</code></pre></li>
+<li>
+<font color=red>th:object</font></br>
+它用于接收后台传过来的对象，如以下代码：
+
+<pre><code>th:object=&quot;${user}&quot;</code></pre></li>
+<li>
+<font color=red>th:action</font></br>
+它用来指定表单提交地址。
+
+<pre><code>&lt;form th:action=&quot;@{/article/}+${article.id}&quot; method=&quot;post&quot;&gt;&lt;/form&gt;</code></pre></li>
+<li>
+<font color=red>th:value</font></br>
+它用对象将id的值替换为value的属性。
+
+<pre><code>&lt;input type=&quot;text&quot; th:value=&quot;${article.id}&quot; name=&quot;id&quot;/&gt;</code></pre></li>
+<li>
+<font color=red>th:field</font></br>
+它用来绑定后台对象和表单数据。Thymeleaf里的“th:field”等同于“th:name”和“th:value”，其具体使用方法见以下代码：
+
+<pre><code>&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;${article.title}&quot;/&gt;
+&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;*{title}&quot;/&gt;</code></pre></li>
+</ol>
+</li>
+<li>
+Thymeleaf中的URL写法</br>
+Thymeleaf是通过语法@{...}来处理URL的，需要使用“th:href”和“th:src”等属性，如以下代码：
+
+<pre><code>&lt;a th:href=&quot;@{http://eg.com/}&quot;&gt;绝对路径&lt;/a&gt;
+&lt;a th:href=&quot;@{/}&quot;&gt;相对路径&lt;/a&gt;
+&lt;a th:href=&quot;@{css/bootstrap.min.css}&quot;&gt;默认访问static下的css文件&lt;/a&gt;</code></pre></li>
+<li>
+用Thymeleaf进行条件求值</br>
+Thymeleaf通过“th:if”和“th:unless”属性进行条件判断。</br>
+“th:unless”和“th:if”恰好相反——只有当表达式中的条件不成立时才显示其内容。
+</li>
+<li>
+Switch
+Thymeleaf支持Switch结构，如以下代码：
+
+<pre><code>&lt;div th:switch=&quot;${user.role}&quot;&gt;
+    &lt;p th:case=&quot;admin&quot;&gt;管理员&lt;/p&gt;
+    &lt;p th:case=&quot;vip&quot;&gt;vip会员&lt;/p&gt;
+    &lt;p th:case=&quot;*&quot;&gt;普通会员&lt;/p&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+Thymeleaf中的字符串替换</br>
+有时需要对文字中的某一处地方进行替换，可以通过字符串拼接操作完成，如以下代码：
+
+<pre><code>&lt;span th:text=&quot;&apos;欢迎您，&apos;+${name}+&apos;！&apos;&quot;&gt;&lt;/span&gt;
+或
+&lt;span th:text=&quot;|欢迎您，${name}！|&quot;&gt;&lt;/span&gt;</code></pre><p>上面的第二种形式限制比较多，|…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。</p>
+</li>
+<li>
+Thymeleaf的运算符
+<ol>
+<li>
+算术运算符。</br>
+如果要在模板中进行算术运算，则可以用下面的写法。以下代码表示求加和取余运算。
+
+<pre><code>&lt;span th:text=&quot;1+3&quot;&gt;1+3&lt;/span&gt;&lt;/br&gt;
+&lt;span th:text=&quot;9%2&quot;&gt;9%2&lt;/span&gt;&lt;/br&gt;</code></pre></li>
+<li>
+条件运算符 th:if。</br>
+下方代码演示了if判断，表示：如果从控制器传来的role值等于“admin”，则显示“欢迎您，管理员”；如果role值等于“vip”，则显示“欢迎您，vim会员”。
+
+<pre><code>&lt;div th:if=&quot;${role} eq admin&quot;&gt;
+    &lt;span&gt;欢迎您，管理员&lt;/span&gt;
+&lt;/div&gt;
+&lt;div th:if=&quot;${role} eq vip&quot;&gt;
+    &lt;span&gt;欢迎您，vip会员&lt;/span&gt;
+&lt;/div&gt;</code></pre><p>eq是判断表达式，代表等于。其他的判断表达式如下。</p>
+<ul>
+<li>gt：大于</li>
+<li>ge：大于或等于</li>
+<li>eq：等于</li>
+<li>lt：小于</li>
+<li>le：小于或等于</li>
+<li>ne：不等于</li>
 </ul>
 </li>
-<li><font color=red>src/test/java</font>:测试程序所在的目录</li>
+<li>
+判断控制。</br>
+可以使用if来判断值是否为空，如以下代码：
+<ul>
+<li>
+判断不为空：
+
+<pre><code>&lt;span ht:if=&quot;${name}!=null&quot;&gt;不为空&lt;/span&gt;</code></pre></li>
+<li>
+判断为空：
+
+<pre><code>&lt;span ht:if=&quot;${name}==null&quot;&gt;为空&lt;/span&gt;</code></pre></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+Thymeleaf共用对象</br>
+Thymeleaf还提供了一系列公用（utility）对象，可以通过“#”直接访问，如以下用法。
+<ul>
+<li>
+格式化时间
+
+<pre><code>&lt;td th:text=&quot;${#dates.format(item.createTime,&apos;yyyy-MM-dd HH:mm:ss&apos;)}&quot;&gt;格式化时间&lt;/td&gt;</code></pre></li>
+<li>
+判断是不是空字符串：
+
+<pre><code>&lt;span ht:if=&quot;${#strings.isEmpty(name)}&quot;&gt;空的&lt;/span&gt;</code></pre></li>
+<li>
+是否包含（分大小写）：
+
+<pre><code>&lt;span ht:if=&quot;${#strings.contains(name,&apos;long&apos;)}&quot;&gt;包含long&lt;/span&gt;</code></pre></li>
+</ul>
+</li>
 </ol>
 
-<h1 id="SpringBoot依赖模块"><a href="#SpringBoot依赖模块" class="headerlink" title="SpringBoot依赖模块"></a>SpringBoot依赖模块</h1><ul>
-<li>核心模块<font color=red>spring-boot-starter</font>:用于支持自动配置、日志和YAML</li>
-<li>测试模块<font color=red>spring-boot-starter-test</font>:包括JUnit、Hamcrest和Mockito，用于测试</li>
-</ul>  
+<h1 id="处理循环遍历"><a href="#处理循环遍历" class="headerlink" title="处理循环遍历"></a>处理循环遍历</br></h1><ol>
+<li>
+遍历对象（object）</br>
+通过“th:each="Object:${Objects}"”标签来处理遍历对象。以下代码是遍历从控制器中传来的文章对象。
 
-<h1 id="SpringBoot入口类"><a href="#SpringBoot入口类" class="headerlink" title="SpringBoot入口类"></a>SpringBoot入口类</h1><p>&#8194;&#8194;&#8194;&#8194;在创建SpringBoot项目时，会自动创建一个用于启动的、名为“项目名+Application”的入口类，它是项目的启动入口。在IDEA中打开入口类后，可以单击类或“main”方法左侧的三角形按钮，通过弹出的选项来运行或调试SpringBoot应用程序。<br>&#8194;&#8194;&#8194;&#8194;加上注解<font color=red>@SpringBootApplication</font>，以标注这是SpringBoot项目的入口类。</p>
-<h1 id="SpringBoot的自动配置"><a href="#SpringBoot的自动配置" class="headerlink" title="SpringBoot的自动配置"></a>SpringBoot的自动配置</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot会根据配置的依赖信息进行自动配置，从而减轻开发者搭建环境和配置的负担。如果在项目中依赖了<font color=red>spring-boot-starter-web</font>，则SpringBoot会自动配置Web环境（配置Tomcat、WebMVC、Validator、JSON等）。<br>&#8194;&#8194;&#8194;&#8194;SpringBoot自动配置是通过注解<font color=red>@EnableAutoConfiguration</font>来实现的，具有非侵入性。<br>&#8194;&#8194;&#8194;&#8194;如果不需要某些自动配置，则可以通过注解<font color=red>@EnableAutoConfiguration</font>的“<font color=red>exclude</font>或<font color=red>excludeName</font>”属性来指定，或在配置文件（<font color=red>application.properties</font>或<font color=red>application.yml</font>）中指定“<font color=red>spring.autoconfigure.exclude</font>”的值。</p>
-<h1 id="SpringBoot热部署"><a href="#SpringBoot热部署" class="headerlink" title="SpringBoot热部署"></a>SpringBoot热部署</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot热部署是为了更好的支持调试，在项目进行修改后不需要耗费时间重启，在应用程序正常运行的情况下即可实时生效，以节约时间和操作。要实现热部署，则需要添加下方的热部署的依赖：</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
-    &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;</code></pre><h1 id="SpringBoot的常用注解"><a href="#SpringBoot的常用注解" class="headerlink" title="SpringBoot的常用注解"></a>SpringBoot的常用注解</br></h1><p><font size=4>什么是注解式编程</font><br>&#8194;&#8194;&#8194;&#8194;注解（annotations）用来定义一个类、属性或一些方法、以便程序能被编译处理。它相当于一个说明文件，告诉应用程序某个被注解的类或属性是什么，要怎么处理。注解可以用于标注包、类、方法和变量等。</li></p>
-<center><font size=4>系统注解</font></center>
+<pre><code>&lt;div th:each=&quot;article:${articles}&quot;&gt;
+    &lt;li th:text=&quot;${article.title}&quot;&gt;文章标题&lt;/li&gt;
+    &lt;li th:text=&quot;${article.body}&quot;&gt;文章内容&lt;/li&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+遍历分页（page）</br>
+通过“th:each="item:${page.content}"”标签来处理page对象。如以下代码：
 
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@Override</td>
-<td>用于修饰方法，表示此方法重写了父类方法</td>
-</tr>
-<tr>
-<td>@Deprecated</td>
-<td>用于修饰方法，表示此方法已经过时。经常在版本升级后会遇到</td>
-</tr>
-<tr>
-<td>@SuppressWarnnings</td>
-<td>告诉编译器忽视某类编译警告</td>
-</tr>
-</tbody></table>
-<p>下面重点介绍一下<font color=red>@SuppressWarnnings</font>注解。它有以下几种属性。</p>
-<ul>
-<li><font color=red>unchecked</font>:未检查的转化。</li>
-<li><font color=red>unused</font>:未使用的变量。</li>
-<li><font color=red>resource</font>:泛型，即未指定类型。</li>
-<li><font color=red>path</font>:在类中的路径。原文件路径中有不存在的路径。</li>
-<li><font color=red>deprecation</font>:使用了某些不赞成使用的类和方法</li>
-<li><font color=red>fallthrough</font>:switch语句执行到底，不会遇到break关键字。</li>
-<li><font color=red>serial</font>:实现了Serializable，但未定义serialVersionUID。</li>
-<li><font color=red>rawtypes</font>:没有传递带有泛型的参数。</li>
-<li><font color=red>all</font>:代表全部类型的警告。</li>
-</ul>
+<pre><code>&lt;div th:each=&quot;item:${page.content}&quot;&gt;
+    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;
+    &lt;li th:text=&quot;${item.title}&quot;&gt;title&lt;/li&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+遍历列表（list）</br>
+要处理list，也使用“th:each="item:${list}"”标签来实现。</br>
+如果list中只有一个元素，则使用以下代码：
 
-<center><font size=4>使用在类名上的注解</font></center>
+<pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;
+    &lt;li th:text=&quot;${item}&quot;&gt;id&lt;/li&gt;
+&lt;/div&gt;</code></pre><p>如果list中有多个元素，则使用以下代码：</p>
+<pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;
+    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;
+    &lt;li th:text=&quot;${item.name}&quot;&gt;name&lt;/li&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+遍历数组（array）</br>
+使用“th:each="item:${arrays}"”标签来遍历数组，如以下代码：
 
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@RestController</td>
-<td>类名上</td>
-<td>作用相当于@ResponseBody加@Controller</td>
-</tr>
-<tr>
-<td>@Controller</td>
-<td>类名上</td>
-<td>声明此类是一个SpringMVC Controller对象</td>
-</tr>
-<tr>
-<td>@Service</td>
-<td>类名上</td>
-<td>声明一个业务处理类（实现非接口类）</td>
-</tr>
-<tr>
-<td>@Repository</td>
-<td>类名上</td>
-<td>声明数据库访问类（实现非接口类）</td>
-</tr>
-<tr>
-<td>@Component</td>
-<td>类名上</td>
-<td>代表其是Spring管理类，常用在无法用@Service、@Repository描述的Spring管理的类上，相当于通用的注解</td>
-</tr>
-<tr>
-<td>@Configuration</td>
-<td>类名上</td>
-<td>声明此类是一个配置类，常与@Bean配合使用</td>
-</tr>
-<tr>
-<td>@Resource</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byName自动注入</td>
-</tr>
-<tr>
-<td>@Autowired</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byType自动注入</td>
-</tr>
-<tr>
-<td>@RequestMapping</td>
-<td>类名或方法上</td>
-<td>如果用在类上，则表示所有响应请求的方法都是以该地址作为父路径的</td>
-</tr>
-<tr>
-<td>@Transactional</td>
-<td>类名或方法上</td>
-<td>用于处理事务</td>
-</tr>
-<tr>
-<td>@Qualifier</td>
-<td>类名或属性上</td>
-<td>为Bean指定名称，随后再通过名字引用Bean</td>
-</tr>
-</tbody></table>
-<p>下面进一步讲解各个注解的知识点和用法</p>
-<ol>
-<font size=4>1</font>.<font color=red>@RestController</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于返回JSON（JavaScript Object Notation，JS对象简谱）、XML（eXtensible Markup Language）等数据，但不能返回HTML（HyperText Markup Language）页面。相当于注解@ResponseBody和注解@Controller合在一起的作用。</br>
-<font size=4>2</font>.<font color=red>@Controller</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注控制器曾，在MVC开发模式中代表C（控制器）</br>
-&#8194;&#8194;&#8194;&#8194;@Controller主要用于构建MVC模式的程序</br>
-<font size=4>3</font>.<font color=red>@Service</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于声明一个业务处理类（实现非接口类），用于标注服务层，处理业务逻辑。</br>
-<font size=4>4</font>.<font color=red>@Repository</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注数据访问层</br>
-<font size=4>5</font>.<font color=red>@Component</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于把普通POJO（Plain Ordinary Java Objects，简单的Java对象）实例化到Spring容器中。当类不属于注解@Controller和@Service等时，就可以使用注解@Component来标注这个类。它可配合CommandLineRunner使用，以便在程序启动后执行一些基础任务。</br>
-<font size=4>6</font>.<font color=red>@Configuration</font></br>
-&#8194;&#8194;&#8194;&#8194;他用于标注配置类，并且可以由Spring容器自动处理。它作为Bean的载体，用来指示一个类声明、一个或多个@Bean方法，在运行时为这些Bean生成BeanDefinition和服务请求</br>
-<font size=4>7</font>.<font color=red>@Resource</font></br>
-&#8194;&#8194;&#8194;&#8194;@Autowired与@Resource都可以用来装配Bean，也都可以写在字段上或Setter方法上。</br>
-<font size=4>8</font>.<font color=red>@Autowired</font></br>
-&#8194;&#8194;&#8194;&#8194;它表示被修饰的类需要注入对象。Spring会扫描所有被@Autowired标注的类，然后根据类型在IoC容器中找到匹配的类进行注入。被@Autowired注解后的类不需要再导入文件。</br>
-<font size=4>9</font>.<font color=red>@RequestMapping</font></br>
-&#8194;&#8194;&#8194;&#8194;它用来请求地址映射，用在类或方法上。如果用在类上，则表示类中的所有响应请求的方法都是以该地址作为父路径的。该注解有6个属性。</br>
-<ul>
-    <li><font color=red>Params</font>:指定Request中必须包含某些参数值，才让该方法处理。</li>
-    <li><font color=red>Headers</font>:指定Request中必须包含某些指定的header值，才能让该方法处理。</li>
-    <li><font color=red>Value</font>:指定请求的实际地址，指定的地址可以是URI Template模式。</li>
-    <li><font color=red>Method</font>:指定请求的Method类型，如GET、POST、PUT、DELETE等。</li>
-    <li><font color=red>Consumes</font>:指定处理请求的提交内容类型Content-Type，如“application/json,text/html”。</li>
-    <li><font color=red>Produces</font>:指定返回的内容类型。只有当Request请求头中的Accept类型中包含该指定类型时才返回。</li>
-</ul>
-<font size=4>10</font>.<font color=red>@Transactional</font></br>
-&#8194;&#8194;&#8194;&#8194;它可以用在接口、接口方法、类及类方法上。</br>
-&#8194;&#8194;&#8194;&#8194;但Spring不建议在接口或者接口方法上使用该注解，因为该注解只有在使用基于接口的代理时才会生效。如果异常被捕获（try{}catch{}）了，则事务就不回滚了。如果想让事务回滚，则必须再往外抛出异常（try{}catch{throw Exception}）。</br>
-<font size=4>11</font>.<font color=red>@Qualifier</font></br>
-&#8194;&#8194;&#8194;&#8194;它的意思是“合格者”，用于标注哪一个实现类才是需要注入的。需要注意的是，@Qualifier的参数名称为被注入的类中的注解@Service标注的名称。</br>
-&#8194;&#8194;&#8194;&#8194;@Qualifier常和@Autowired一起使用。而@Resource和它不同，@Resource自带name属性。</br>
+<pre><code>&lt;div th:each=&quot;item:${arrays}&quot;&gt;
+    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+遍历集合（map）</br>
+集合通过“th:text="${item.key}"”显示集合的key，通过“th:text="${item.value}"”显示集合的值，如以下代码：
+
+<pre><code>//遍历key
+&lt;div th:each=&quot;item:${map}&quot;&gt;
+    &lt;li th:text=&quot;${item.key}&quot;&gt;&lt;/li&gt;
+&lt;/div&gt;
+
+//遍历value
+&lt;div th:each=&quot;item:${map}&quot;&gt;
+    &lt;li th:text=&quot;${item.value}&quot;&gt;&lt;/li&gt;
+&lt;/div&gt;
+
+//遍历key-value
+&lt;div th:each=&quot;item:${map}&quot;&gt;
+    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;
+&lt;/div&gt;</code></pre></li>
 </ol>
 
-<center><font size=4>使用在方法上的主要注解</font></center>
+<h1 id="处理公共代码块"><a href="#处理公共代码块" class="headerlink" title="处理公共代码块"></a>处理公共代码块</br></h1><ol>
+<li>
+用fragment标记重复代码块</br>
+可以通过“th:fragment="header"”标签来标记重复代码块，如以下代码：
 
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@RequestBody</td>
-<td>方法参数前</td>
-<td>常用来处理application/json、application/xml等Content-Type类型的数据，意味着HTTP消息是JSON/XML格式，需将其转化为指定类型参数</td>
-</tr>
-<tr>
-<td>@PathVariable</td>
-<td>方法参数前</td>
-<td>将URL获取的参数映射到方法参数上</td>
-</tr>
-<tr>
-<td>@Bean</td>
-<td>方法上</td>
-<td>声明该方法的返回结果是一个由Spring容器管理的Bean</td>
-</tr>
-<tr>
-<td>@ResponsetBody</td>
-<td>方法上</td>
-<td>通过适当的HttpMessageConverter将控制器中方法返回的对象转换为指定格式（JSON/XML）后，写入Response对象的body数据区</td>
-</tr>
-</tbody></table>
-<ol>
-<font size=4>1</font>.<font color=red>@RequestBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它常用来处理JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。
-<font size=4>2</font>.<font color=red>@PathVariable</font></br>
-&#8194;&#8194;&#8194;&#8194;用于获取路径中的参数</br>
-<font size=4>3</font>.<font color=red>@Bean</font></br>
-&#8194;&#8194;&#8194;&#8194;它代表产生一个Bean，并交给Spring管理。用于封装数据，一般有Setter、Getter方法。在MVC模型中，对应的是M（模型）。</br>
-<font size=4>4</font>.<font color=red>@ResponsetBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它的作用是通过转换器将控制器方法返回的对象转换为指定的格式，然后写入Response对象的body区。它常用来返回JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。</br>
-&#8194;&#8194;&#8194;&#8194;使用此注解后，数据直接写入输入流中，不需要进行视图渲染。</br>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;body&gt;
+    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;header&quot;&gt;
+        公共header
+    &lt;/div&gt;
+
+    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;footer&quot;&gt;
+        公共footer
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></li>
+<li>
+调用重复代码块</br>
+在需要调用的地方，用“th:include”或“th:replace”标签根据fragment值来调用，如以下代码：
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;body&gt;
+    &lt;div&gt;replace调用方式：&lt;/div&gt;
+    &lt;div th:replace=&quot;~common::header&quot;&gt;&lt;/div&gt;
+    &lt;div&gt;body&lt;/div&gt;
+    &lt;div&gt;include调用方式：&lt;/div&gt;
+    &lt;div th:include=&quot;~common::footer&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>“th:include”和“th:replace”标签都可以调用公共代码。它们的区别如下。</p>
+<ul>
+<li>
+th:replace：替换当前标签为模板中的标签。
+</li>
+<li>
+th:include：只加载模板的内容。
+</li>
+</ul>
+</li>
+</ol>
+
+<h1 id="处理分页"><a href="#处理分页" class="headerlink" title="处理分页"></a>处理分页</br></h1><ol>
+<li>
+用控制器传入page对象
+
+<pre><code>Pageable pageable = PageRequest.of(start,limit,sort);
+Page&lt;Article&gt; page = articleRepository,findAll(pageable);
+ModelAndView mav = new ModelAndView(&quot;article/list&quot;);
+mav.addObject(&quot;page&quot;,page);
+return mav;</code></pre></li>
+<li>
+用Thymeleaf接收page对象并处理
+
+<pre><code>&lt;div&gt;
+    &lt;a th:href=&quot;@{/article(start=0)}&quot;&gt;【首页】&lt;/a&gt;
+    &lt;a th:if=&quot;@{not page.isFirst()}&quot; th:href=&quot;@{/article(start=${page.number-1})}&quot;&gt;【上页】&lt;/a&gt;
+    &lt;a th:if=&quot;@{not page.isLast()}&quot; th:href=&quot;@{/article(start=${page.number+1})}&quot;&gt;【下页】&lt;/a&gt;
+    &lt;a th:href=&quot;@{/article(start=${page.totalPages-1})}&quot;&gt;【末页】&lt;/a&gt;
+&lt;/div&gt;</code></pre></li>
+<li>
+处理路径多参数</br>
+&#8194;&#8194;&#8194;&#8194;如果分页URI中有多个参数，则一定要注意格式，中间用“，”隔开，而不是用“&”。
+
+
+</li>
 </ol>
 
 
-<center><font size=4>其他常用注解</font></center>。
 
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@EnableAutoConfiguration</td>
-<td>入口类/类名上</td>
-<td>用来提供自动配置</td>
-</tr>
-<tr>
-<td>@SpringBootApplication</td>
-<td>入口类/类名上</td>
-<td>用来启动入口类Application</td>
-</tr>
-<tr>
-<td>@EnableScheduling</td>
-<td>入口类/类名上</td>
-<td>用来开启计划任务。Spring通过@Scheduled支持多种类型的计划任务，包含cron、fixDelay、fixRate等</td>
-</tr>
-<tr>
-<td>@EnableAsync</td>
-<td>入口类/类名上</td>
-<td>用来开启异步注解功能</td>
-</tr>
-<tr>
-<td>@ComponentScan</td>
-<td>入口类/类名上</td>
-<td>用来扫描组件，可自动发现和装配一些Bean。它根据定义的扫描路径，把符合扫描规则的类装配到Spring容器中，告诉Spring那个包（package）的类会被Spring自动扫描并且装入IoC容器。它对应XML配置中的元素。可以通过basePackages等属性来细粒度地定制自动扫描的范围，默认会从声明@ComponentScan所在类的包进行扫描</td>
-</tr>
-<tr>
-<td>@Aspec</td>
-<td>入口类/类名上</td>
-<td>标注切面，可以用来配置事务、日志、权限验证，在用户请求时做一些处理等</td>
-</tr>
-<tr>
-<td>@ControllerAdvice</td>
-<td>类名上</td>
-<td>包含@ComponentScan，可以被扫描到。统一处理异常</td>
-</tr>
-<tr>
-<td>@ExceptionHandler</td>
-<td>方法上</td>
-<td>用在方法上，表示遇到异常就执行该方法</td>
-</tr>
-<tr>
-<td>@Value</td>
-<td>属性上</td>
-<td>用于获取配置文件中的值</td>
-</tr>
-</tbody></table>
-<h1 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot支持使用Properties和YAML两种配置方式。两者功能类似，都能完成SpringBoot的配置，但是<font color=red>Properties的优先级要高于YAML</font>。<br>&#8194;&#8194;&#8194;&#8194;YAML文件的好处是——它采用的是树状结构，一目了然。但是，使用YAML配置方式时要注意以下几点。</p>
-<ul>
-<li>原来以“.”分隔的key会变成树状结构</li>
-<li>在key后的冒号后一定要跟一个空格</li>
-<li>如果把原有的application.properties删除，则建议执行以下“<font color=red>maven -X clean install</font>”命令</li>
-<li>YAML格式不支持用注解<font color=red>@PropertySource</font>导入配置</li>
-</ul>
 
-<h1 id="SpringBoot的Starter"><a href="#SpringBoot的Starter" class="headerlink" title="SpringBoot的Starter"></a>SpringBoot的Starter</br></h1><p><font size=4>了解Starter</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot为了简化配置，提供了非常多的Starter。它先打包好与常用模块相关的所有JAR包，并完成自动配置，然后组装成Starter（如把Web相关的SpringMVC、容器等打包好后组装成spring-boot-starter-web）。这使得在开发业务代码是不需要过多关注框架的配置，只需关注逻辑即可。</p>
-<center><font size=4>常用的Starter</font></center>
 
-<table>
-<thead>
-<tr>
-<th>Starter</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>spring-boot-stater-web</td>
-<td>用于构建Web。包含RESTful风格框架、SpringMVC和默认的嵌入式容器Tomcat</td>
-</tr>
-<tr>
-<td>spring-boot-stater-test</td>
-<td>用于测试</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-jpa</td>
-<td>带有Hibernate的SpringDataJPA</td>
-</tr>
-<tr>
-<td>spring-boot-stater-jdbc</td>
-<td>传统的JDBC。轻量级应用可以使用，学习成本低，但最好使用JPA或Mybatis</td>
-</tr>
-<tr>
-<td>spring-boot-stater-thymeleaf</td>
-<td>支持Thymeleaf</td>
-</tr>
-<tr>
-<td>spring-boot-stater-mail</td>
-<td>支持JavaMail、SpringMail发送邮件</td>
-</tr>
-<tr>
-<td>spring-boot-stater-integration</td>
-<td>Spring框架创建的一个API，面向企业应用集成（EAI）</td>
-</tr>
-<tr>
-<td>spring-boot-stater-mobile</td>
-<td>SpringMVC的扩展，用来简化手机上的Web应用程序开发</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-redis</td>
-<td>通过SpringDataRedis、RedisClient使用Redis</td>
-</tr>
-<tr>
-<td>spring-boot-stater-validation</td>
-<td>BeanValidation是一个数据验证的规范，HibernateValidator是一个数据验证框架</td>
-</tr>
-<tr>
-<td>spring-boot-stater-websocket</td>
-<td>相对于非持久的协议HTTP，Websocket是一个持久化的协议</td>
-</tr>
-<tr>
-<td>spring-boot-stater-web-services</td>
-<td>SOAPWebServices</td>
-</tr>
-<tr>
-<td>spring-boot-stater-hateoas</td>
-<td>为服务添加HATEOAS功能</td>
-</tr>
-<tr>
-<td>spring-boot-stater-security</td>
-<td>用SpringSecurity进行身份验证和授权</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-rest</td>
-<td>用SpringDateREST公布简单的REST服务</td>
-</tr>
-</tbody></table>
+
+
+
+
+
+
+
+
 
       
     </div>
@@ -740,15 +708,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/" rel="next" title="SpringBoot之SpringBoot基础">
+                <i class="fa fa-chevron-left"></i> SpringBoot之SpringBoot基础
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" rel="prev" title="SpringBoot之分层开发Web应用程序">
-                SpringBoot之分层开发Web应用程序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -871,8 +839,13 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot项目结构"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot项目结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot依赖模块"><span class="nav-number">2.</span> <span class="nav-text">SpringBoot依赖模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot入口类"><span class="nav-number">3.</span> <span class="nav-text">SpringBoot入口类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的自动配置"><span class="nav-number">4.</span> <span class="nav-text">SpringBoot的自动配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot热部署"><span class="nav-number">5.</span> <span class="nav-text">SpringBoot热部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的常用注解"><span class="nav-number">6.</span> <span class="nav-text">SpringBoot的常用注解
-</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用配置文件"><span class="nav-number">7.</span> <span class="nav-text">使用配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的Starter"><span class="nav-number">8.</span> <span class="nav-text">SpringBoot的Starter
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#了解MVC模式"><span class="nav-number">1.</span> <span class="nav-text">了解MVC模式
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVC和三层架构的关系"><span class="nav-number">2.</span> <span class="nav-text">MVC和三层架构的关系
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用视图技术Thymeleaf"><span class="nav-number">3.</span> <span class="nav-text">使用视图技术Thymeleaf
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础语法"><span class="nav-number">4.</span> <span class="nav-text">基础语法
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理循环遍历"><span class="nav-number">5.</span> <span class="nav-text">处理循环遍历
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理公共代码块"><span class="nav-number">6.</span> <span class="nav-text">处理公共代码块
+</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理分页"><span class="nav-number">7.</span> <span class="nav-text">处理分页
 </span></a></li></ol></div>
             
 
