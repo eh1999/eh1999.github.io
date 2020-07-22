@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="SpringBoot基础">
+<meta name="description" content="SpringBoot进阶">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot之SpringBoot基础">
-<meta property="og:url" content="https://eh1999.github.io/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="SpringBoot之用ORM操作SQL数据库">
+<meta property="og:url" content="https://eh1999.github.io/2020/07/21/SpringBoot%E4%B9%8B%E7%94%A8ORM%E6%93%8D%E4%BD%9CSQL%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="SpringBoot基础">
-<meta property="article:published_time" content="2020-07-03T02:29:30.000Z">
-<meta property="article:modified_time" content="2020-07-04T00:24:06.232Z">
+<meta property="og:description" content="SpringBoot进阶">
+<meta property="article:published_time" content="2020-07-21T06:01:52.000Z">
+<meta property="article:modified_time" content="2020-07-21T09:18:37.382Z">
 <meta property="article:author" content="eh">
 <meta property="article:tag" content="SpringBoot">
 <meta name="twitter:card" content="summary">
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://eh1999.github.io/2020/07/03/SpringBoot之SpringBoot基础/"/>
+  <link rel="canonical" href="https://eh1999.github.io/2020/07/21/SpringBoot之用ORM操作SQL数据库/"/>
 
 
 
 
 
-  <title>SpringBoot之SpringBoot基础 | Blog</title>
+  <title>SpringBoot之用ORM操作SQL数据库 | Blog</title>
   
 
 
@@ -296,7 +296,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://eh1999.github.io/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://eh1999.github.io/2020/07/21/SpringBoot%E4%B9%8B%E7%94%A8ORM%E6%93%8D%E4%BD%9CSQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="eh">
@@ -313,7 +313,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SpringBoot之SpringBoot基础</h1>
+          <h1 class="post-title" itemprop="name headline">SpringBoot之用ORM操作SQL数据库</h1>
         
 
         <div class="post-meta">
@@ -325,8 +325,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-03T10:29:30+08:00">
-                2020-07-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-21T14:01:52+08:00">
+                2020-07-21
               </time>
             
 
@@ -350,7 +350,7 @@
 
           
               <div class="post-description">
-                  SpringBoot基础
+                  SpringBoot进阶
               </div>
           
 
@@ -367,33 +367,107 @@
       
 
       
-        <h1 id="SpringBoot项目结构"><a href="#SpringBoot项目结构" class="headerlink" title="SpringBoot项目结构"></a>SpringBoot项目结构</h1><ol>
-<li><font color=red>src/main/java</font>:入口（启动）类及程序的开发目录。在这个目录下进行业务开发、创建实体层、控制器层、数据连接层等</li>
-<li>
-<font color=red>src/main/resources</font>:资源文件目录，主要用于存放静态文件和配置文件。
+        <h1 id="Java的数据库连接模板JDBCTemplate"><a href="#Java的数据库连接模板JDBCTemplate" class="headerlink" title="Java的数据库连接模板JDBCTemplate"></a>Java的数据库连接模板JDBCTemplate</h1><h2 id="用JDBCTemplate实现数据的增删改查"><a href="#用JDBCTemplate实现数据的增删改查" class="headerlink" title="用JDBCTemplate实现数据的增删改查"></a>用JDBCTemplate实现数据的增删改查</h2><h3 id="配置基础依赖"><a href="#配置基础依赖" class="headerlink" title="配置基础依赖"></a>配置基础依赖</h3><p>要使用JDBCTemplate，需要添加其Starter依赖，因为要操作数据库，所以也要配置数据库（以MySQL为例）的连接依赖，代码如下：</p>
+<pre><code>&lt;!--JDBCTemplate依赖--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!--MySql数据库依赖--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre><p>添加完依赖后，还要配置数据库来凝结信息，这样JDBCTemplate才能正常连接到数据库，在application.properties配置文件中该配置数据库的地址和用户信息，daimaruxia:</p>
+<pre><code>//配置IP地址、编码、时区和SSL
+spring.datasource.url=jdbc:mysql://127.0.0.1/book&gt;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=true
+//用户名
+spring.datasource.username=root
+//密码
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</code></pre><h3 id="新建实体类"><a href="#新建实体类" class="headerlink" title="新建实体类"></a>新建实体类</h3><p>新建一个测试实体类User，实现RowMapper类，重写mapRow方法，以便实体字段和数据表字段映射（对应），具体代码如下：</p>
+<pre><code>@Data
+public class User implements RowMapper&lt;User&gt;{
+    private int id;
+    private String username;
+    public User mapRow(ResultSet r,int i){
+        User user = new User();
+        user.setId(r.getInt(&quot;id&quot;));
+        user.setUsename(r.getString(&quot;username&quot;));
+    }
+}</code></pre><h3 id="操作数据"><a href="#操作数据" class="headerlink" title="操作数据"></a>操作数据</h3><p>JDBCTemplate提供了以下操作数据的3个方法。</p>
 <ul>
-<li><font color=red>static</font>:用于存放静态资源，如层叠样式表 CSS文件（Cascading Style Sheets）文件、JavaScript文件、图片等</li>
-<li><font color=red>templates</font>:用于存放模板文件</li>
-<li><font color=red>application.properties</font>:用于配置项目运行所需的配置数据。如果用YAML方式管理配置，则YAML文件也放在这个目录中</li>
-</ul>
+<li>
+execute:表示“执行”，用于直接执行SQL语句。
 </li>
-<li><font color=red>src/test/java</font>:测试程序所在的目录</li>
-</ol>
+<li>
+update:表示“更新”，包括新增、修改、删除操作。
+</li>
+<li>
+query:表示“查询”。
+</li>
+</ul>
 
-<h1 id="SpringBoot依赖模块"><a href="#SpringBoot依赖模块" class="headerlink" title="SpringBoot依赖模块"></a>SpringBoot依赖模块</h1><ul>
-<li>核心模块<font color=red>spring-boot-starter</font>:用于支持自动配置、日志和YAML</li>
-<li>测试模块<font color=red>spring-boot-starter-test</font>:包括JUnit、Hamcrest和Mockito，用于测试</li>
-</ul>  
+<h1 id="认识ORM"><a href="#认识ORM" class="headerlink" title="认识ORM"></a>认识ORM</h1><p>ORM是对象/关系映射。它提供了概念性的、易于理解的数据模型，将数据库中的表和内存中的对象建立映射关系。它是随着面向对象的软件开发方法的发展而产生的，面对对象的开发方法依然是当前主流的开发方法。<br>对象和关系型数据是业务实体的两种表现形式。业务实体在内存中表现为对象，在数据库中表现为关系型数据。内存中的对象不会被永久保存，只有关系型数据库（或NoSQL数据库，或文件）中的对象会被永久保存。<br>对象/关系映射（ORM）系统一般以中间件的形式存在，因为内存中的对象之间存在关联和继承关系，而在数据库中，关系型数据无法直接表达多对多的关联和继承关系。</p>
+<h1 id="JPA——Java持久层API"><a href="#JPA——Java持久层API" class="headerlink" title="JPA——Java持久层API"></a>JPA——Java持久层API</h1><h2 id="认识SpringData"><a href="#认识SpringData" class="headerlink" title="认识SpringData"></a>认识SpringData</h2><p>SpringData是Spring的一个子项目，旨在统一和简化各类型数据的持久化存储方式，而不拘泥于是关系型数据库还是NoSQL数据库。<br>无论是哪种持久化存储方式，数据访问对象都会提供对对象的增加、删除、修改和查询的方法，以及排序和分页方法等。<br>SpringData提供了基于这些层面的统一接口，以实现持久化的存储。</p>
+<h2 id="认识JPA"><a href="#认识JPA" class="headerlink" title="认识JPA"></a>认识JPA</h2><p>JPA是Java的持久化API，用于对象的持久化，它是一个非常强大的ORM持久化的解决方案，免去了使用JDBCTemplate开发的编写脚本工作。JPA通过简单约定好接口方法的规则自动生成相应的JPQL语句，然后映射成POJO对象。<br>JPA是一个规范化接口，封装了Hibernate的操作作为默认实现，让用户不通过任何配置即可完成数据库的操作。<br>Hibernate主要通过hibernate-annotation、hibernate-entitymanager和hibernate-core三个组件来操作数据。   </p>
+<ul>
+<li>
+hibernate-annotation:是Hibernate支持annotation方式配置的基础，它包括标准的JPAannotation、Hibernate自身特殊功能的annotation。
+</li>
+<li>
+hibernate-entitymanager:是Hibernate的核心实现，提供了Hibernate所有的核心功能。
+</li>
+<li>
+hibernate-core:实现了标准的JPA，它是hibernate-core和JPA之间的适配器，它不直接提供ORM的功能，而是对hibernate-core进行封装，是的Hibernate符合JPA的规范。
+</li>
+</ul>
 
-<h1 id="SpringBoot入口类"><a href="#SpringBoot入口类" class="headerlink" title="SpringBoot入口类"></a>SpringBoot入口类</h1><p>&#8194;&#8194;&#8194;&#8194;在创建SpringBoot项目时，会自动创建一个用于启动的、名为“项目名+Application”的入口类，它是项目的启动入口。在IDEA中打开入口类后，可以单击类或“main”方法左侧的三角形按钮，通过弹出的选项来运行或调试SpringBoot应用程序。<br>&#8194;&#8194;&#8194;&#8194;加上注解<font color=red>@SpringBootApplication</font>，以标注这是SpringBoot项目的入口类。</p>
-<h1 id="SpringBoot的自动配置"><a href="#SpringBoot的自动配置" class="headerlink" title="SpringBoot的自动配置"></a>SpringBoot的自动配置</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot会根据配置的依赖信息进行自动配置，从而减轻开发者搭建环境和配置的负担。如果在项目中依赖了<font color=red>spring-boot-starter-web</font>，则SpringBoot会自动配置Web环境（配置Tomcat、WebMVC、Validator、JSON等）。<br>&#8194;&#8194;&#8194;&#8194;SpringBoot自动配置是通过注解<font color=red>@EnableAutoConfiguration</font>来实现的，具有非侵入性。<br>&#8194;&#8194;&#8194;&#8194;如果不需要某些自动配置，则可以通过注解<font color=red>@EnableAutoConfiguration</font>的“<font color=red>exclude</font>或<font color=red>excludeName</font>”属性来指定，或在配置文件（<font color=red>application.properties</font>或<font color=red>application.yml</font>）中指定“<font color=red>spring.autoconfigure.exclude</font>”的值。</p>
-<h1 id="SpringBoot热部署"><a href="#SpringBoot热部署" class="headerlink" title="SpringBoot热部署"></a>SpringBoot热部署</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot热部署是为了更好的支持调试，在项目进行修改后不需要耗费时间重启，在应用程序正常运行的情况下即可实时生效，以节约时间和操作。要实现热部署，则需要添加下方的热部署的依赖：</p>
+<h2 id="使用JPA"><a href="#使用JPA" class="headerlink" title="使用JPA"></a>使用JPA</h2><p>要使用JPA，只要加入它的starter依赖，然后配置数据库连接信息。</p>
+<h3 id="添加JPA和MySQL数据库的依赖"><a href="#添加JPA和MySQL数据库的依赖" class="headerlink" title="添加JPA和MySQL数据库的依赖"></a>添加JPA和MySQL数据库的依赖</h3><p>下面以配置JPA和MySQL数据库的依赖为例，配置如下：</p>
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
-    &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;</code></pre><h1 id="SpringBoot的常用注解"><a href="#SpringBoot的常用注解" class="headerlink" title="SpringBoot的常用注解"></a>SpringBoot的常用注解</br></h1><p><font size=4>什么是注解式编程</font><br>&#8194;&#8194;&#8194;&#8194;注解（annotations）用来定义一个类、属性或一些方法、以便程序能被编译处理。它相当于一个说明文件，告诉应用程序某个被注解的类或属性是什么，要怎么处理。注解可以用于标注包、类、方法和变量等。</li></p>
-<center><font size=4>系统注解</font></center>
+    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre><h3 id="配置数据库连接信息"><a href="#配置数据库连接信息" class="headerlink" title="配置数据库连接信息"></a>配置数据库连接信息</h3><p>SpringBoot项目使用MySQL等关系型数据库，需要配置连接信息，可以在application.properties文件中进行配置。以下代码配置了与MySQL数据库的连接信息：</p>
+<pre><code>spring.datasource.url=jdbc:mysql://127.0.0.1/book&gt;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+//hibernate的配置属性，其主要作用是：自动创建、更新、验证数据库表结构
+spring.jpa.properties.hibernate.hbm2ddl.auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+//开发工具的控制台是否显示SQL的语句
+spring.jpa.show-sql=true</code></pre><center>Hibernate的配置属性</center>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>create</td>
+<td>每次加载Hibernate时都会删除上一次生成的表，然后根据Model类再重新生成新表，哪怕没有任何改变也会这样执行，这会导致数据库数据的丢失</td>
+</tr>
+<tr>
+<td>create-drop</td>
+<td>每次加载Hibernate时会根据Model类生成表，但是sessionFactory一旦关闭，表就会自动被删除</td>
+</tr>
+<tr>
+<td>update</td>
+<td>最常用的属性。第一次加载Hibernate时会根据Model类自动建立表的结构（前提是先建立好数据库）。以后加载Hibernate时，会根据Model类自动更新表结构，即使表结构改变了，但表中的数据依然存在，不会被删除。要注意的是，当部署到服务器后，表结构是不会被马上建立起来的，要等应用程序第一次运行起来后才会建立。Update表示如果Entity实体的字段发生了变化，那么直接在数据库中进行更新</td>
+</tr>
+<tr>
+<td>validate</td>
+<td>每次加载Hibernate时，会验证数据库的表结构，只会和数据库中的表进行比较，不会创建新表，但是会插入新值</td>
+</tr>
+</tbody></table>
+<h2 id="了解JPA注解和属性"><a href="#了解JPA注解和属性" class="headerlink" title="了解JPA注解和属性"></a>了解JPA注解和属性</h2><center>JPA的常用注解</center>
 
 <table>
 <thead>
@@ -403,314 +477,285 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>@Override</td>
-<td>用于修饰方法，表示此方法重写了父类方法</td>
+<td>@Entity</td>
+<td>声明类为实体</td>
 </tr>
 <tr>
-<td>@Deprecated</td>
-<td>用于修饰方法，表示此方法已经过时。经常在版本升级后会遇到</td>
+<td>@Table</td>
+<td>声明表名，@Entity和@Table注解一般一块使用，如果表名和实体类名相同，那么@Table可以省略</td>
 </tr>
 <tr>
-<td>@SuppressWarnnings</td>
-<td>告诉编译器忽视某类编译警告</td>
+<td>@Basic</td>
+<td>指定非约束明确的各个字段</td>
+</tr>
+<tr>
+<td>@Embedded</td>
+<td>用于注释属性，表示该属性的类是嵌入类（@embeddable用于注释Java类的，表示类是嵌入类）</td>
+</tr>
+<tr>
+<td>@Id</td>
+<td>指定的类的属性，一个表中的主键</td>
+</tr>
+<tr>
+<td>@GeneratedValue</td>
+<td>指定如何表示属性可以被初始化，如@GeneratedValue(Strategy=GenerationType.SEQUENCE,generator=”repair_seq”)：表示主键生成策略是sequence，还有Auto、Identity、Native等</td>
+</tr>
+<tr>
+<td>@Transient</td>
+<td>表示该属性并非一个数据库表的字段的映射，ORM框架将忽略该属性。如果一个属性并非数据库表的字段映射，就务必将其表示位@Transient，即它是不持久的，为虚拟字段</td>
+</tr>
+<tr>
+<td>@Column</td>
+<td>指定持久属性，即字段名。如果字段名与列名相同，则可以省略。使用方法如：@Column(length=11,name=”phone”,nullable=false,columnDefinition=”varchar(11) unique comment’电话号码’”)</td>
+</tr>
+<tr>
+<td>@SequenceGenerator</td>
+<td>指定在@GeneratedValue注解中指定的属性的值。它创建一个序列</td>
+</tr>
+<tr>
+<td>@TableGenerator</td>
+<td>在数据库生成一张表来管理主键生成策略</td>
+</tr>
+<tr>
+<td>@AccessType</td>
+<td>这种类型的注释用于设置访问类型。如果设置@AccessType(FIELD)，则可以直接访问变量，并且不需要使用Getter和Setter方法，但必须为public属性。如果设置@AccessType(PROPERTY)，则通过Getter和Setter方法访问Entity的变量</td>
+</tr>
+<tr>
+<td>@UniqueConstraint</td>
+<td>指定的字段和用于主要或辅助表的唯一约束</td>
+</tr>
+<tr>
+<td>@ColumnResult</td>
+<td>可以参考使用select字句的SQL查询中的列名</td>
+</tr>
+<tr>
+<td>@NamedQueries</td>
+<td>指定命名查询的列表</td>
+</tr>
+<tr>
+<td>@NamedQuery</td>
+<td>指定使用静态名称的查询</td>
+</tr>
+<tr>
+<td>@Basic</td>
+<td>指定实体属性的加载方式，如@Basic(fetch=FetchType.LAZY)</td>
+</tr>
+<tr>
+<td>@JsonIgnore</td>
+<td>作用是JSON序列化时将JavaBean中的一些属性忽略掉没序列化和反序列化都受影响</td>
 </tr>
 </tbody></table>
-<p>下面重点介绍一下<font color=red>@SuppressWarnnings</font>注解。它有以下几种属性。</p>
-<ul>
-<li><font color=red>unchecked</font>:未检查的转化。</li>
-<li><font color=red>unused</font>:未使用的变量。</li>
-<li><font color=red>resource</font>:泛型，即未指定类型。</li>
-<li><font color=red>path</font>:在类中的路径。原文件路径中有不存在的路径。</li>
-<li><font color=red>deprecation</font>:使用了某些不赞成使用的类和方法</li>
-<li><font color=red>fallthrough</font>:switch语句执行到底，不会遇到break关键字。</li>
-<li><font color=red>serial</font>:实现了Serializable，但未定义serialVersionUID。</li>
-<li><font color=red>rawtypes</font>:没有传递带有泛型的参数。</li>
-<li><font color=red>all</font>:代表全部类型的警告。</li>
-</ul>
-
-<center><font size=4>使用在类名上的注解</font></center>
+<center>映射关系的注解</center>
 
 <table>
 <thead>
 <tr>
 <th>注解</th>
-<th>使用位置</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>@RestController</td>
-<td>类名上</td>
-<td>作用相当于@ResponseBody加@Controller</td>
+<td>@JoinColumn</td>
+<td>指定一个实体组织或实体集合。用在“多对一”和“一对多”的关联中</td>
 </tr>
 <tr>
-<td>@Controller</td>
-<td>类名上</td>
-<td>声明此类是一个SpringMVC Controller对象</td>
+<td>@OneToOne</td>
+<td>定义表之间“一对一”的关系</td>
 </tr>
 <tr>
-<td>@Service</td>
-<td>类名上</td>
-<td>声明一个业务处理类（实现非接口类）</td>
+<td>@OneToMany</td>
+<td>定义表之间“一对多”的关系</td>
 </tr>
 <tr>
-<td>@Repository</td>
-<td>类名上</td>
-<td>声明数据库访问类（实现非接口类）</td>
+<td>@ManyToOne</td>
+<td>定义表之间“多对一”的关系</td>
 </tr>
 <tr>
-<td>@Component</td>
-<td>类名上</td>
-<td>代表其是Spring管理类，常用在无法用@Service、@Repository描述的Spring管理的类上，相当于通用的注解</td>
-</tr>
-<tr>
-<td>@Configuration</td>
-<td>类名上</td>
-<td>声明此类是一个配置类，常与@Bean配合使用</td>
-</tr>
-<tr>
-<td>@Resource</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byName自动注入</td>
-</tr>
-<tr>
-<td>@Autowired</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byType自动注入</td>
-</tr>
-<tr>
-<td>@RequestMapping</td>
-<td>类名或方法上</td>
-<td>如果用在类上，则表示所有响应请求的方法都是以该地址作为父路径的</td>
-</tr>
-<tr>
-<td>@Transactional</td>
-<td>类名或方法上</td>
-<td>用于处理事务</td>
-</tr>
-<tr>
-<td>@Qualifier</td>
-<td>类名或属性上</td>
-<td>为Bean指定名称，随后再通过名字引用Bean</td>
+<td>@ManyToMany</td>
+<td>定义表之间“多对多”的关系</td>
 </tr>
 </tbody></table>
-<p>下面进一步讲解各个注解的知识点和用法</p>
-<ol>
-<font size=4>1</font>.<font color=red>@RestController</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于返回JSON（JavaScript Object Notation，JS对象简谱）、XML（eXtensible Markup Language）等数据，但不能返回HTML（HyperText Markup Language）页面。相当于注解@ResponseBody和注解@Controller合在一起的作用。</br>
-<font size=4>2</font>.<font color=red>@Controller</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注控制器曾，在MVC开发模式中代表C（控制器）</br>
-&#8194;&#8194;&#8194;&#8194;@Controller主要用于构建MVC模式的程序</br>
-<font size=4>3</font>.<font color=red>@Service</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于声明一个业务处理类（实现非接口类），用于标注服务层，处理业务逻辑。</br>
-<font size=4>4</font>.<font color=red>@Repository</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注数据访问层</br>
-<font size=4>5</font>.<font color=red>@Component</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于把普通POJO（Plain Ordinary Java Objects，简单的Java对象）实例化到Spring容器中。当类不属于注解@Controller和@Service等时，就可以使用注解@Component来标注这个类。它可配合CommandLineRunner使用，以便在程序启动后执行一些基础任务。</br>
-<font size=4>6</font>.<font color=red>@Configuration</font></br>
-&#8194;&#8194;&#8194;&#8194;他用于标注配置类，并且可以由Spring容器自动处理。它作为Bean的载体，用来指示一个类声明、一个或多个@Bean方法，在运行时为这些Bean生成BeanDefinition和服务请求</br>
-<font size=4>7</font>.<font color=red>@Resource</font></br>
-&#8194;&#8194;&#8194;&#8194;@Autowired与@Resource都可以用来装配Bean，也都可以写在字段上或Setter方法上。</br>
-<font size=4>8</font>.<font color=red>@Autowired</font></br>
-&#8194;&#8194;&#8194;&#8194;它表示被修饰的类需要注入对象。Spring会扫描所有被@Autowired标注的类，然后根据类型在IoC容器中找到匹配的类进行注入。被@Autowired注解后的类不需要再导入文件。</br>
-<font size=4>9</font>.<font color=red>@RequestMapping</font></br>
-&#8194;&#8194;&#8194;&#8194;它用来请求地址映射，用在类或方法上。如果用在类上，则表示类中的所有响应请求的方法都是以该地址作为父路径的。该注解有6个属性。</br>
-<ul>
-    <li><font color=red>Params</font>:指定Request中必须包含某些参数值，才让该方法处理。</li>
-    <li><font color=red>Headers</font>:指定Request中必须包含某些指定的header值，才能让该方法处理。</li>
-    <li><font color=red>Value</font>:指定请求的实际地址，指定的地址可以是URI Template模式。</li>
-    <li><font color=red>Method</font>:指定请求的Method类型，如GET、POST、PUT、DELETE等。</li>
-    <li><font color=red>Consumes</font>:指定处理请求的提交内容类型Content-Type，如“application/json,text/html”。</li>
-    <li><font color=red>Produces</font>:指定返回的内容类型。只有当Request请求头中的Accept类型中包含该指定类型时才返回。</li>
-</ul>
-<font size=4>10</font>.<font color=red>@Transactional</font></br>
-&#8194;&#8194;&#8194;&#8194;它可以用在接口、接口方法、类及类方法上。</br>
-&#8194;&#8194;&#8194;&#8194;但Spring不建议在接口或者接口方法上使用该注解，因为该注解只有在使用基于接口的代理时才会生效。如果异常被捕获（try{}catch{}）了，则事务就不回滚了。如果想让事务回滚，则必须再往外抛出异常（try{}catch{throw Exception}）。</br>
-<font size=4>11</font>.<font color=red>@Qualifier</font></br>
-&#8194;&#8194;&#8194;&#8194;它的意思是“合格者”，用于标注哪一个实现类才是需要注入的。需要注意的是，@Qualifier的参数名称为被注入的类中的注解@Service标注的名称。</br>
-&#8194;&#8194;&#8194;&#8194;@Qualifier常和@Autowired一起使用。而@Resource和它不同，@Resource自带name属性。</br>
-</ol>
-
-<center><font size=4>使用在方法上的主要注解</font></center>
+<center>映射关系的属性</center>
 
 <table>
 <thead>
 <tr>
-<th>注解</th>
-<th>使用位置</th>
+<th>属性名</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>@RequestBody</td>
-<td>方法参数前</td>
-<td>常用来处理application/json、application/xml等Content-Type类型的数据，意味着HTTP消息是JSON/XML格式，需将其转化为指定类型参数</td>
+<td>targetEntity</td>
+<td>表示默认关联的实体类型，默认为当前标注的实体类</td>
 </tr>
 <tr>
-<td>@PathVariable</td>
-<td>方法参数前</td>
-<td>将URL获取的参数映射到方法参数上</td>
+<td>cascade</td>
+<td>表示与此实体一对一关联的实体的级联样式类型，以及当对实体进行操作时的策略。在定义关系时经常会涉及是否定义Cascade（级联处理）属性，如果担心级联处理容易造成负面影响，则可以不定义。它的类型包括CascadeType.PERSIST（级联新建）、CascadeType.REMOVE（级联删除）、CasCadeType.REFRESH（级联刷新）、CasCadeType.MERGE（级联更新）、CasCadeType.ALL（级联新建、更新、删除、刷新）</td>
 </tr>
 <tr>
-<td>@Bean</td>
-<td>方法上</td>
-<td>声明该方法的返回结果是一个由Spring容器管理的Bean</td>
+<td>fetch</td>
+<td>该实体的加载方式，包含LAZY和EAGER</td>
 </tr>
 <tr>
-<td>@ResponsetBody</td>
-<td>方法上</td>
-<td>通过适当的HttpMessageConverter将控制器中方法返回的对象转换为指定格式（JSON/XML）后，写入Response对象的body数据区</td>
+<td>optional</td>
+<td>表示关联的实体是否能够存在null值。默认为true，表示可以存在null值。如果为false，则要同时配合使用@JoinColumn标记</td>
+</tr>
+<tr>
+<td>mappedBy</td>
+<td>双向关联实体时使用，标注在不保存关系的实体中</td>
+</tr>
+<tr>
+<td>JoinColumn</td>
+<td>关联指定列。该属性值可接受多个@JoinColumn。用于配置连接表中外键列的信息</td>
+</tr>
+<tr>
+<td>JoinTable</td>
+<td>两张表通过中间的关联表建立联系时使用，即多对多关系</td>
+</tr>
+<tr>
+<td>PrimaryKeyJoinColumn</td>
+<td>主键关联。在关联的两个实体中直接使用注解@PrimaryKeyJoinColumn注释</td>
 </tr>
 </tbody></table>
-<ol>
-<font size=4>1</font>.<font color=red>@RequestBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它常用来处理JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。
-<font size=4>2</font>.<font color=red>@PathVariable</font></br>
-&#8194;&#8194;&#8194;&#8194;用于获取路径中的参数</br>
-<font size=4>3</font>.<font color=red>@Bean</font></br>
-&#8194;&#8194;&#8194;&#8194;它代表产生一个Bean，并交给Spring管理。用于封装数据，一般有Setter、Getter方法。在MVC模型中，对应的是M（模型）。</br>
-<font size=4>4</font>.<font color=red>@ResponsetBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它的作用是通过转换器将控制器方法返回的对象转换为指定的格式，然后写入Response对象的body区。它常用来返回JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。</br>
-&#8194;&#8194;&#8194;&#8194;使用此注解后，数据直接写入输入流中，不需要进行视图渲染。</br>
-</ol>
-
-
-<center><font size=4>其他常用注解</font></center>。
+<p>懒加载LAZY和实时加载EAGER的目的是，实现关联数据的选择性加载。<br>懒加载是在属性被引用时才生成查询语句，抽取相关联数据。<br>实时加载则是执行完主查询后，不管是否被引用，都会马上执行后续的关联数据查询。<br>使用懒加载来调用关联数据，必须要保证主查询的Session的生命周期没有结束，否则是无法抽取到数据的。<br>在SpringDataJPA中，要控制Session的生命周期，否则会出现“could not initialize proxy[xxxx#18] - no Session”错误。可以在配置文件中配置以下代码来控制Session的生命周期：</p>
+<pre><code>spring.jpa.open-in-view=true
+spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true</code></pre><h2 id="认识JPA的接口"><a href="#认识JPA的接口" class="headerlink" title="认识JPA的接口"></a>认识JPA的接口</h2><p>JPA提供了操作数据库的接口。在开发过程中继承和使用这些接口，可简化下游的持久化开发工作。可以使Spring找到自定义接口，并生成代理类，后续可以把自定义接口注入Spring容器中进行管理。在自定义接口的过程中，可以不写相关的SQL操作，由代理类自动生成。</p>
+<h3 id="JPA接口JpaRepository"><a href="#JPA接口JpaRepository" class="headerlink" title="JPA接口JpaRepository"></a>JPA接口JpaRepository</h3><p>JpaRepository继承自PagingAndSortingRepository。该接口提供了JPA的相关使用功能，以及通过Example进行查询的功能。Example对象是JPA提供用来构造查询条件的对象。该接口的关键代码如下：</p>
+<pre><code>public interface JpaRepository&lt;T,ID&gt; extends PagingAndSortingRepository&lt;T,ID&gt;,
+QueryByExampleExecutor&lt;T&gt;{}</code></pre><p>在上述代码中，T表示实体对象，ID表示主键。ID必须实现序列化。</p>
+<center>JpaRepository提供的方法</center>
 
 <table>
 <thead>
 <tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
+<th>方法</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>@EnableAutoConfiguration</td>
-<td>入口类/类名上</td>
-<td>用来提供自动配置</td>
+<td>List&lt;T&gt; findAll();</td>
+<td>查找所有实体</td>
 </tr>
 <tr>
-<td>@SpringBootApplication</td>
-<td>入口类/类名上</td>
-<td>用来启动入口类Application</td>
+<td>List&lt;T&gt; findAll(Sort var1);</td>
+<td>排序、查找所有实体</td>
 </tr>
 <tr>
-<td>@EnableScheduling</td>
-<td>入口类/类名上</td>
-<td>用来开启计划任务。Spring通过@Scheduled支持多种类型的计划任务，包含cron、fixDelay、fixRate等</td>
+<td>List&lt;T&gt; findAllById(Iterable&lt;ID&gt; var1);</td>
+<td>返回指定一组ID的实体</td>
 </tr>
 <tr>
-<td>@EnableAsync</td>
-<td>入口类/类名上</td>
-<td>用来开启异步注解功能</td>
+<td>&lt;S extends T&gt; List&lt;S&gt; saveAll(Iterable&lt;S&gt; var1);</td>
+<td>保存集合</td>
 </tr>
 <tr>
-<td>@ComponentScan</td>
-<td>入口类/类名上</td>
-<td>用来扫描组件，可自动发现和装配一些Bean。它根据定义的扫描路径，把符合扫描规则的类装配到Spring容器中，告诉Spring那个包（package）的类会被Spring自动扫描并且装入IoC容器。它对应XML配置中的元素。可以通过basePackages等属性来细粒度地定制自动扫描的范围，默认会从声明@ComponentScan所在类的包进行扫描</td>
+<td>void flush();</td>
+<td>执行缓存与数据库同步</td>
 </tr>
 <tr>
-<td>@Aspec</td>
-<td>入口类/类名上</td>
-<td>标注切面，可以用来配置事务、日志、权限验证，在用户请求时做一些处理等</td>
+<td>&lt;S extends T&gt; S saveAndFlush(S var1);</td>
+<td>强制执行持久化</td>
 </tr>
 <tr>
-<td>@ControllerAdvice</td>
-<td>类名上</td>
-<td>包含@ComponentScan，可以被扫描到。统一处理异常</td>
+<td>void deleteInBatch(Iterable&lt;T&gt; var1);</td>
+<td>删除一个实体集合</td>
 </tr>
 <tr>
-<td>@ExceptionHandler</td>
-<td>方法上</td>
-<td>用在方法上，表示遇到异常就执行该方法</td>
+<td>void deleteAllInBatch();</td>
+<td>删除所有实体</td>
 </tr>
 <tr>
-<td>@Value</td>
-<td>属性上</td>
-<td>用于获取配置文件中的值</td>
+<td>T getOne(ID var1)</td>
+<td>返回ID对应的实体，如果不存在，则返回空值</td>
+</tr>
+<tr>
+<td>&lt;S extends T&gt; List&lt;S&gt; findAll(Example&lt;S&gt; var1)</td>
+<td>查询满足Example的所有对象</td>
+</tr>
+<tr>
+<td>&lt;S extends T&gt; List&lt;S&gt; findAll(Example&lt;S&gt; var1,Sort var2)</td>
+<td>查询满足Example的所有对象，并且进行排序返回</td>
 </tr>
 </tbody></table>
-<h1 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot支持使用Properties和YAML两种配置方式。两者功能类似，都能完成SpringBoot的配置，但是<font color=red>Properties的优先级要高于YAML</font>。<br>&#8194;&#8194;&#8194;&#8194;YAML文件的好处是——它采用的是树状结构，一目了然。但是，使用YAML配置方式时要注意以下几点。</p>
-<ul>
-<li>原来以“.”分隔的key会变成树状结构</li>
-<li>在key后的冒号后一定要跟一个空格</li>
-<li>如果把原有的application.properties删除，则建议执行以下“<font color=red>maven -X clean install</font>”命令</li>
-<li>YAML格式不支持用注解<font color=red>@PropertySource</font>导入配置</li>
-</ul>
-
-<h1 id="SpringBoot的Starter"><a href="#SpringBoot的Starter" class="headerlink" title="SpringBoot的Starter"></a>SpringBoot的Starter</br></h1><p><font size=4>了解Starter</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot为了简化配置，提供了非常多的Starter。它先打包好与常用模块相关的所有JAR包，并完成自动配置，然后组装成Starter（如把Web相关的SpringMVC、容器等打包好后组装成spring-boot-starter-web）。这使得在开发业务代码是不需要过多关注框架的配置，只需关注逻辑即可。</p>
-<center><font size=4>常用的Starter</font></center>
+<h3 id="分页排序接口PagingAndSortingRepository"><a href="#分页排序接口PagingAndSortingRepository" class="headerlink" title="分页排序接口PagingAndSortingRepository"></a>分页排序接口PagingAndSortingRepository</h3><p>PagingAndSortingRepository继承自CrudRepository提供的分页和排序方法。代码如下：</p>
+<pre><code>@NoRepositoryBean
+public interface PagingAndSortingRepository&lt;T,ID&gt; extends CrudRepository&lt;T,ID&gt;{
+    //排序功能。它按照“sort”指定的排序返回数据
+    Iterable&lt;T&gt; findAll(Sort var1);
+    //分页查询（含排序功能）
+    Page&lt;T&gt; findAll(Pageable var1);
+}</code></pre><h3 id="数据操作接口CrudRepository"><a href="#数据操作接口CrudRepository" class="headerlink" title="数据操作接口CrudRepository"></a>数据操作接口CrudRepository</h3><p>CrudRepository接口继承自Repository接口，并新增了增加、删除、修改和查询方法。</p>
+<center>CrudRepository提供的方法</center>
 
 <table>
 <thead>
 <tr>
-<th>Starter</th>
-<th>说明</th>
+<th>方法</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>spring-boot-stater-web</td>
-<td>用于构建Web。包含RESTful风格框架、SpringMVC和默认的嵌入式容器Tomcat</td>
+<td>&lt;S extends T&gt; S save(S entity);</td>
+<td>保存实体。当实体中包含主键时，JPA会进行更新操作</td>
 </tr>
 <tr>
-<td>spring-boot-stater-test</td>
-<td>用于测试</td>
+<td>&lt;S extends T&gt; Iterable&lt;S&gt; saveAll(Iterable&lt;S&gt; entities);</td>
+<td>保存所有实体。实体必须不为空</td>
 </tr>
 <tr>
-<td>spring-boot-stater-data-jpa</td>
-<td>带有Hibernate的SpringDataJPA</td>
+<td>“Optional&lt;T&gt; findById(Id id)</td>
+<td>根据主键id检索实体</td>
 </tr>
 <tr>
-<td>spring-boot-stater-jdbc</td>
-<td>传统的JDBC。轻量级应用可以使用，学习成本低，但最好使用JPA或Mybatis</td>
+<td>“boolean existsById(ID id)</td>
+<td>根据主键id检索实体，返回是否存在。值为布尔类型</td>
 </tr>
 <tr>
-<td>spring-boot-stater-thymeleaf</td>
-<td>支持Thymeleaf</td>
+<td>Iterable&lt;T&gt; findAll()</td>
+<td>返回所有实体</td>
 </tr>
 <tr>
-<td>spring-boot-stater-mail</td>
-<td>支持JavaMail、SpringMail发送邮件</td>
+<td>Iterable&lt;T&gt; findAllById(Iterable&lt;ID&gt; ids)</td>
+<td>根据给定的一组id值返回一组实体</td>
 </tr>
 <tr>
-<td>spring-boot-stater-integration</td>
-<td>Spring框架创建的一个API，面向企业应用集成（EAI）</td>
+<td>long count()</td>
+<td>返回实体的数量</td>
 </tr>
 <tr>
-<td>spring-boot-stater-mobile</td>
-<td>SpringMVC的扩展，用来简化手机上的Web应用程序开发</td>
+<td>void deleteById(ID id)</td>
+<td>根据id删除数据</td>
 </tr>
 <tr>
-<td>spring-boot-stater-data-redis</td>
-<td>通过SpringDataRedis、RedisClient使用Redis</td>
+<td>void delete(T entity)</td>
+<td>删除给定的实体</td>
 </tr>
 <tr>
-<td>spring-boot-stater-validation</td>
-<td>BeanValidation是一个数据验证的规范，HibernateValidator是一个数据验证框架</td>
+<td>void deleteAll(Iterable&lt;? extends T&gt; entities)</td>
+<td>删除实体</td>
 </tr>
 <tr>
-<td>spring-boot-stater-websocket</td>
-<td>相对于非持久的协议HTTP，Websocket是一个持久化的协议</td>
-</tr>
-<tr>
-<td>spring-boot-stater-web-services</td>
-<td>SOAPWebServices</td>
-</tr>
-<tr>
-<td>spring-boot-stater-hateoas</td>
-<td>为服务添加HATEOAS功能</td>
-</tr>
-<tr>
-<td>spring-boot-stater-security</td>
-<td>用SpringSecurity进行身份验证和授权</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-rest</td>
-<td>用SpringDateREST公布简单的REST服务</td>
+<td>void deleteAll()</td>
+<td>删除所有实体</td>
 </tr>
 </tbody></table>
-
+<h3 id="分页接口Pageable和Page"><a href="#分页接口Pageable和Page" class="headerlink" title="分页接口Pageable和Page"></a>分页接口Pageable和Page</h3><p>Pageable接口用于构造翻页查询，返回Page对象。Page从0开始分页。<br>例如，可以通过以下代码来构建文章的翻页查询参数。</p>
+<pre><code>@RequestMapping(&quot;/article&quot;)
+public ModelAndView articleList(@RequestParam(value=&quot;start&quot;,defaultValue=&quot;0&quot;)Integer start,@RequestParam(value=&quot;limit&quot;,defaultValue=&quot;10&quot;)Integer limit){
+    start = start &lt; 0 ? 0 :start;
+    Sort sort = new Sort(Sort.Direction.DESC,&quot;id&quot;);
+    Pageable pageable = PageRequest.of(start,limit,sort);
+    Page&lt;Article&gt; page = articleRepository.findAll(pageable);
+    ModelAndView mav = new ModelAndView(&quot;admin/article/list&quot;);
+    mav.addObject(&quot;page&quot;,page);
+    return mav;
+}</code></pre><p>然后，再调用它的参数获取总页数、上一页、下一页和末页，见以下代码：</p>
+<pre><code>&lt;div&gt;
+    &lt;a th:href=&quot;@{/article(start=0)}&quot;}【首页】&lt;/a&gt;
+    &lt;a th:if=&quot;${not page.isFirst()}&quot; th=&quot;@{/article(start=${page.number-1})}&quot;&gt;【上页】&lt;/a&gt;
+    &lt;a th:if=&quot;${not page.isLast()}&quot; th=&quot;@{/article(start=${page.number+1})}&quot;&gt;【下页】&lt;/a&gt;
+    &lt;a th:href=&quot;@{/article(start=${page.totalPages-1})}&quot;}【末页】&lt;/a&gt;
+&lt;/div&gt;</code></pre>
       
     </div>
     
@@ -740,15 +785,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/07/10/SpringBoot%E4%B9%8BSpringBoot%E8%BF%9B%E9%98%B6/" rel="next" title="SpringBoot之SpringBoot进阶">
+                <i class="fa fa-chevron-left"></i> SpringBoot之SpringBoot进阶
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" rel="prev" title="SpringBoot之分层开发Web应用程序">
-                SpringBoot之分层开发Web应用程序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -871,9 +916,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot项目结构"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot项目结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot依赖模块"><span class="nav-number">2.</span> <span class="nav-text">SpringBoot依赖模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot入口类"><span class="nav-number">3.</span> <span class="nav-text">SpringBoot入口类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的自动配置"><span class="nav-number">4.</span> <span class="nav-text">SpringBoot的自动配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot热部署"><span class="nav-number">5.</span> <span class="nav-text">SpringBoot热部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的常用注解"><span class="nav-number">6.</span> <span class="nav-text">SpringBoot的常用注解
-</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用配置文件"><span class="nav-number">7.</span> <span class="nav-text">使用配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot的Starter"><span class="nav-number">8.</span> <span class="nav-text">SpringBoot的Starter
-</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的数据库连接模板JDBCTemplate"><span class="nav-number">1.</span> <span class="nav-text">Java的数据库连接模板JDBCTemplate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用JDBCTemplate实现数据的增删改查"><span class="nav-number">1.1.</span> <span class="nav-text">用JDBCTemplate实现数据的增删改查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置基础依赖"><span class="nav-number">1.1.1.</span> <span class="nav-text">配置基础依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新建实体类"><span class="nav-number">1.1.2.</span> <span class="nav-text">新建实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作数据"><span class="nav-number">1.1.3.</span> <span class="nav-text">操作数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#认识ORM"><span class="nav-number">2.</span> <span class="nav-text">认识ORM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JPA——Java持久层API"><span class="nav-number">3.</span> <span class="nav-text">JPA——Java持久层API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#认识SpringData"><span class="nav-number">3.1.</span> <span class="nav-text">认识SpringData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认识JPA"><span class="nav-number">3.2.</span> <span class="nav-text">认识JPA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用JPA"><span class="nav-number">3.3.</span> <span class="nav-text">使用JPA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加JPA和MySQL数据库的依赖"><span class="nav-number">3.3.1.</span> <span class="nav-text">添加JPA和MySQL数据库的依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置数据库连接信息"><span class="nav-number">3.3.2.</span> <span class="nav-text">配置数据库连接信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#了解JPA注解和属性"><span class="nav-number">3.4.</span> <span class="nav-text">了解JPA注解和属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认识JPA的接口"><span class="nav-number">3.5.</span> <span class="nav-text">认识JPA的接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JPA接口JpaRepository"><span class="nav-number">3.5.1.</span> <span class="nav-text">JPA接口JpaRepository</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分页排序接口PagingAndSortingRepository"><span class="nav-number">3.5.2.</span> <span class="nav-text">分页排序接口PagingAndSortingRepository</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据操作接口CrudRepository"><span class="nav-number">3.5.3.</span> <span class="nav-text">数据操作接口CrudRepository</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分页接口Pageable和Page"><span class="nav-number">3.5.4.</span> <span class="nav-text">分页接口Pageable和Page</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

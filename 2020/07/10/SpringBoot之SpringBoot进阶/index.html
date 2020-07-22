@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SpringBoot," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SpringBoot进阶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot之SpringBoot进阶">
+<meta property="og:url" content="https://eh1999.github.io/2020/07/10/SpringBoot%E4%B9%8BSpringBoot%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="SpringBoot进阶">
+<meta property="article:published_time" content="2020-07-10T00:52:54.000Z">
+<meta property="article:modified_time" content="2020-07-17T06:41:11.151Z">
+<meta property="article:author" content="eh">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://eh1999.github.io/2020/07/10/SpringBoot之SpringBoot进阶/"/>
+
+
+
+
+
+  <title>SpringBoot之SpringBoot进阶 | Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://eh1999.github.io/2020/07/10/SpringBoot%E4%B9%8BSpringBoot%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="eh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringBoot之SpringBoot进阶</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-10T08:52:54+08:00">
+                2020-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  SpringBoot进阶
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="静态资源访问"><a href="#静态资源访问" class="headerlink" title="静态资源访问"></a>静态资源访问</br></h1><h2 id="默认策略"><a href="#默认策略" class="headerlink" title="默认策略"></a>默认策略</h2><p>SpringBoot中对于SpringMVC的自动化配置都在WebMvcAutoConfiguration类中，因此对于默认的静态资源过滤策略可以从这个类中一窥究竟。在WebMvcAutoConfiguration类中有一个静态内部类WebMvcAutoConfigurationAdapter，实现了提到的WebMvcConfigurer接口。WebMvcConfigurer接口中有一个方法addResourceHandlers, 是用来配置静态资源过滤的方法在WebMvcAutoConfigurationAdapter类中得到了实现，部分核心代码如下：</p>
+<pre><code> public void addResourceHandlers (ResourceHandlerRegistry registry) {
+ ....
+ ....
+ String staticPathPattern = this.mvcProperties.getStaticPathPattern();
+    if(!registry. hasMappingForPattern(staticPathPattern)) {
+        custornizeResourceHandlerRegistration
+            registry.addResourceHandler(staticPathPattern)
+                .addResourceLocations(getResourceLocations(
+                    this.resourceProperties.getStaticLocations()))
+                .setCachePeriod(getSeconds(cachePeriod))
+                .setCacheControl(cacheControl));
+    }
+}</code></pre><p>SpringBoot在这里进行了默认的静态资源过滤配置，其中staticPathPattern默认定义在WebMvcProperties中，定义内容如下：</p>
+<pre><code>private String staticPathPattern = &quot;/**&quot;,</code></pre><p>this.resourceProperties.getStaticLocations()获取到的默认静态资源位置定义在ResourceProperties中，代码如下：</p>
+<pre><code>private static final String[] CLASSPATH_RESOURCE LOCATIONS = { 
+&quot;classpath:/META-INF/resources/&quot;,&quot;classpath:/resources/&quot;, 
+&quot;classpath:/static/&quot;,&quot;classpath:/public&quot;};</code></pre><p>在getResourceLocations方法中，对这4个静态资源位置做了扩充，代码如下：</p>
+<pre><code>static String[] getResourceLocations(String[] staticLocations){
+String[] locations= new String[staticLocations.length+SERVLET_LOCATIONS.length];
+System.arraycopy(staticLocations,0,locations,0,staticLocations.length);
+System.arraycopy(SERVLET_LOCATIONS,0,locations,staticLocations.length,
+SERVLET_LOCATIONS.length);
+return locations;
+}</code></pre><p>其中，SERVLET_LOCATIONS的定义是一个{“/“}。<br>综上可以看到，SpringBoot默认会过滤所有的静态资源，而静态资源的位置一共有5个，分别是”classpath:/META-INF/resources/“、”classpath:/resources/“、”classpath:/static/“、”classpath:/public/“以及”/“也就是说，开发者可以将静态资源放到这5个位置中的任意一个。注意，按照定义的顺序5个静态资源位置的优先级依次降低。但是一般情况下，SpringBoot项目不需要webapp目录，所以第5个”/“可以暂不考虑。</br></p>
+<h2 id="自定义策略"><a href="#自定义策略" class="headerlink" title="自定义策略"></a>自定义策略</h2><ol>
+<li>
+在配置文件中定义</br>
+可以在application.properties中直接定义过滤规则和静态资源位置，代码如下：
+
+<pre><code>spring.mvc.static-path-pattern=/static/**
+spring.resources.static-locations=classpath:/static/</code></pre><p>过滤规则为/static/**，静态资源位置为classpath:/static/。 </p>
+</li>
+<li>
+Java编码定义</br>
+只需要实现WebMvcConfigurer接口即可，然后实现该接口的addResourceHandlers方法，代码如下：
+
+<pre><code>@Configuration
+public class MyWebMvcConfig implements WebMvcConfigurer {
+    @Override 
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry
+            .addResourceHandler(&quot;/static/**&quot;)
+            .addResourceLocations(&quot;classpath:/static/&quot;);
+    }
+}</code></pre></li>
+</ol>
+
+<h1 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</br></h1><p>SpringMVC对文件上传做了简化，在SpringBoot中对此做了更进一步的简化，文件上传更为方便。</br><br>Java中的文件上传一共涉及两个组件，一个是CommonsMultipartResolver，另一个是StandardServletMultipartResolver，其中CommonsMultipartResolver使用commons-fileupload来处理multipart请求，而StandardServletMultipartResolver则是基于Servlet3.0来处理multipart请求的，因此若使用StandardServletMultipartResolver则不需要添加额外的jar包。Tomcat7.0开始就支持Servlet3.0了，而SpringBoot2.0.4内嵌的Tomcat为Tomcat8.5.32，因此可以直接使用StandardServletMultipartResolver。而在SpringBoot提供的文件上传自动化配置类MultipartAutoConfiguration中，默认也是采用StandardServletMultipartResolver，部分源码如下：</p>
+<pre><code>public class MultipartAutoConfiguration (
+...
+...
+    @Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME) 
+    @ConditionalOnMissingBean(MultipartResolver.class)
+    public StandardServletMultipartResolver multipartResolver(){
+        StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
+        multipartResolver.setResolveLazily(this.multipartProperties.isResolveLazily()); 
+        return multipartResolver; 
+    }
+}</code></pre><p>根据这里的配置可以看出，如果开发者没有提供MultipartResolver，那么默认采用的MultipartResolver就是StandardServletMultipartResolver因此，在pringBoot中上传文件甚至可以做到零配置。下面来看具体上传过程。</p>
+<h2 id="单文件上传"><a href="#单文件上传" class="headerlink" title="单文件上传"></a>单文件上传</h2><p>首先创建一个SpringBoot项目并添加spring-boot-starter-web依赖。</br><br>然后在resources目录下的static目录中创建一个upload.html文件，内容如下：</p>
+<pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html lang＝&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;/upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+&lt;input type＝&quot;file&quot; name=&quot;uploadFile&quot; value＝&quot;请选择文件&quot;&gt;
+&lt;input type=&quot;submit&quot; value＝&quot;上传&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>这是一个很简单的文件上传页面，上传接口是/upload，注意请求方法是post,enctype是multipart/form-data。</br><br>接着创建文件上传处理接口，代码如下：</p>
+<pre><code>@RestController
+public class FileUploadController{
+    SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy/MM/dd/&quot;);
+    @PostMapping(&quot;/upload&quot;)
+    public String upload(MultipartFile uploadFile , HttpServletRequest req) {
+        String realPath = req.getSession().getServletContext().getRealPath(&quot;/uploadFile/&quot;);
+        String format = sdf.format(new Date());
+        File folder = new File (realPath + format);
+        if(!folder.isDirectory()) {
+            folder.mkdirs(); 
+        }
+        String oldName = uploadFile.getOriginalFilename(); 
+        String newName = UUID.randomUUID().toString()+oldName.substring(oldName.lastIndexOf(&quot;.&quot;),oldName.length()); 
+        try{
+            uploadFile.transferTo(new File(folder,newName));
+            String filePath = req.getScheme()+&quot;://&quot;+req.getServerName()+&quot;:&quot;+req.getServerPort()+&quot;/uploadFile/&quot;+format+&quot;/&quot;+newName;
+            return filePath; 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return &quot;上传失败！&quot;;
+    }
+}</code></pre><p>代码解释：</p>
+<ol>
+<li>
+第6～12代码表示规划上传文件的保存路径为项目运行目录下的uploadFile文件夹，并在文件夹中通过日期对所上传的文件归类保存。
+</li>
+<li>
+第13～15行代码表示给上传的文件重命名，这是为了避免文件重名。
+</li>
+<li>
+第17行是文件保存操作。
+</li>
+<li>
+第18～20行是生成上传文件的访问路径，并将访问路径返回。
+</li>
+</ol>
+
+<p>开发者需要对图片上传的细节进行配置，也是允许的，代码如下：</p>
+<pre><code>spring.servlet.multipart.enabled=true 
+spring.servlet.multipart.file-size-threshold=O 
+spring.servlet.multipart.location=E:\\temp 
+spring.servlet.multipart.max-file-size=lMB 
+spring.servlet.multipart.max-request-size=lOMB 
+spring.servlet.multipart.resolve-lazily=false </code></pre><p>代码解释：</p>
+<ol>
+<li>
+第l行表示是否开启文件上传支持，默认为true。
+</li>
+<li>
+第2行表示文件写入磁盘的阈值，默认为0。
+</li>
+<li>
+第3行表示上传文件的临时保存位置。
+</li>
+<li>
+第4行表示上传的单个文件的最大大小，默认为1MB。 
+</li>
+<li>
+第5行表示多文件上传时文件的总大小，默认为10MB。  
+</li>
+<li>
+第6行表示文件是否延迟解析，默认为false。
+</li>
+</ol>
+
+<h2 id="多文件上传"><a href="#多文件上传" class="headerlink" title="多文件上传"></a>多文件上传</h2><p>多文件上传和单文件上传基本一致，首先修改HTML文件，代码如下：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;/uploads&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+&lt;input type＝&quot;file&quot; name=&quot;uploadFiles&quot; value＝&quot;请选择文件&quot; multiple&gt;
+&lt;input type＝&quot;submit&quot; value＝&quot;上传&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>然后修改控制器，代码如下：</p>
+<pre><code>@PostMapping(&quot;/uploads&quot;)
+public String upload(MultipartFile[] uploadFiles,HttpServletRequest req){
+   //遍历uploadFiles数组分别存储 
+}</code></pre><p>控制器里边的核心逻辑和单文件上传是一样的，只是多一个遍历的步骤。</p>
+<h1 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h1><p>@ControllerAdvice就是@Controller的增强版。@ControllerAdvice主要用来处理全局数据，一般搭配@ExceptionHandler、@ModelAttribute以及@InitBinder 使用。</p>
+<h2 id="全局异常处理"><a href="#全局异常处理" class="headerlink" title="全局异常处理"></a>全局异常处理</h2><p>@ControllerAdvice最常见的使用场景就是全局异常处理。如果用户上传的文件超过了限制大小，就会抛出异常，此时可以通过@Controller Advice 结合@ExceptionHandler定义全局异常捕获机制，代码如下：</p>
+<pre><code>@ControllerAdvice
+public class CustomExceptionHandler {
+   @ExceptionHandler(MaxUploadSizeExceededException.class)
+   public void uploadException(MaxUploadSizeExceededException e,
+   HttpServletResponse resp) throws IOException {
+       resp.setContentType(&quot;text/html;charset=utf-8&quot;);
+       PrintWriter out = resp.getWriter();
+       out.write(&quot;上传文件大小超出限制！&quot;);
+       out.flush();
+       out.close(); 
+   }
+}</code></pre><p>只需在系统中定义CustomExceptionHandler类然后添加@ControllerAdvice注解即可。当系统启动时，该类就会被扫描到Spring容器中，然后定义uploadException方法，在该方法上添加了@ExceptionHandler注解，其中定义的MaxUploadSizeExceededException.class表明该方法用来处理MaxUploadSizeExceededException类型的异常。如果想让该方法处理所有类型的异常，只需将MaxUploadSizeExceededException改为Exception即可。方法的参数可以有异常实例、HttpServletResponse以及HttpServletRequest、 Model等，返回值可以是一段JSON、一个ModelAndView、一个逻辑视图名等。此时，上传一个超大文件会有错误提示给用户。</p>
+<h2 id="添加全局数据"><a href="#添加全局数据" class="headerlink" title="添加全局数据"></a>添加全局数据</h2><p>@ControllerAdvice是一个全局数据处理组件，因此也可以在@ControllerAdvice中配置全局数据，使用@ModelAttribute注解进行配置，代码如下：</p>
+<pre><code>@ControllerAdvice
+public class GlobalConfig{
+    @ModelAttribute(value = &quot;info&quot;)
+    public Map&lt;String,String&gt; userInfo(){
+        HashMap&lt;String,String&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;username&quot;,&quot;罗贯中&quot;);
+        map.put(&quot;gender&quot;,&quot;男&quot;);
+        return map; 
+    }
+}</code></pre><p>代码解释：</p>
+<ol>
+<li>
+在全局配置中添加userlnfo方法，返回一个map。该方法有一个注解@ModelAttribute，其中的value属性表示这条返回数据的key，而方法的返回值是返回数据的value。
+</li>
+<li>
+此时在任意请求的Controller中，通过方法参数中的Model都可以获取info的数据。
+</li>
+</ol>
+
+<h2 id="请求参数预处理"><a href="#请求参数预处理" class="headerlink" title="请求参数预处理"></a>请求参数预处理</h2><p>@ControllerAdvice结合@InitBinder还能实现请求参数预处理，即将表单中的数据绑定到实体类上时进行一些额外处理。</p>
+<h1 id="自定义错误页"><a href="#自定义错误页" class="headerlink" title="自定义错误页"></a>自定义错误页</h1><p>SpringBoot中的全局异常处理。在处理异常时，开发者可以根据实际情况返回不同的页面，但是这种异常处理方式一般用来处理应用级别的异常，有一些容器级别的错误就处理不了，例如Filter中抛出异常，使用@ControllerAdvice 定义的全局异常处理机制就无法处理。<br>在SpringBoot中，默认情况下，如果用户在发起请求时发生了404错误，SpringBoot会有一个默认的页面展示给用户。<br>事实上，SpringBoot在返回错误信息时不一定返回HTML页面，而是根据实际情况返回HTML页面或者一段JSON（若开发者发起Ajax请求，则错误信息是一段JSON）。对于开发者而言，这一段HTML或者JSON都能够自由定制。<br>SpringBoot中的错误默认是由BasicErrorController类来处理的，该类中的核心方法主要有两个：</p>
+<pre><code>@RequestMapping(produces = &quot;text/html&quot; )
+public ModelAndView errorHtml(HttpServletRequest request,HttpServletResponse response) {
+    HttpStatus status = getStatus (request);
+    Map&lt;String,Object&gt; model = Collections.unmodifiableMap(getErrorAttributes(
+        request,isIncludeStackTrace(request,MediaType.TEXT_HTML)));
+    response.setStatus(status.value());
+    ModelAndView modelAndView = resolveErrorView(request,response,status,model);
+    return(modelAndView != null ? modelAndView : new ModelAndView(&quot;error&quot;,model));
+}
+@RequestMapping
+@ResponseBody 
+public ResponseEntity&lt;Map&lt;String,Object&gt; error(HttpServletRequest request) {
+    Map&lt;String,Object&gt; body = getErrorAttributes(request,
+        isIncludeStackTrace(request,MediaType.ALL));
+    HttpStatus status = getStatus(request);
+    return new ResponseEntity&lt;&gt; (body, status);
+}</code></pre><p>其中，errorHtml方法用来返回错误HTML页面，error用来返回错误JSON，具体返回的是HTML还是JSON，则要看请求头的Accept参数。返回JSON的逻辑很简单，不必过多介绍，返回HTML的逻辑稍微有些复杂，在errorHtml方法中，通过调用resolveErrorView方法来获取一个错误视图的ModelAndView。而resolveErrorView方法的调用最终会来到DefaultErrorViewResolver类中。<br>DefaultErrorViewResolver类是SpringBoot中默认的错误信息视图解析器，部分源码如下：</p>
+<pre><code>public class DefaultErrorViewResolver implements ErrorViewResolver, Ordered {
+   private static final Map&lt;Series,String&gt; SERIES_VIEWS;
+   static{
+       Map&lt;Series,String&gt; views = new EnumMap&lt;&gt;(Series.class);
+       views.put(Series.CLIENT_ERROR,&quot;4xx&quot;);
+       views.put(Series.SERVER_ERROR,&quot;Sxx&quot;);
+       SERIES_VIEWS = Collections.unmodifiableMap(views); 
+   }
+}
+...
+...
+private ModelAndView resolve(String viewName,Map&lt;String,Object&gt; model) {
+   String errorViewName = &quot;error/&quot; + viewName;
+   TemplateAvailabilityProvider provider = this.templateAvailabilityProviders
+       .getProvider(errorViewName,this.applicationContext);
+   if (provider != null) {
+       return new ModelAndView(errorViewName,model);
+   }
+   return resolveResource(errorViewName , model);
+}</code></pre><p>从这一段源码中可以看到，SpringBoot默认是在error目录下查找4xx、5xx的文件作为错误视图，当找不到时会回到errorHtml方法中，然后使用error作为默认的错误页面视图名，如果名为error的视图也找不到，那么就会直接out在页面上。</p>
+<h2 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h2><p>要自定义错误页面其实很简单，提供4xx和5xx页面即可。如果开发者不需要向用户展示详细的错误信息，那么可以把错误信息定义成静态页面，直接在resources/static目录下创建error目录，然后在error目录中创建错误展示页面。错误展示页面的命名规则有两种：一种是4xx.html、5xx.html；另一种是直接使用响应码命名文件，例如404.html、405.html、500.html。第二种命名方式划分得更细，当出错时，不同的错误会展示不同的错误页面。<br>这种定义都是使用了静态HTML页面，无法向用户展示完整的错误信息，若采用视图模板技术，则可以向用户展示更多的错误信息。如果要使用HTML模板，那么先引入模板相关的依赖，这里以Thymeleaf为例，Thymeleaf页面模板默认处于classpath:/templates/目录下，因此在该目录下先创建error目录，再创建错误展示页。<br>由于模板页面展示信息比较灵活，因此可以直接创建4xx.html、5xx.html。以4xx.html页面为例，其内容如下：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang＝&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org/&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;table border=&quot;1&quot;&gt;
+&lt;tr&gt;
+&lt;td&gt;timestamp&lt;/td&gt;
+&lt;td th:text＝&quot;{timestamp}&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;status&lt;/td&gt;
+&lt;td th:text=&quot;${status}&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;error&lt;/td&gt;
+&lt;td th:text=&quot;${error}&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;message&lt;/td&gt;
+&lt;td th:text=&quot;${message}&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;path&lt;/td&gt;
+&lt;td th:text＝&quot;${path}&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>SpringBoot在这里一共返回了5条错误相关的信息，分别是timestamp、status、error、message以及path。<br>若用户定义了多个错误页面，则响应码.html页面的优先级高于4xx.html、5xx.html页面的优先级，即若当前是一个404错误，则优先展示404.html而不是4xx.html；动态页面的优先级高于静态页面，即若 resources/templates和resources/static下同时定义了4xx.html，则优先展示resources/templates/4xx.html。</p>
+<h2 id="复杂配置"><a href="#复杂配置" class="headerlink" title="复杂配置"></a>复杂配置</h2><p>上面这种配置还是不够灵活，只能定义HTML页面，无法处理JSON的定制。SpringBoot中支持对Error信息的深度定制，接下来将从三个方面介绍深度定制：自定义Error数据、自定义Error视图以及完全自定义。</p>
+<h3 id="自定义Error数据"><a href="#自定义Error数据" class="headerlink" title="自定义Error数据"></a>自定义Error数据</h3><p>自定义Error数据就是对返回的数据进行自定义。SpringBoot返回的Error信息一共有5条，分别是timestamp、status、error、message以及path。在BasicErrorController的errorHtml方法和error方法中，都是通过getErrorAttributes方法获取Error信息的。该方法最终会调用到DefaultErrorAttributes类的getErrorAttributes方法，而DefaultErrorAttributes类是在ErrorMvcAutoConfiguration中默认提供的。ErrorMvcAutoConfiguration类的errorAttributes 方法源码如下：</p>
+<pre><code>@Bean
+@ConditionalOnMissingBean(value=ErrorAttributes.class,search=SearchStrategy.CURRENT) 
+public DefaultErrorAttributes errorAttributes(){
+    return new DefaultErrorAttributes(this.serverProperties.getError().isIncludeException()); 
+}</code></pre><p>从这段源码中可以看出，当系统没有提供ErrorAttributes时才会采用DefaultErrorAttributes。因此自定义错误提示时，只需要自己提供一个ErrorAttributes即可，而DefaultErrorAttributes是ErrorAttributes的子类，因此只需要继承DefaultErrorAttributes即可，代码如下：</p>
+<pre><code>@Component
+public class MyErrorAttribute extends DefaultErrorAttributes{
+    @Override
+    public Map&lt;String,Object&gt; getErrorAttributes(WebRequest webRequest,boolean includeStackTrace) {
+        Map&lt;String,Object&gt; errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
+        errorAttributes.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);
+        errorAttributes.remove(&quot;error&quot;); 
+        return errorAttributes;
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>自定义MyErrorAttribute继承自DefaultErrorAttributes，重写DefaultErrorAttributes中的getErrorAttributes方法。MyErrorAttribute类添加@Component注解，该类将被注册到Spring容器中。 </li>
+<li>第6、7行通过super.getErrorAttributes获取SpringBoot默认提供的错误信息，然后在此基础上添加Error信息或者移除Error信息。</li>
+</ul>
+
+<p>此时，当系统抛出异常时，错误信息将被修改。</p>
+<h3 id="自定义Error视图"><a href="#自定义Error视图" class="headerlink" title="自定义Error视图"></a>自定义Error视图</h3><p>Error视图是展示给用户的页面，在BasicErrorController的errorHtml方法中调用resolveErrorView方法获取一个ModelAndView实例。resolveErrorView方法是由ErrorViewResolver提供的，通过ErrorMvcAutoConfiguration类的源码可以看到SpringBoot默认采用的ErrorViewResolver是DefaultErrorViewResolver。ErrorMvcAutoConfiguration部分源码如下：</p>
+<pre><code>@Bean
+@ConditionalOnBean(DispatcherServlet.class)
+@ConditionalOnMissingBean
+public DefaultErrorViewResolver conventionErrorViewResolver() {
+    return new DefaultErrorViewResolver(this.applicationContext,this.resourceProperties); 
+}</code></pre><p>从这一段源码可以看到，如果用户没有定义ErrorViewResolver，那么默认使用的ErrorViewResolver是DefaultErrorViewResolver，正是在DefaultErrorViewResolver中配置了默认去error目录下寻找4xx.html、5xx.html。因此，开发者想要自定义Error视图，只需要提供自己的ErrorViewResolver即可，代码如下：</p>
+<pre><code>@Component
+public class MyErrorViewResolver implements ErrorViewResolver {
+    @Override
+    public ModelAndView resolveErrorView(HttpServletRequest request , HttpStatus 
+       status, Map&lt;String,Object&gt; model) {
+       ModelAndView mv = new ModelAndView(&quot;errorPage&quot;);
+       mv.addObject(&quot;custommsg&quot;,&quot;出错啦！！&quot;);
+       mv.addAllObjects(model);
+       return mv; 
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>自定义MyErrorViewResolver实现ErrorViewResolver接口并实现接口中的resolveErrorView方法，使用@Component注解将该类注册到Spring容器中。 </li>
+<li>在resolveErrorView方法中，最后一个Map参数就是SpringBoot提供的默认的5条Error信息（可以按照前面自定义Error数据的步骤对这5条消息进行修改）。在resolveErrorView方法中，返回一个ModelAndView，在ModelAndView中设置Error视图和Error数据。</li>
+<li>理论上，开发者也可以通过实现ErrorViewResolver接口来实现Error数据的自定义，但是如果只是单纯地想自定义Error数据，还是建议继承DefaultErrorAttributes。</li>
+</ul>
+此时，无论请求发生4xx的错误还是发生5xx的错误，都会来到errorPage.html页面。
+
+<h3 id="完全自定义"><a href="#完全自定义" class="headerlink" title="完全自定义"></a>完全自定义</h3><p>前面提到的两种自定义方式都是对BasicErrorController类中的某个环节进行修补。查看Error自动化配置类ErrorMvcAutoConfiguration，可以发现BasicErrorController本身只是一个默认的配置，相关源码如下：</p>
+<pre><code>public class ErrorMvcAutoConfiguration {
+    ...
+    ...
+    @Bean
+    @ConditionalOnMissingBean(value=ErrorController.class,search=SearchStrategy.CURRENT)
+    public BasicErrorController basicErrorController(ErrorAttributes errorAttributes) { 
+        return new BasicErrorController(errorAttributes, this.serverProperties.getError(),this.errorViewResolvers); 
+    }
+    ...
+    ...
+}</code></pre><p>从这段源码中可以看到，若开发者没有提供自己的ErrorController，则SpringBoot提供BasicErrorController作为默认的ErrorController。因此，如果开发者需要更加灵活地对Error视图和数据进行处理，那么只需要提供自己的ErrorController即可。提供自己的ErrorController有两种方式：一种是实现ErrorController接口，另一种是直接继承BasicErrorController。由于ErrorController接口只提供一个待实现的方法，而BasicErrorController己经实现了很多功能，因此这里选择第二种方式，即通过继承BasicErrorController来实现自己的ErrorController。具体定义如下：</p>
+<pre><code>@Controller
+public class MyErrorController extends BasicErrorController {
+    @Autowired
+    public MyErrorController(ErrorAttributes errorAttributes,
+                               ServerProperties serverProperties,
+                               List&lt;ErrorViewResolver&gt; errorViewResolvers){
+       super(errorAttributes,serverProperties.getError(),errorViewResolvers);
+    }
+    @Override
+    public ModelAndView errorHtml(HttpServletRequest request,
+                                   HttpServletResponse response) {
+       HttpStatus status=getStatus(request);
+       Map&lt;String,Object&gt; model = getErrorAttributes(request,isIncludeStackTrace(request,MediaType.TEXT_HTML));
+       model.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);
+       ModelAndView modelAndView=new ModelAndView(&quot;myErrorPage&quot;,model,status);
+       return modelAndView;
+    }
+    @Override
+    public ResponseEntity&lt;Map&lt;String,Object&gt;&gt; error(HttpServletRequest request){
+       Map&lt;String,Object&gt; body=getErrorAttributes(request,isIncludeStackTrace(request,MediaType.ALL));
+       body.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);
+       HttpStatus status = getStatus(request);
+       return new ResponseEntity&lt;&gt; (body,status); 
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>自定义MyErrorController继承自BasicErrorController并添加@Controller注解，将MyErrorController注册到SpringMVC 容器中。  </li>
+<li>由于BasicErrorController没有无参构造方法，因此在创建BasicErrorController实例时需要传递参数，在MyErrorController的构造方法上添加@Autowired注解解注入所需参数。</li>
+<li>参考BasicErrorController中的实现，重写errorHtml和error方法，对Error的视图和数据进行充分的自定义。</li>
+</ul>
+
+
+<h1 id="CORS支持"><a href="#CORS支持" class="headerlink" title="CORS支持"></a>CORS支持</h1><p>CORS(Cross-Origin Resource Sharing）是由W3C制定的一种跨域资源共享技术标准，其目的就是为了解决前端的跨域请求。在JavaEE开发中，最常见的前端跨域请求解决方案是JSONP，但是JSONP只支持GET请求，这是一个很大的缺陷，而CORS则支持多种HTTP请求方法。以CORS中的GET请求为例，当浏览器发起请求时，请求头中携带了如下信息：</p>
+<pre><code>...
+...
+Host:localhost:8080
+Origin:http://localhost:8081 
+Referer:http://localhost:8081/index.html 
+...
+...</code></pre><p>假如服务端支持 CORS，则服务端给出的响应信息如下：</p>
+<pre><code>...
+...
+Access-Control-Allow-Origin:http://localhost:8081
+Content-Length:20
+Content-Type:text/plain;charset=UTF-8
+Date:Thu,12 Jul 2018 12:51:14 GMT
+...
+...</code></pre><p>响应头中有一个Access-Control-Allow-Origin字段，用来记录可以访问该资源的域。当浏览器收到这样的响应头信息之后，提取出Access-Control-Allow-Origin字段中的值，发现该值包含当前页面所在的域，就知道这个跨域是被允许的，因此就不再对前端的跨域请求进行限制。这就是GET请求的整个跨域流程，在这个过程中，前端请求的代码不需要修改，主要是后端进行处理。这个流程主要是针对GET、POST以及HEAD请求，并且没有自定义请求头，如果用户发起一个DELETE请求、PUT请求或者自定义了请求头，流程就会稍微复杂一下。<br>以DELETE请求为例，当前端发起一个DELETE请求时，这个请求的处理会经过两个步骤。<br>第一步：发送一个OPTIONS请求。代码如下：</p>
+<pre><code>...
+...
+Access-Control-Request-Method DELETE 
+Connection keep-alive 
+Host localhost:8080 
+Origin http://localhost:8081 
+...
+...</code></pre><p>这个请求将向服务端询问是否具备该资源的DELETE权限，服务端会给浏览器一个响应，代码如下：</p>
+<pre><code>...
+...
+HTTP/1.1 200 
+Access-Control-Allow-Origin:http://localhost:8081 
+Access-Control-Allow-Methods:DELETE 
+Access-Control-Max-Age:1800 
+Allow: GET,HEAD,POST,PUT,DELETE,OPTIONS,PATCH 
+Content-Length:0 
+Date: Thu, 12 Jul 2018 13:20:26 GMT 
+...
+...</code></pre><p>服务端给浏览器的响应，Allow头信息表示服务端支持的请求方法，这个请求相当于一个探测请求，当浏览器分析了请求头宇段之后，知道服务端支持本次请求，则进入第二步。<br>第二步：发送DELETE请求。接下来浏览器就会发送一个跨域的DELETE请求，代码如下：</p>
+<pre><code>...
+...
+Host:localhost:8080
+Origin:http://localhost:8081 
+Connection:keep-alive 
+...
+...</code></pre><p>服务端给一个响应：</p>
+<pre><code>...
+...
+HTTP/1.1 200 
+Access-Control-Allow-Origin:http://localhost:8081 
+Content-Type:text/plain;charset=UTF-8 
+Date:Thu, 12 Jul 2018 13:20:26 GMT 
+...
+...</code></pre><p>至此，一个跨域的DELETE请求完成。无论是简单请求还是需要先进行探测的请求，前端的写法都是不变的，额外的处理都是在服务端来完成的。在传统的JavaEE开发中，可以通过过滤器统一配置，而SpringBoot中对此则提供了更加简洁的解决方案。在SpringBoot中配置 CORS 的步骤如下：<br><strong>1.创建SpringBoot工程</strong><br><strong>2.创建控制器</strong><br>在新创建的SpringBoot工程中，添加一个BookController控制器，代码如下：</p>
+<pre><code>@RestController 
+@RequestMapping(&quot;/book&quot;) 
+public class BookController {
+    @PostMapping(&quot;/&quot;)
+    public String addBook(String name){
+        return &quot;receive:&quot;+name; 
+    }
+    @DeleteMapping(&quot;/{id)&quot;)
+    public String deleteBookByid(@PathVariable Long id) {
+        return String.valueOf(id); 
+    }
+}</code></pre><p>BookController 中提供了两个接口 ： 一个是添加接口，另一个是删除接口。<br><strong>3.配置跨域</strong><br>跨域有两个地方可以配置。一个是直接在相应的请求方法上加注解：</p>
+<pre><code>@RestController
+@RequestMapping(&quot;/book&quot;)
+public class BookController {
+    @PostMapping(&quot;/&quot;)
+    @CrossOrigin(value=&quot;http://localhost:8081&quot;,maxAge=1800,allowedHeaders=&quot;*&quot;)
+    public String addBook(String name){
+        return &quot;receive:&quot;+name;
+    }
+    @DeleteMapping(&quot;/{id}&quot;)
+    @CrossOrigin(value=&quot;http://localhost:8081&quot;,maxAge=1800,allowedHeaders=&quot;*&quot;)
+    public String deleteBookByid(@PathVariable Long id) {
+        return String.valueOf(id);
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>全局配置需要自定义类实现WebMvcConfigurer接口，然后实现接口中的addCorsMappings方法。 </li>
+<li>在addCorsMappings方法中，addMapping表示对哪种格式的请求路径进行跨域处理；allowedHeaders表示允许的请求头，默认允许所有的请求头信息；allowedMethods表示允许的请求方法，默认是GET、POST和HEAD；*表示支持所有的请求方法；maxAge表示探测 请求的有效期；allowedOrigins表示支持的域。</li>
+</ul>
+这种配置方式是一种细粒度的配置，可以控制到每一个方法上。当然，也可以不在每个方法上添加@CrossOrigin注解，而是采用一种全局配置，代码如下：
+
+<pre><code> @Configuration
+ public class MyWebMvcConfig implements WebMvcConfigurer{
+    @Override
+    public void addCorsMappings(CorsRegistry registry){
+        registry.addMapping{&quot;/book/**&quot;)
+            .allowedHeaders(&quot;*&quot;)
+            .allowedMethods(&quot;*&quot;)
+            .maxAge(1800)
+            .allowedOrigins(&quot;http://localhost:8081&quot;); 
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>全局配置需要自定义类实现WebMvcConfigurer接口，然后实现接口中的addCorsMappings方法。  </li>
+<li>在addCorsMappings方法中，addMapping表示对哪种格式的请求路径进行跨域处理；allowedHeaders表示允许的请求头，默认允许所有的请求头信息；allowedMethods表示允许的请求方法，默认是GET、POST和HEAD；*表示支持所有的请求方法；maxAge表示探测请求的有效期；allowedOrigins表示支持的域。</li>
+</ul>
+在上面的两种配置方式（@CrossOrigin注解配置和全局配置）中，选择其中一种即可，然后启动项目。
+
+<p><strong>4.测试</strong><br>新建一个SpringBoot项目，添加Web依赖，然后在resources/static目录下加入jquery.js，再在resources/static目录下创建一个index.html 文件，内容如下：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Title&lt;/title&gt;
+&lt;script src=&quot;jquery3.3.1.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;contentDiv&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;deleteResult&quot;&gt;&lt;/div&gt;
+&lt;input type=&quot;button&quot; value=&quot;提交数据&quot; onclick=&quot;getData()&quot;&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; value=&quot;删除数据&quot; onclick=&quot;deleteData()&quot;&gt;&lt;br&gt;
+&lt;script&gt;
+    function deleteData(){
+        $.ajax({
+            url:&quot;http://localhost:8080/book/99&quot;,
+            type:&quot;delete&quot;,
+            success:function(msg){
+                $(&quot;#deleteResult&quot;).html(msg); 
+            }
+        })
+    }
+    function getData(){
+        $.ajax({ 
+            url:&quot;http://localhost:8080/book/&quot;, 
+            type:&quot;post&quot;, 
+            data:{name:&quot;三国演义&quot;},
+            success:function(msg){
+                $(&quot;#contentDiv&quot;).html(msg); 
+            }
+        })
+    }
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>两个普通的Ajax都发送了一个跨域请求。然后将项目的端口修改为8081，代码如下：</p>
+<pre><code>server.port=8081</code></pre><h1 id="配置类与XML配置"><a href="#配置类与XML配置" class="headerlink" title="配置类与XML配置"></a>配置类与XML配置</h1><p>SpringBoot推荐使用Java来完成相关的配置工作。在项目中，不建议将所有的配置放在一个配置类中，可以根据不同的需求提供不同的配置类，例如专门处理SpringSecurity的配置类、提供Bean的配置类、SpringMVC相关的配置类。这些配置类上都需要添加＠Configuration注解，@ComponentScan注解会扫描所有的Spring组件，也包括@Configuration。@ComponentScan注解在项目入口类的@SpringBootApplication注解中己经提供，因此在实际项目中只需要按需提供相关配置类即可。<br>SpringBoot中并不推荐使用XML配置，建议尽量用Java配置代替XML配置。如果开发者需要使用XML配置，只需在resources目录下提供配置文件，然后通过@ImportResource加载配置文件即可。例如，有一个Hello类如下：</p>
+<pre><code>public class Hello {
+    public String sayHello (String name) { 
+        return &quot;hello&quot;+name; 
+    }
+}    </code></pre><p>在resources目录下新建beans.xml文件配置该类：</p>
+<pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt; 
+&lt;bean class=&quot;org.sang.Hello&quot; id=&quot;hello&quot;/&gt;
+&lt;/beans&gt; </code></pre><p>然后创建Beans配置类，导入XML配置：</p>
+<pre><code>@Configuration
+@ImportResource(&quot;classpath:beans.xml&quot;) 
+public class Beans { 
+}</code></pre><p>最后在Controller中就可以直接导入Hello类使用了：</p>
+<pre><code>@RestController 
+public class HelloController { 
+    @Autowired 
+    Hello hello; 
+    @GetMapping(&quot;/hello&quot;) 
+    public String hello(){ 
+        return hello.sayHello(&quot;江南一点雨&quot;);
+    }
+}</code></pre><h1 id="注册拦截器"><a href="#注册拦截器" class="headerlink" title="注册拦截器"></a>注册拦截器</h1><p>SpringMVC中提供了AOP风格的拦截器，拥有更加精细的拦截处理能力。SpringBoot中拦截器的注册更加方便，步骤如下：<br><strong>步骤01</strong>  创建一个 SpringBoot项目，添加spring-boot-starter－web依赖。<br><strong>步骤02</strong> 创建拦截器实现HandlerInterceptor接口，代码如下</p>
+<pre><code>public class MyInterceptor1 implements HandlerInterceptor { 
+    @Override 
+    public boolean preHandle (HttpServletRequest request,
+                                HttpServletResponse response, 
+                                Object handler) { 
+        System.out.println(&quot;Myinterceptorl&gt;&gt;&gt;preHandle&quot;); 
+        return true; 
+    }
+    @Override
+    public void postHandle(HttpServletRequest request, 
+                            HttpServletResponse response, 
+                            Object handler, 
+                            ModelAndView modelAndView){ 
+        System.out.println(&quot;Mylnterceptorl&gt;&gt;&gt;postHandle&quot;);
+    }
+    @Override 
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response, 
+                                Object handler, 
+                                Exception ex){
+        System.out.println(&quot;Mylnterceptorl&gt;&gt;&gt;afterCompletion&quot;); 
+    }
+}</code></pre><p>拦截器中的方法将按preHandle-&gt;Controller-&gt;postHandle-&gt;afterCompletion的顺序执行。注意，只有preHandle方法返回true时后面的方法才会执行。当拦截器链内存在多个拦截器时，postHandler在拦截器链内的所有拦截器返回成功时才会调用，而afterCompletion只有preHandle返回true才调用，但若拦截器链内的第一个拦截器的preHandle方法返回false，则后面的方法都不会执行。<br><strong>步骤03</strong> 配置拦截器。定义配置类进行拦截器的配置，代码如下：</p>
+<pre><code>@Configuration 
+public class WebMvcConfig implements WebMvcConfigurer {
+    @Override 
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new Mylnterceptor1()) 
+                .addPathPatterns(&quot;/**&quot;) 
+                .excludePathPatterns(&quot;/hello&quot;); 
+    }
+}</code></pre><p>自定义类实现WebMvcConfigurer接口实现接口中的addlnterceptors方法。其中，addPathPattems表示拦截路径，excludePathPattems表示排除的路径。</p>
+<h1 id="启动系统任务"><a href="#启动系统任务" class="headerlink" title="启动系统任务"></a>启动系统任务</h1><p>有一些特殊的任务需要在系统启动时执行，例如配置文件加载、数据库初始化等操作。如果没有使用SpringBoot，这些问题可以在Listener中解决。SpringBoot对此提供了两种解决方案：CommandLineRunner和ApplicationRunner。CommandLineRunner和ApplicationRunner基本一致，差别主要体现在参数上。</p>
+<h2 id="CommandlineRunner"><a href="#CommandlineRunner" class="headerlink" title="CommandlineRunner"></a>CommandlineRunner</h2><p>SpringBoot项目在启动时会遍历所有CommandLineRunner的实现类并调用其中的run方法，如果整个系统中有多个CommandLineRunner的实现类，那么可以使用@Order注解对这些实现类的调用顺序进行排序。<br>在一个SpringBootWeb项目中添加两个CommandLineRunner，分别如下：</p>
+<pre><code>@Component
+@Order(1)
+public class MyCommandLineRunnerl implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println(&quot;Runnerl&gt;&gt;&gt;&quot;+Arrays.toString(args));
+    )
+}
+@Component
+@Order(2)
+public class MyCommandLineRunner2 implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println(&quot;Runner2&gt;&gt;&gt;&quot;+Arrays.toString(args));
+    )
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>@Order(l)注解用来描述CommandLineRunner的执行顺序，数字越小越先执行。  </li>
+<li>run方法中是调用的核心逻辑，参数是系统启动时传入的参数，即入口类中main方法的参数（在调用SpringApplication.run方法时被传入SpringBoot项目中）。</li>
+</ul>
+在系统启动时，配置传入的参数。以IntelliJ IDEA为例，配置方式如下：
+
+<p><strong>步骤01</strong>单击右上角的编辑启动配置。</p>
+<p><strong>步骤02</strong>在打开的新页面中编辑Program arguments，如果有多个参数，参数之间用空格隔开。</p>
+<p><strong>步骤03</strong>启动项目。</p>
+<h2 id="ApplicationRunner"><a href="#ApplicationRunner" class="headerlink" title="ApplicationRunner"></a>ApplicationRunner</h2><p>ApplicationRunner的用法和CommandLineRunner基本一致，区别主要体现在run方法的参数上。<br>在一个SpringBootWeb项目中新建两个ApplicationRunner，代码如下：</p>
+<pre><code>@Component
+@Order(1)
+public class MyApplicationRunnerl implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguπtents args) throws Exception{
+        List&lt;String&gt; nonOptionArgs = args.getNonOptionArgs();
+        System.out.println(&quot;1-nonOptionArgs&gt;&gt;&gt;&quot;+nonOptionArgs);
+        Set&lt;String&gt; optionNames = args.getOptionNames();
+        for(String optionName : optionNames) {
+            System.out.println(&quot;1-key:&quot;+optionName+&quot;;value:&quot;+args.getOptionValues(optionName)); 
+        }
+    }
+}
+@Component
+@Order(2)
+public class MyApplicationRunner2 implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguπtents args) throws Exception{
+        List&lt;String&gt; nonOptionArgs = args.getNonOptionArgs();
+        System.out.println(&quot;2-nonOptionArgs&gt;&gt;&gt;&quot;+nonOptionArgs);
+        Set&lt;String&gt; optionNames = args.getOptionNames();
+        for(String optionName : optionNames) {
+            System.out.println(&quot;2-key:&quot;+optionName+&quot;;value:&quot;+args.getOptionValues(optionName)); 
+        }
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>@Order注解依然是用来描述执行顺序的，数字越小越优先执行。  </li>
+<li>不同于CommandLineRunner中run方法的数组参数，这里run方法的参数是一个ApplicationArguments对象，如果想从ApplicationArguments对象中获取入口类中main方法接收的参数，调用ApplicationArguments中的getNonOptionArgs方法即可。ApplicationArguments中的getOptionNames方法用来获取项目启动命令行中参数的key，例如将本项目打成jar包，运行java -jar xxx.jar name=Michael 命令来启动项目，此时getOptionNames方法获取到的就是name，而getOptionValues 方法则是获取相应的value。</li>
+</ul>
+接下来运行mvnpackage命令对项目进行打包，代码如下：
+
+<pre><code>mvn package</code></pre><p>进入打包目录中，执行如下命令启动项目： </p>
+<pre><code>Java -jar linerunner-0.0.1.jar --name=Michael --age=99 三国演义 罗贯中</code></pre><p>命令解释：</p>
+<ul>
+<li>--name=Michael --age=99 都属于getOptionNames/getOptionValues范畴。 </li>
+<li>后面的“三国演义”“罗贯中”可以通过getNonOptionArgs方法获取，获取到的是一个数组，相当于上文提到的运行时配置的ProgramArguments。</li>
+</ul>    
+
+<h1 id="整合Serviet、Filter和Listener"><a href="#整合Serviet、Filter和Listener" class="headerlink" title="整合Serviet、Filter和Listener"></a>整合Serviet、Filter和Listener</h1><p>一般情况下，使用Spring、SpringMVC这些框架之后，基本上就告别Serviet、Filter以及Listener了，但是有时在整合一些第三方框架时，可能还是不得不使用Serviet，比如在整合某报表插件时就需要使用Servlet。SpringBoot中对于整合这些基本的Web组件也提供了很好的支持。<br>在一个SpringBootWeb项目中添加如下三个组件：</p>
+<pre><code>@WebServlet(&quot;/my&quot;)
+public class MyServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        doPost(req,resp);
+    }    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println (&quot;name&gt;&gt;&gt;&quot;+req.getParameter(&quot;name&quot;));
+    }
+}
+@WebFilter(&quot;/*&quot;)
+public class MyFilter implements Filter {
+    @Override
+    public void init (FilterConfig filterConfig) {
+        System.out.println(&quot;MyFilter&gt;&gt;&gt;init&quot;);
+    }
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) { 
+        System.out.println(&quot;MyFilter&gt;&gt;&gt;doFilter&quot;); 
+        chain.doFilter(req,resp); 
+    }
+    @Override 
+    public void destroy() { 
+        System.out.println (&quot;MyFilter&gt;&gt;&gt;destroy&quot;);
+    }
+}
+@WebListener 
+public class MyListener implements ServletRequestListener {
+    @Override 
+    public void requestDestroyed(ServletRequestEvent sre) { 
+        System.out.println(&quot;MyListener&gt;&gt;&gt;requestDestroyed&quot;);
+    }
+    @Override 
+    public void requestInitialized (ServletRequestEvent sre) { 
+        System.out.println (&quot;MyListener&gt;&gt;&gt;requestIn工tialized&quot;);
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>这里定义了三个基本的组件，分别使用@WebServlet、@WebFilter和@WebListener三个注解进行标记。 </li>
+<li>这里以ServletRequestListener为例，但是对于其他的Listener，例如HttpSessionListener、ServletContextListener等也是支持的。</li>
+</ul>
+在项目入口类上添加@ServletComponentScan注解，实现对Serviet、Filter以及Listener的扫描，代码如下：
+
+<pre><code>@SpringBootApplication 
+@ServletComponentScan 
+public class ServletApplication { 
+    public static void main(String[] args) { 
+        SpringApplication.run(ServletApplication.class,args); 
+    }
+}</code></pre><h1 id="路径映射"><a href="#路径映射" class="headerlink" title="路径映射"></a>路径映射</h1><p>一般情况下，使用了页面模板后，用户需要通过控制器才能访问页面。有一些页面需要在控制器中加载数据，然后渲染，才能显示出来；还有一些页面在控制器中不需要加载数据，只是完成简单的跳转，对于这种页面，可以直接配置路径映射，提高访问速度。例如，有两个Thymeleaf做模板的页面login.html和index.html，直接在MVC配置中重写addViewController方法配置映射关系即可：</p>
+<pre><code>@Configuration 
+public class WebMvcConfig implements WebMvcConfigurer { 
+    @Override 
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController(&quot;/login&quot;).setViewName(&quot;login&quot;); 
+        registry.addViewController(&quot;/index&quot;).setViewName(&quot;index&quot;); 
+    }
+}</code></pre><h1 id="配置AOP"><a href="#配置AOP" class="headerlink" title="配置AOP"></a>配置AOP</h1><p>在AOP中，有一些常见的概念：</p>
+<ul>
+<li>Joinpoint（连接点）：类里面可以被增强的方法即为连接点。例如，想修改哪个方法的功能，那么该方法就是一个连接点。 </li>
+<li>Pointcut（切入点）：对Joinpoint进行拦截的定义即为切入点，例如，拦截所有以insert开始的方法，这个定义即为切入点。  </li>
+<li>Advice（通知）：拦截到Joinpoint之后所要做的事情就是通知。例如，上文说到的打印日志 监控。通知分为前置通知、后置通知、异常通知、最终通知和环绕通知。   </li>
+<li>Aspect（切面）：Pointcut和Advice的结合。   </li>
+<li>Target（目标对象）：要增强的类称为Target。</li>
+</ul>
+
+<h2 id="SpringBoot支持"><a href="#SpringBoot支持" class="headerlink" title="SpringBoot支持"></a>SpringBoot支持</h2><p>SpringBoot在Spring的基础上对AOP的配置提供了自动化配置解决方案spring-boot-starter-aop，使开发者能够更加便捷地在SpringBoot项目中使用AOP。配置步骤如下。<br>首先在SpringBootWeb项目中引入spring-boot-starter-aop依赖，代码如下：</p>
+<pre><code>&lt;dependency&gt;
+&lt;groupid&gt;org.springframework.boot&lt;/groupid&gt;
+&lt;artifactid&gt;spring-boot-starter-aop&lt;/artifactid&gt;
+&lt;/dependency&gt;</code></pre><p>然后在org.sang.aop.service包下创建UserService类，代码如下：</p>
+<pre><code>@Service
+public class UserService {
+    public String getUserByid (Integer id){
+        System.out.println(&quot;get...&quot;);
+        return &quot;user&quot;;
+    }
+    public void deleteUserByid(Integer id){
+        System.out.println(&quot;delete...&quot;); 
+    }
+}</code></pre><p>接下来创建切面，代码如下： </p>
+<pre><code>@Component
+@Aspect 
+public class LogAspect {
+    @Pointcut(&quot;execution(* org.sang.aop.service.*.*(..))&quot;)
+    public void pcl(){
+    }
+    @Before(value=&quot;pcl()&quot;)
+    public void before(JoinPoint jp) {
+        String name = jp.getSignature().getName();
+        System.out.println(name+&quot;方法开始执行．．．&quot;);
+    }
+    @After(value=&quot;pcl()&quot;)    
+    public void after (JoinPoint jp) {
+        String name = jp.getSignature().getName();
+        System.out.println(name+&quot;方法执行结束．．．&quot;);
+    }
+    @AfterReturning(value=&quot;pcl()&quot;,returning=&quot;result&quot;)
+    public void afterReturning(JoinPoint jp,Object result) {
+        String name = jp.getSignature().getName();
+        System.out.println(name+&quot;方法返回值为：&quot;+result);
+    }
+    @AfterThrowing(value=&quot;pcl()&quot;,throwing=&quot;e&quot;)
+    public void afterThrowing(JoinPoint jp,Exception e) {
+        String name = jp.getSignature().getName();
+        System.out.println(name+&quot;方法抛异常了，异常是：&quot;+e.getMessage());
+    }
+    @Around(&quot;pcl()&quot;)
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+        return pjp.proceed();
+    }
+}</code></pre><p>代码解释：</p>
+<ul>
+<li>@Aspect注解表明这是一个切面类。  </li>
+<li>第4～6行定义的pcl方法使用了@Pointcut注解，这是一个切入点定义。execution中的第一个*表示方法返回任意值，第二个*表示service包下的任意类，第三个*表示类中的任意方法，括号中的两个点表示方法参数任意，即这里描述的切入点为service包下所有类中的所有方法。   </li>
+<li>第7～11行定义的方法使用了@Before注解，表示这是一个前置通知，该方法在目标方法执行之前执行。通过JoinPoint参数可以获取目标方法的方法名、修饰符等信息。    </li>
+<li>第12～16行定义的方法使用了@After注解，表示这是一个后置通知，该方法在目标方法执行之后执行。    </li>
+<li>第17～21行定义的方法使用了@AfterReturning注解，表示这是一个返回通知，在该方法中可以获取目标方法的返回值。@AfterReturning注解的returning参数是指返回值的变量名，对应方法的参数。注意，在方法参数中定义了result的类型为Object，表示目标方法的返回值可以是任意类型，若result参数的类型为Long，则该方法只能处理目标方法返回值为Long的情况。</li>
+<li>第22～26行定义的方法使用了@AfterThrowing注解，表示这是一个异常通知，即当目标方法发生异常时，该方法会被调用，异常类型为Exception表示所有的异常都会进入该方法中执行，若异常类型为ArithmeticException，则表示只有目标方法抛出的ArithmeticException异常才会进入该方法中处理。 </li>
+<li>第27～30行定义的方法使用了@Around注解，表示这是一个环绕通知。环绕通知是所有通知里功能最为强大的通知，可以实现前置通知、后置通知、异常通知以及返回通知的功能。目标方法进入环绕通知后，通过调用ProceedingJoinPoint对象的proceed方法使目标方法继续执行，开发者可以在此修改目标方法的执行参数、返回值等，并且可以在此处理目标方法的异常。 </li>
+</ul>
+配置完成后，接下来在Controller中创建接口，分别调用UserService中的两个方法，即可看到LogAspect中的代码动态地嵌入目标方法中执行了。UserController类的定义如下：
+
+<pre><code>@RestController
+public class UserController {
+    @Autowired
+    UserService userService;
+    @GetMapping(&quot;/getUserById&quot;)
+    public String getUserByid(Integer id) {
+        return userService.getUserById(id);
+    }
+    @GetMapping(&quot;/deleteUserById&quot;)
+    public void deleteUserByid(Integer id) {
+        userService.deleteUserById(id); 
+    }
+}</code></pre><h1 id="除去某个自动配置"><a href="#除去某个自动配置" class="headerlink" title="除去某个自动配置"></a>除去某个自动配置</h1><p>SpringBoot中提供了大量的自动化配置类，例如上文提到过的ErrorMvcAutoConfiguration、ThymeleafAutoConfiguration、FreeMarkerAutoConfiguration、MultipartAutoConfiguration 等，这些自动化配置可以减少相应操作的配置，达到开箱即用的效果。在SpringBoot的入口类上有一个@SpringBootApplication注解。该注解是一个组合注解，由@SpringBootConfiguration、@EnableAutoConfiguration以及@ComponentScan组成，其中@EnableAutoConfiguration注解开启自动化配置，相关的自动化配置类就会被使用。如果开发者不想使用某个自动化配置，按如下方式除去相关配置即可：</p>
+<pre><code> @Spring BootApplication
+ @EnableAutoConfiguration(exclude={ErrorMvcAutoConfiguration.class})
+ public class OtherApplication {
+    public static void main (String[] args) { 
+        SpringApplication(OtherApplication.class,args);
+    }
+}</code></pre><p>在@EnableAutoConfiguration注解中使用exclude属性除去Error的自动化配置类，这时如果在resources/static/error目录下创建4xx.html、5xx.html，访问出错时就不会自动跳转了。由于@EnableAutoConfiguration注解的exclude属性值是一个数组，因此有多个要排除的自动化配置类时只需继续添加即可。除了这种配置方式外，开发者也可以在application.properties配置文件中进行配置，代码如下：</p>
+<pre><code>spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" rel="next" title="SpringBoot之分层开发Web应用程序">
+                <i class="fa fa-chevron-left"></i> SpringBoot之分层开发Web应用程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/07/21/SpringBoot%E4%B9%8B%E7%94%A8ORM%E6%93%8D%E4%BD%9CSQL%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="prev" title="SpringBoot之用ORM操作SQL数据库">
+                SpringBoot之用ORM操作SQL数据库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">eh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7Carchive">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态资源访问"><span class="nav-number">1.</span> <span class="nav-text">静态资源访问
+</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#默认策略"><span class="nav-number">1.1.</span> <span class="nav-text">默认策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义策略"><span class="nav-number">1.2.</span> <span class="nav-text">自定义策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件上传"><span class="nav-number">2.</span> <span class="nav-text">文件上传
+</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单文件上传"><span class="nav-number">2.1.</span> <span class="nav-text">单文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多文件上传"><span class="nav-number">2.2.</span> <span class="nav-text">多文件上传</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ControllerAdvice"><span class="nav-number">3.</span> <span class="nav-text">@ControllerAdvice</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局异常处理"><span class="nav-number">3.1.</span> <span class="nav-text">全局异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加全局数据"><span class="nav-number">3.2.</span> <span class="nav-text">添加全局数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求参数预处理"><span class="nav-number">3.3.</span> <span class="nav-text">请求参数预处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义错误页"><span class="nav-number">4.</span> <span class="nav-text">自定义错误页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单配置"><span class="nav-number">4.1.</span> <span class="nav-text">简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂配置"><span class="nav-number">4.2.</span> <span class="nav-text">复杂配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义Error数据"><span class="nav-number">4.2.1.</span> <span class="nav-text">自定义Error数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义Error视图"><span class="nav-number">4.2.2.</span> <span class="nav-text">自定义Error视图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完全自定义"><span class="nav-number">4.2.3.</span> <span class="nav-text">完全自定义</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CORS支持"><span class="nav-number">5.</span> <span class="nav-text">CORS支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置类与XML配置"><span class="nav-number">6.</span> <span class="nav-text">配置类与XML配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注册拦截器"><span class="nav-number">7.</span> <span class="nav-text">注册拦截器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动系统任务"><span class="nav-number">8.</span> <span class="nav-text">启动系统任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CommandlineRunner"><span class="nav-number">8.1.</span> <span class="nav-text">CommandlineRunner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ApplicationRunner"><span class="nav-number">8.2.</span> <span class="nav-text">ApplicationRunner</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整合Serviet、Filter和Listener"><span class="nav-number">9.</span> <span class="nav-text">整合Serviet、Filter和Listener</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#路径映射"><span class="nav-number">10.</span> <span class="nav-text">路径映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置AOP"><span class="nav-number">11.</span> <span class="nav-text">配置AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot支持"><span class="nav-number">11.1.</span> <span class="nav-text">SpringBoot支持</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#除去某个自动配置"><span class="nav-number">12.</span> <span class="nav-text">除去某个自动配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">eh</span>
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

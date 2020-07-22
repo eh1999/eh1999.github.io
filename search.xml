@@ -1,673 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>SpringBoot之分层开发Web应用程序</title>
-    <url>/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</url>
-    <content><![CDATA[<h1 id="了解MVC模式"><a href="#了解MVC模式" class="headerlink" title="了解MVC模式"></a>了解MVC模式</br></h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot开发Web应用程序主要使用<font color=red>MVC模式</font>。MVC是Model（模型）、View（视图）、Controller（控制器）的简写。</br></p>
-<ul>
-<li><font color=red>Model</font>:是Java的实体Bean，代表可存取数据的对象或POJO（Plain Ordinary Java Objects，简单的Java对象），也可以带有逻辑。其作用是在内存中暂时存储数据，并在数据变化时更新控制器（如果要持久化，则需要把它写入数据库或者磁盘文件中）。</li>
-<li><font color=red>View</font>:主要用来解析、处理、显示内容，并进行模板的渲染。</li>
-<li><font color=red>Controller</font>:主要用来处理视图中的响应。它决定如何调用Model（模型）的实体Bean、如何调用业务层的数据增加、删除、修改和查询等业务操作，以及如何将结果返给视图进行渲染。建议在控制器中尽量不放业务逻辑代码。</li>
-</ul>
-&#8194;&#8194;&#8194;&#8194;这样分层的好处是：将应用程序的用户界面和业务逻辑分离，使得代码具备良好的可扩展性、可复用性、可维护性和灵活性。</br>
-&#8194;&#8194;&#8194;&#8194;在整个SpringMVC框架中，<font color=red>DispatcherServlet处于核心位置，继承自HttpServlet</font>。它负责协调和组织不同组件，以完成请求处理并返回相应工作。</br>
-&#8194;&#8194;&#8194;&#8194;整个工程流程如下：</br>
-<ol>
-<li>客户端（用户）发出的请求由Tomcat（服务器）接收，然后Tomcat将请求转交给DispatcherServlet处理。</li>
-<li>DispatcherServlet匹配控制器中配置的映射路径，进行下一步处理。</li>
-<li>ViewResolver将ModelAndView或Exception解析成View。然后View会调用render()方法，并根据ModelAndView中的数据渲染出页面。</li>
-</ol>
-
-<h1 id="MVC和三层架构的关系"><a href="#MVC和三层架构的关系" class="headerlink" title="MVC和三层架构的关系"></a>MVC和三层架构的关系</br></h1><p>&#8194;&#8194;&#8194;&#8194;三层架构，就是将整个应用程序划分为表现层（UI）、业务逻辑层（Service）、数据访问层（DAO/Repository）。</p>
-<ul>
-<li><font color=red>表现层</font>：用于展示界面。主要对用户的请求进行接收，以及进行数据的返回。它为客户端（用户）提供应用程序的访问接口（界面）。</li>
-<li><font color=red>业务逻辑层</font>：是三层架构的服务层，负责业务逻辑处理，主要是调用DAO层对数据进行增加、删除、修改和查询等操作。</li>
-<li><font color=red>数据访问层</font>：与数据库进行交互的持久层，被Service调用。在SpringDataJPA中由Hibernate来实现。</li>
-</ul>
-&#8194;&#8194;&#8194;&#8194;MVC是三层架构中的UI层。通过MVC把三层架构中的UI层又进行分层。由此可见，三层架构是基于业务逻辑或功能来划分的，而MVC是基于页面或功能来划分的。</br>
-
-<h1 id="使用视图技术Thymeleaf"><a href="#使用视图技术Thymeleaf" class="headerlink" title="使用视图技术Thymeleaf"></a>使用视图技术Thymeleaf</br></h1><p><font size=4>认识Thymeleaf</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot主要支持Thymeleaf、FreeMarker、Mustache、Groovy Templates等模板引擎。<br>&#8194;&#8194;&#8194;&#8194;Thymeleaf可以轻易地与SpringMVC等Web框架进行集成。</br><br><font size=4>使用Thymeleaf</font></p>
-<ol>
-<li>
-要使用Thymeleaf，首先需要引如依赖。直接在pom.xml文件中加入以下依赖即可。
-
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.dpringframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;dependency&gt;</code></pre></li>
-<li>在模板中加入解析</br>再加入依赖后，还需要再HTML文件中加入“<font color=red>&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;</font>”命名空间。这样就能完成Thymeleaf的标签的渲染</li>
-</ol>
-
-<p><font size=4>配置视图解析器</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot默认的页面映射路径（即模板文件存放的位置）为“<font color=red>classpath:/templates/*.html</font>”。静态文件路径为“<font color=red>classpath:/statics/</font>”，其中可以存放层叠样式表CSS、JS等模板公用的静态文件。<br>&#8194;&#8194;&#8194;&#8194;在application.properties文件中，可以配置Thymeleaf模板解析器属性。</p>
-<h1 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</br></h1><ol>
-<li>
-引用命名空间</br>
-要使用Thymeleaf，则需要引入依赖，然后在模板文件中引用命名空间，如下：
-
-<pre><code>&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</code></pre><p>之后，会进行Thymeleaf模板标签的渲染。如果用SpringSecurity作为安全认证，且需要显示登录用户的信息，则可以现在视图中加入额外的thymeleaf-extras-springsecurity依赖，然后在模板文件中加入thymeleaf-extras-springsecurity命名空间，具体见以下代码：</p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;
-        xmlns:sec=&quot;http://www.thymeleaf,org/thymeleaf-extras-springsecurity5&quot;&gt;
-//省略部分HTML标签
-&lt;span sec:authentivation=&quot;name&quot;&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;
-&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_ADMIN&apos;)&quot;&gt;管理员&lt;/span&gt;
-&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_USER&apos;)&quot;&gt;普通用户&lt;/span&gt;
-//省略部分HTML标签</code></pre><p>这里特别要注意查看<font color=red>spring-boot-starter-thymeleaf依赖和thymeleaf-extras-springsecurity依赖的版本是否兼容。如果不兼容，则无法调用登录用户的信息</font>。</p>
-</li>
-<li>
-常用th标签
-<ol>
-<li>
-<font color=red>th:text</font>
-
-<pre><code>&lt;div th:text=&quot;${name}&quot;&gt;name&lt;/div&gt;</code></pre><p>它用于显示控制器传入的name值。<br>如果name不存在，要显示默认值，则使用以下代码：</p>
-<pre><code>&lt;span th:text=&quot;${name}?:&apos;默认值&apos;&quot;&gt;&lt;/span&gt;</code></pre></li>
-<li>
-<font color=red>th:object</font></br>
-它用于接收后台传过来的对象，如以下代码：
-
-<pre><code>th:object=&quot;${user}&quot;</code></pre></li>
-<li>
-<font color=red>th:action</font></br>
-它用来指定表单提交地址。
-
-<pre><code>&lt;form th:action=&quot;@{/article/}+${article.id}&quot; method=&quot;post&quot;&gt;&lt;/form&gt;</code></pre></li>
-<li>
-<font color=red>th:value</font></br>
-它用对象将id的值替换为value的属性。
-
-<pre><code>&lt;input type=&quot;text&quot; th:value=&quot;${article.id}&quot; name=&quot;id&quot;/&gt;</code></pre></li>
-<li>
-<font color=red>th:field</font></br>
-它用来绑定后台对象和表单数据。Thymeleaf里的“th:field”等同于“th:name”和“th:value”，其具体使用方法见以下代码：
-
-<pre><code>&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;${article.title}&quot;/&gt;
-&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;*{title}&quot;/&gt;</code></pre></li>
-</ol>
-</li>
-<li>
-Thymeleaf中的URL写法</br>
-Thymeleaf是通过语法@{...}来处理URL的，需要使用“th:href”和“th:src”等属性，如以下代码：
-
-<pre><code>&lt;a th:href=&quot;@{http://eg.com/}&quot;&gt;绝对路径&lt;/a&gt;
-&lt;a th:href=&quot;@{/}&quot;&gt;相对路径&lt;/a&gt;
-&lt;a th:href=&quot;@{css/bootstrap.min.css}&quot;&gt;默认访问static下的css文件&lt;/a&gt;</code></pre></li>
-<li>
-用Thymeleaf进行条件求值</br>
-Thymeleaf通过“th:if”和“th:unless”属性进行条件判断。</br>
-“th:unless”和“th:if”恰好相反——只有当表达式中的条件不成立时才显示其内容。
-</li>
-<li>
-Switch
-Thymeleaf支持Switch结构，如以下代码：
-
-<pre><code>&lt;div th:switch=&quot;${user.role}&quot;&gt;
-    &lt;p th:case=&quot;admin&quot;&gt;管理员&lt;/p&gt;
-    &lt;p th:case=&quot;vip&quot;&gt;vip会员&lt;/p&gt;
-    &lt;p th:case=&quot;*&quot;&gt;普通会员&lt;/p&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-Thymeleaf中的字符串替换</br>
-有时需要对文字中的某一处地方进行替换，可以通过字符串拼接操作完成，如以下代码：
-
-<pre><code>&lt;span th:text=&quot;&apos;欢迎您，&apos;+${name}+&apos;！&apos;&quot;&gt;&lt;/span&gt;
-或
-&lt;span th:text=&quot;|欢迎您，${name}！|&quot;&gt;&lt;/span&gt;</code></pre><p>上面的第二种形式限制比较多，|…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。</p>
-</li>
-<li>
-Thymeleaf的运算符
-<ol>
-<li>
-算术运算符。</br>
-如果要在模板中进行算术运算，则可以用下面的写法。以下代码表示求加和取余运算。
-
-<pre><code>&lt;span th:text=&quot;1+3&quot;&gt;1+3&lt;/span&gt;&lt;/br&gt;
-&lt;span th:text=&quot;9%2&quot;&gt;9%2&lt;/span&gt;&lt;/br&gt;</code></pre></li>
-<li>
-条件运算符 th:if。</br>
-下方代码演示了if判断，表示：如果从控制器传来的role值等于“admin”，则显示“欢迎您，管理员”；如果role值等于“vip”，则显示“欢迎您，vim会员”。
-
-<pre><code>&lt;div th:if=&quot;${role} eq admin&quot;&gt;
-    &lt;span&gt;欢迎您，管理员&lt;/span&gt;
-&lt;/div&gt;
-&lt;div th:if=&quot;${role} eq vip&quot;&gt;
-    &lt;span&gt;欢迎您，vip会员&lt;/span&gt;
-&lt;/div&gt;</code></pre><p>eq是判断表达式，代表等于。其他的判断表达式如下。</p>
-<ul>
-<li>gt：大于</li>
-<li>ge：大于或等于</li>
-<li>eq：等于</li>
-<li>lt：小于</li>
-<li>le：小于或等于</li>
-<li>ne：不等于</li>
-</ul>
-</li>
-<li>
-判断控制。</br>
-可以使用if来判断值是否为空，如以下代码：
-<ul>
-<li>
-判断不为空：
-
-<pre><code>&lt;span ht:if=&quot;${name}!=null&quot;&gt;不为空&lt;/span&gt;</code></pre></li>
-<li>
-判断为空：
-
-<pre><code>&lt;span ht:if=&quot;${name}==null&quot;&gt;为空&lt;/span&gt;</code></pre></li>
-</ul>
-</li>
-</ol>
-</li>
-<li>
-Thymeleaf共用对象</br>
-Thymeleaf还提供了一系列公用（utility）对象，可以通过“#”直接访问，如以下用法。
-<ul>
-<li>
-格式化时间
-
-<pre><code>&lt;td th:text=&quot;${#dates.format(item.createTime,&apos;yyyy-MM-dd HH:mm:ss&apos;)}&quot;&gt;格式化时间&lt;/td&gt;</code></pre></li>
-<li>
-判断是不是空字符串：
-
-<pre><code>&lt;span ht:if=&quot;${#strings.isEmpty(name)}&quot;&gt;空的&lt;/span&gt;</code></pre></li>
-<li>
-是否包含（分大小写）：
-
-<pre><code>&lt;span ht:if=&quot;${#strings.contains(name,&apos;long&apos;)}&quot;&gt;包含long&lt;/span&gt;</code></pre></li>
-</ul>
-</li>
-</ol>
-
-<h1 id="处理循环遍历"><a href="#处理循环遍历" class="headerlink" title="处理循环遍历"></a>处理循环遍历</br></h1><ol>
-<li>
-遍历对象（object）</br>
-通过“th:each="Object:${Objects}"”标签来处理遍历对象。以下代码是遍历从控制器中传来的文章对象。
-
-<pre><code>&lt;div th:each=&quot;article:${articles}&quot;&gt;
-    &lt;li th:text=&quot;${article.title}&quot;&gt;文章标题&lt;/li&gt;
-    &lt;li th:text=&quot;${article.body}&quot;&gt;文章内容&lt;/li&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-遍历分页（page）</br>
-通过“th:each="item:${page.content}"”标签来处理page对象。如以下代码：
-
-<pre><code>&lt;div th:each=&quot;item:${page.content}&quot;&gt;
-    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;
-    &lt;li th:text=&quot;${item.title}&quot;&gt;title&lt;/li&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-遍历列表（list）</br>
-要处理list，也使用“th:each="item:${list}"”标签来实现。</br>
-如果list中只有一个元素，则使用以下代码：
-
-<pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;
-    &lt;li th:text=&quot;${item}&quot;&gt;id&lt;/li&gt;
-&lt;/div&gt;</code></pre><p>如果list中有多个元素，则使用以下代码：</p>
-<pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;
-    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;
-    &lt;li th:text=&quot;${item.name}&quot;&gt;name&lt;/li&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-遍历数组（array）</br>
-使用“th:each="item:${arrays}"”标签来遍历数组，如以下代码：
-
-<pre><code>&lt;div th:each=&quot;item:${arrays}&quot;&gt;
-    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-遍历集合（map）</br>
-集合通过“th:text="${item.key}"”显示集合的key，通过“th:text="${item.value}"”显示集合的值，如以下代码：
-
-<pre><code>//遍历key
-&lt;div th:each=&quot;item:${map}&quot;&gt;
-    &lt;li th:text=&quot;${item.key}&quot;&gt;&lt;/li&gt;
-&lt;/div&gt;
-
-//遍历value
-&lt;div th:each=&quot;item:${map}&quot;&gt;
-    &lt;li th:text=&quot;${item.value}&quot;&gt;&lt;/li&gt;
-&lt;/div&gt;
-
-//遍历key-value
-&lt;div th:each=&quot;item:${map}&quot;&gt;
-    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;
-&lt;/div&gt;</code></pre></li>
-</ol>
-
-<h1 id="处理公共代码块"><a href="#处理公共代码块" class="headerlink" title="处理公共代码块"></a>处理公共代码块</br></h1><ol>
-<li>
-用fragment标记重复代码块</br>
-可以通过“th:fragment="header"”标签来标记重复代码块，如以下代码：
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
-&lt;body&gt;
-    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;header&quot;&gt;
-        公共header
-    &lt;/div&gt;
-
-    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;footer&quot;&gt;
-        公共footer
-    &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre></li>
-<li>
-调用重复代码块</br>
-在需要调用的地方，用“th:include”或“th:replace”标签根据fragment值来调用，如以下代码：
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
-&lt;body&gt;
-    &lt;div&gt;replace调用方式：&lt;/div&gt;
-    &lt;div th:replace=&quot;~common::header&quot;&gt;&lt;/div&gt;
-    &lt;div&gt;body&lt;/div&gt;
-    &lt;div&gt;include调用方式：&lt;/div&gt;
-    &lt;div th:include=&quot;~common::footer&quot;&gt;&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre><p>“th:include”和“th:replace”标签都可以调用公共代码。它们的区别如下。</p>
-<ul>
-<li>
-th:replace：替换当前标签为模板中的标签。
-</li>
-<li>
-th:include：只加载模板的内容。
-</li>
-</ul>
-</li>
-</ol>
-
-<h1 id="处理分页"><a href="#处理分页" class="headerlink" title="处理分页"></a>处理分页</br></h1><ol>
-<li>
-用控制器传入page对象
-
-<pre><code>Pageable pageable = PageRequest.of(start,limit,sort);
-Page&lt;Article&gt; page = articleRepository,findAll(pageable);
-ModelAndView mav = new ModelAndView(&quot;article/list&quot;);
-mav.addObject(&quot;page&quot;,page);
-return mav;</code></pre></li>
-<li>
-用Thymeleaf接收page对象并处理
-
-<pre><code>&lt;div&gt;
-    &lt;a th:href=&quot;@{/article(start=0)}&quot;&gt;【首页】&lt;/a&gt;
-    &lt;a th:if=&quot;@{not page.isFirst()}&quot; th:href=&quot;@{/article(start=${page.number-1})}&quot;&gt;【上页】&lt;/a&gt;
-    &lt;a th:if=&quot;@{not page.isLast()}&quot; th:href=&quot;@{/article(start=${page.number+1})}&quot;&gt;【下页】&lt;/a&gt;
-    &lt;a th:href=&quot;@{/article(start=${page.totalPages-1})}&quot;&gt;【末页】&lt;/a&gt;
-&lt;/div&gt;</code></pre></li>
-<li>
-处理路径多参数</br>
-&#8194;&#8194;&#8194;&#8194;如果分页URI中有多个参数，则一定要注意格式，中间用“，”隔开，而不是用“&”。
-
-
-</li>
-</ol>
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <tags>
-        <tag>SpringBoot</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot之SpringBoot基础</title>
-    <url>/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="SpringBoot项目结构"><a href="#SpringBoot项目结构" class="headerlink" title="SpringBoot项目结构"></a>SpringBoot项目结构</h1><ol>
-<li><font color=red>src/main/java</font>:入口（启动）类及程序的开发目录。在这个目录下进行业务开发、创建实体层、控制器层、数据连接层等</li>
-<li>
-<font color=red>src/main/resources</font>:资源文件目录，主要用于存放静态文件和配置文件。
-<ul>
-<li><font color=red>static</font>:用于存放静态资源，如层叠样式表 CSS文件（Cascading Style Sheets）文件、JavaScript文件、图片等</li>
-<li><font color=red>templates</font>:用于存放模板文件</li>
-<li><font color=red>application.properties</font>:用于配置项目运行所需的配置数据。如果用YAML方式管理配置，则YAML文件也放在这个目录中</li>
-</ul>
-</li>
-<li><font color=red>src/test/java</font>:测试程序所在的目录</li>
-</ol>
-
-<h1 id="SpringBoot依赖模块"><a href="#SpringBoot依赖模块" class="headerlink" title="SpringBoot依赖模块"></a>SpringBoot依赖模块</h1><ul>
-<li>核心模块<font color=red>spring-boot-starter</font>:用于支持自动配置、日志和YAML</li>
-<li>测试模块<font color=red>spring-boot-starter-test</font>:包括JUnit、Hamcrest和Mockito，用于测试</li>
-</ul>  
-
-<h1 id="SpringBoot入口类"><a href="#SpringBoot入口类" class="headerlink" title="SpringBoot入口类"></a>SpringBoot入口类</h1><p>&#8194;&#8194;&#8194;&#8194;在创建SpringBoot项目时，会自动创建一个用于启动的、名为“项目名+Application”的入口类，它是项目的启动入口。在IDEA中打开入口类后，可以单击类或“main”方法左侧的三角形按钮，通过弹出的选项来运行或调试SpringBoot应用程序。<br>&#8194;&#8194;&#8194;&#8194;加上注解<font color=red>@SpringBootApplication</font>，以标注这是SpringBoot项目的入口类。</p>
-<h1 id="SpringBoot的自动配置"><a href="#SpringBoot的自动配置" class="headerlink" title="SpringBoot的自动配置"></a>SpringBoot的自动配置</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot会根据配置的依赖信息进行自动配置，从而减轻开发者搭建环境和配置的负担。如果在项目中依赖了<font color=red>spring-boot-starter-web</font>，则SpringBoot会自动配置Web环境（配置Tomcat、WebMVC、Validator、JSON等）。<br>&#8194;&#8194;&#8194;&#8194;SpringBoot自动配置是通过注解<font color=red>@EnableAutoConfiguration</font>来实现的，具有非侵入性。<br>&#8194;&#8194;&#8194;&#8194;如果不需要某些自动配置，则可以通过注解<font color=red>@EnableAutoConfiguration</font>的“<font color=red>exclude</font>或<font color=red>excludeName</font>”属性来指定，或在配置文件（<font color=red>application.properties</font>或<font color=red>application.yml</font>）中指定“<font color=red>spring.autoconfigure.exclude</font>”的值。</p>
-<h1 id="SpringBoot热部署"><a href="#SpringBoot热部署" class="headerlink" title="SpringBoot热部署"></a>SpringBoot热部署</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot热部署是为了更好的支持调试，在项目进行修改后不需要耗费时间重启，在应用程序正常运行的情况下即可实时生效，以节约时间和操作。要实现热部署，则需要添加下方的热部署的依赖：</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
-    &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;</code></pre><h1 id="SpringBoot的常用注解"><a href="#SpringBoot的常用注解" class="headerlink" title="SpringBoot的常用注解"></a>SpringBoot的常用注解</br></h1><p><font size=4>什么是注解式编程</font><br>&#8194;&#8194;&#8194;&#8194;注解（annotations）用来定义一个类、属性或一些方法、以便程序能被编译处理。它相当于一个说明文件，告诉应用程序某个被注解的类或属性是什么，要怎么处理。注解可以用于标注包、类、方法和变量等。</li></p>
-<center><font size=4>系统注解</font></center>
-
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@Override</td>
-<td>用于修饰方法，表示此方法重写了父类方法</td>
-</tr>
-<tr>
-<td>@Deprecated</td>
-<td>用于修饰方法，表示此方法已经过时。经常在版本升级后会遇到</td>
-</tr>
-<tr>
-<td>@SuppressWarnnings</td>
-<td>告诉编译器忽视某类编译警告</td>
-</tr>
-</tbody></table>
-<p>下面重点介绍一下<font color=red>@SuppressWarnnings</font>注解。它有以下几种属性。</p>
-<ul>
-<li><font color=red>unchecked</font>:未检查的转化。</li>
-<li><font color=red>unused</font>:未使用的变量。</li>
-<li><font color=red>resource</font>:泛型，即未指定类型。</li>
-<li><font color=red>path</font>:在类中的路径。原文件路径中有不存在的路径。</li>
-<li><font color=red>deprecation</font>:使用了某些不赞成使用的类和方法</li>
-<li><font color=red>fallthrough</font>:switch语句执行到底，不会遇到break关键字。</li>
-<li><font color=red>serial</font>:实现了Serializable，但未定义serialVersionUID。</li>
-<li><font color=red>rawtypes</font>:没有传递带有泛型的参数。</li>
-<li><font color=red>all</font>:代表全部类型的警告。</li>
-</ul>
-
-<center><font size=4>使用在类名上的注解</font></center>
-
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@RestController</td>
-<td>类名上</td>
-<td>作用相当于@ResponseBody加@Controller</td>
-</tr>
-<tr>
-<td>@Controller</td>
-<td>类名上</td>
-<td>声明此类是一个SpringMVC Controller对象</td>
-</tr>
-<tr>
-<td>@Service</td>
-<td>类名上</td>
-<td>声明一个业务处理类（实现非接口类）</td>
-</tr>
-<tr>
-<td>@Repository</td>
-<td>类名上</td>
-<td>声明数据库访问类（实现非接口类）</td>
-</tr>
-<tr>
-<td>@Component</td>
-<td>类名上</td>
-<td>代表其是Spring管理类，常用在无法用@Service、@Repository描述的Spring管理的类上，相当于通用的注解</td>
-</tr>
-<tr>
-<td>@Configuration</td>
-<td>类名上</td>
-<td>声明此类是一个配置类，常与@Bean配合使用</td>
-</tr>
-<tr>
-<td>@Resource</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byName自动注入</td>
-</tr>
-<tr>
-<td>@Autowired</td>
-<td>类名上、属性或构造函数参数上</td>
-<td>默认按byType自动注入</td>
-</tr>
-<tr>
-<td>@RequestMapping</td>
-<td>类名或方法上</td>
-<td>如果用在类上，则表示所有响应请求的方法都是以该地址作为父路径的</td>
-</tr>
-<tr>
-<td>@Transactional</td>
-<td>类名或方法上</td>
-<td>用于处理事务</td>
-</tr>
-<tr>
-<td>@Qualifier</td>
-<td>类名或属性上</td>
-<td>为Bean指定名称，随后再通过名字引用Bean</td>
-</tr>
-</tbody></table>
-<p>下面进一步讲解各个注解的知识点和用法</p>
-<ol>
-<font size=4>1</font>.<font color=red>@RestController</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于返回JSON（JavaScript Object Notation，JS对象简谱）、XML（eXtensible Markup Language）等数据，但不能返回HTML（HyperText Markup Language）页面。相当于注解@ResponseBody和注解@Controller合在一起的作用。</br>
-<font size=4>2</font>.<font color=red>@Controller</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注控制器曾，在MVC开发模式中代表C（控制器）</br>
-&#8194;&#8194;&#8194;&#8194;@Controller主要用于构建MVC模式的程序</br>
-<font size=4>3</font>.<font color=red>@Service</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于声明一个业务处理类（实现非接口类），用于标注服务层，处理业务逻辑。</br>
-<font size=4>4</font>.<font color=red>@Repository</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于标注数据访问层</br>
-<font size=4>5</font>.<font color=red>@Component</font></br>
-&#8194;&#8194;&#8194;&#8194;它用于把普通POJO（Plain Ordinary Java Objects，简单的Java对象）实例化到Spring容器中。当类不属于注解@Controller和@Service等时，就可以使用注解@Component来标注这个类。它可配合CommandLineRunner使用，以便在程序启动后执行一些基础任务。</br>
-<font size=4>6</font>.<font color=red>@Configuration</font></br>
-&#8194;&#8194;&#8194;&#8194;他用于标注配置类，并且可以由Spring容器自动处理。它作为Bean的载体，用来指示一个类声明、一个或多个@Bean方法，在运行时为这些Bean生成BeanDefinition和服务请求</br>
-<font size=4>7</font>.<font color=red>@Resource</font></br>
-&#8194;&#8194;&#8194;&#8194;@Autowired与@Resource都可以用来装配Bean，也都可以写在字段上或Setter方法上。</br>
-<font size=4>8</font>.<font color=red>@Autowired</font></br>
-&#8194;&#8194;&#8194;&#8194;它表示被修饰的类需要注入对象。Spring会扫描所有被@Autowired标注的类，然后根据类型在IoC容器中找到匹配的类进行注入。被@Autowired注解后的类不需要再导入文件。</br>
-<font size=4>9</font>.<font color=red>@RequestMapping</font></br>
-&#8194;&#8194;&#8194;&#8194;它用来请求地址映射，用在类或方法上。如果用在类上，则表示类中的所有响应请求的方法都是以该地址作为父路径的。该注解有6个属性。</br>
-<ul>
-    <li><font color=red>Params</font>:指定Request中必须包含某些参数值，才让该方法处理。</li>
-    <li><font color=red>Headers</font>:指定Request中必须包含某些指定的header值，才能让该方法处理。</li>
-    <li><font color=red>Value</font>:指定请求的实际地址，指定的地址可以是URI Template模式。</li>
-    <li><font color=red>Method</font>:指定请求的Method类型，如GET、POST、PUT、DELETE等。</li>
-    <li><font color=red>Consumes</font>:指定处理请求的提交内容类型Content-Type，如“application/json,text/html”。</li>
-    <li><font color=red>Produces</font>:指定返回的内容类型。只有当Request请求头中的Accept类型中包含该指定类型时才返回。</li>
-</ul>
-<font size=4>10</font>.<font color=red>@Transactional</font></br>
-&#8194;&#8194;&#8194;&#8194;它可以用在接口、接口方法、类及类方法上。</br>
-&#8194;&#8194;&#8194;&#8194;但Spring不建议在接口或者接口方法上使用该注解，因为该注解只有在使用基于接口的代理时才会生效。如果异常被捕获（try{}catch{}）了，则事务就不回滚了。如果想让事务回滚，则必须再往外抛出异常（try{}catch{throw Exception}）。</br>
-<font size=4>11</font>.<font color=red>@Qualifier</font></br>
-&#8194;&#8194;&#8194;&#8194;它的意思是“合格者”，用于标注哪一个实现类才是需要注入的。需要注意的是，@Qualifier的参数名称为被注入的类中的注解@Service标注的名称。</br>
-&#8194;&#8194;&#8194;&#8194;@Qualifier常和@Autowired一起使用。而@Resource和它不同，@Resource自带name属性。</br>
-</ol>
-
-<center><font size=4>使用在方法上的主要注解</font></center>
-
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@RequestBody</td>
-<td>方法参数前</td>
-<td>常用来处理application/json、application/xml等Content-Type类型的数据，意味着HTTP消息是JSON/XML格式，需将其转化为指定类型参数</td>
-</tr>
-<tr>
-<td>@PathVariable</td>
-<td>方法参数前</td>
-<td>将URL获取的参数映射到方法参数上</td>
-</tr>
-<tr>
-<td>@Bean</td>
-<td>方法上</td>
-<td>声明该方法的返回结果是一个由Spring容器管理的Bean</td>
-</tr>
-<tr>
-<td>@ResponsetBody</td>
-<td>方法上</td>
-<td>通过适当的HttpMessageConverter将控制器中方法返回的对象转换为指定格式（JSON/XML）后，写入Response对象的body数据区</td>
-</tr>
-</tbody></table>
-<ol>
-<font size=4>1</font>.<font color=red>@RequestBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它常用来处理JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。
-<font size=4>2</font>.<font color=red>@PathVariable</font></br>
-&#8194;&#8194;&#8194;&#8194;用于获取路径中的参数</br>
-<font size=4>3</font>.<font color=red>@Bean</font></br>
-&#8194;&#8194;&#8194;&#8194;它代表产生一个Bean，并交给Spring管理。用于封装数据，一般有Setter、Getter方法。在MVC模型中，对应的是M（模型）。</br>
-<font size=4>4</font>.<font color=red>@ResponsetBody</font></br>
-&#8194;&#8194;&#8194;&#8194;它的作用是通过转换器将控制器方法返回的对象转换为指定的格式，然后写入Response对象的body区。它常用来返回JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。</br>
-&#8194;&#8194;&#8194;&#8194;使用此注解后，数据直接写入输入流中，不需要进行视图渲染。</br>
-</ol>
-
-
-<center><font size=4>其他常用注解</font></center>。
-
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>使用位置</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@EnableAutoConfiguration</td>
-<td>入口类/类名上</td>
-<td>用来提供自动配置</td>
-</tr>
-<tr>
-<td>@SpringBootApplication</td>
-<td>入口类/类名上</td>
-<td>用来启动入口类Application</td>
-</tr>
-<tr>
-<td>@EnableScheduling</td>
-<td>入口类/类名上</td>
-<td>用来开启计划任务。Spring通过@Scheduled支持多种类型的计划任务，包含cron、fixDelay、fixRate等</td>
-</tr>
-<tr>
-<td>@EnableAsync</td>
-<td>入口类/类名上</td>
-<td>用来开启异步注解功能</td>
-</tr>
-<tr>
-<td>@ComponentScan</td>
-<td>入口类/类名上</td>
-<td>用来扫描组件，可自动发现和装配一些Bean。它根据定义的扫描路径，把符合扫描规则的类装配到Spring容器中，告诉Spring那个包（package）的类会被Spring自动扫描并且装入IoC容器。它对应XML配置中的元素。可以通过basePackages等属性来细粒度地定制自动扫描的范围，默认会从声明@ComponentScan所在类的包进行扫描</td>
-</tr>
-<tr>
-<td>@Aspec</td>
-<td>入口类/类名上</td>
-<td>标注切面，可以用来配置事务、日志、权限验证，在用户请求时做一些处理等</td>
-</tr>
-<tr>
-<td>@ControllerAdvice</td>
-<td>类名上</td>
-<td>包含@ComponentScan，可以被扫描到。统一处理异常</td>
-</tr>
-<tr>
-<td>@ExceptionHandler</td>
-<td>方法上</td>
-<td>用在方法上，表示遇到异常就执行该方法</td>
-</tr>
-<tr>
-<td>@Value</td>
-<td>属性上</td>
-<td>用于获取配置文件中的值</td>
-</tr>
-</tbody></table>
-<h1 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot支持使用Properties和YAML两种配置方式。两者功能类似，都能完成SpringBoot的配置，但是<font color=red>Properties的优先级要高于YAML</font>。<br>&#8194;&#8194;&#8194;&#8194;YAML文件的好处是——它采用的是树状结构，一目了然。但是，使用YAML配置方式时要注意以下几点。</p>
-<ul>
-<li>原来以“.”分隔的key会变成树状结构</li>
-<li>在key后的冒号后一定要跟一个空格</li>
-<li>如果把原有的application.properties删除，则建议执行以下“<font color=red>maven -X clean install</font>”命令</li>
-<li>YAML格式不支持用注解<font color=red>@PropertySource</font>导入配置</li>
-</ul>
-
-<h1 id="SpringBoot的Starter"><a href="#SpringBoot的Starter" class="headerlink" title="SpringBoot的Starter"></a>SpringBoot的Starter</br></h1><p><font size=4>了解Starter</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot为了简化配置，提供了非常多的Starter。它先打包好与常用模块相关的所有JAR包，并完成自动配置，然后组装成Starter（如把Web相关的SpringMVC、容器等打包好后组装成spring-boot-starter-web）。这使得在开发业务代码是不需要过多关注框架的配置，只需关注逻辑即可。</p>
-<center><font size=4>常用的Starter</font></center>
-
-<table>
-<thead>
-<tr>
-<th>Starter</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>spring-boot-stater-web</td>
-<td>用于构建Web。包含RESTful风格框架、SpringMVC和默认的嵌入式容器Tomcat</td>
-</tr>
-<tr>
-<td>spring-boot-stater-test</td>
-<td>用于测试</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-jpa</td>
-<td>带有Hibernate的SpringDataJPA</td>
-</tr>
-<tr>
-<td>spring-boot-stater-jdbc</td>
-<td>传统的JDBC。轻量级应用可以使用，学习成本低，但最好使用JPA或Mybatis</td>
-</tr>
-<tr>
-<td>spring-boot-stater-thymeleaf</td>
-<td>支持Thymeleaf</td>
-</tr>
-<tr>
-<td>spring-boot-stater-mail</td>
-<td>支持JavaMail、SpringMail发送邮件</td>
-</tr>
-<tr>
-<td>spring-boot-stater-integration</td>
-<td>Spring框架创建的一个API，面向企业应用集成（EAI）</td>
-</tr>
-<tr>
-<td>spring-boot-stater-mobile</td>
-<td>SpringMVC的扩展，用来简化手机上的Web应用程序开发</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-redis</td>
-<td>通过SpringDataRedis、RedisClient使用Redis</td>
-</tr>
-<tr>
-<td>spring-boot-stater-validation</td>
-<td>BeanValidation是一个数据验证的规范，HibernateValidator是一个数据验证框架</td>
-</tr>
-<tr>
-<td>spring-boot-stater-websocket</td>
-<td>相对于非持久的协议HTTP，Websocket是一个持久化的协议</td>
-</tr>
-<tr>
-<td>spring-boot-stater-web-services</td>
-<td>SOAPWebServices</td>
-</tr>
-<tr>
-<td>spring-boot-stater-hateoas</td>
-<td>为服务添加HATEOAS功能</td>
-</tr>
-<tr>
-<td>spring-boot-stater-security</td>
-<td>用SpringSecurity进行身份验证和授权</td>
-</tr>
-<tr>
-<td>spring-boot-stater-data-rest</td>
-<td>用SpringDateREST公布简单的REST服务</td>
-</tr>
-</tbody></table>
-]]></content>
-      <tags>
-        <tag>SpringBoot</tag>
-      </tags>
-  </entry>
+<search> 
+  
+  
+    
+    <entry>
+      <title>SpringBoot之用ORM操作SQL数据库</title>
+      <link href="/2020/07/21/SpringBoot%E4%B9%8B%E7%94%A8ORM%E6%93%8D%E4%BD%9CSQL%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <url>/2020/07/21/SpringBoot%E4%B9%8B%E7%94%A8ORM%E6%93%8D%E4%BD%9CSQL%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Java的数据库连接模板JDBCTemplate"><a href="#Java的数据库连接模板JDBCTemplate" class="headerlink" title="Java的数据库连接模板JDBCTemplate"></a>Java的数据库连接模板JDBCTemplate</h1><h2 id="用JDBCTemplate实现数据的增删改查"><a href="#用JDBCTemplate实现数据的增删改查" class="headerlink" title="用JDBCTemplate实现数据的增删改查"></a>用JDBCTemplate实现数据的增删改查</h2><h3 id="配置基础依赖"><a href="#配置基础依赖" class="headerlink" title="配置基础依赖"></a>配置基础依赖</h3><p>要使用JDBCTemplate，需要添加其Starter依赖，因为要操作数据库，所以也要配置数据库（以MySQL为例）的连接依赖，代码如下：</p><pre><code>&lt;!--JDBCTemplate依赖--&gt;&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;&lt;/dependency&gt;&lt;!--MySql数据库依赖--&gt;&lt;dependency&gt;    &lt;groupId&gt;mysql&lt;/groupId&gt;    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;&lt;/dependency&gt;</code></pre><p>添加完依赖后，还要配置数据库来凝结信息，这样JDBCTemplate才能正常连接到数据库，在application.properties配置文件中该配置数据库的地址和用户信息，daimaruxia:</p><pre><code>//配置IP地址、编码、时区和SSLspring.datasource.url=jdbc:mysql://127.0.0.1/book&gt;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=true//用户名spring.datasource.username=root//密码spring.datasource.password=rootspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</code></pre><h3 id="新建实体类"><a href="#新建实体类" class="headerlink" title="新建实体类"></a>新建实体类</h3><p>新建一个测试实体类User，实现RowMapper类，重写mapRow方法，以便实体字段和数据表字段映射（对应），具体代码如下：</p><pre><code>@Datapublic class User implements RowMapper&lt;User&gt;{    private int id;    private String username;    public User mapRow(ResultSet r,int i){        User user = new User();        user.setId(r.getInt(&quot;id&quot;));        user.setUsename(r.getString(&quot;username&quot;));    }}</code></pre><h3 id="操作数据"><a href="#操作数据" class="headerlink" title="操作数据"></a>操作数据</h3><p>JDBCTemplate提供了以下操作数据的3个方法。</p><ul><li>execute:表示“执行”，用于直接执行SQL语句。</li><li>update:表示“更新”，包括新增、修改、删除操作。</li><li>query:表示“查询”。</li></ul><h1 id="认识ORM"><a href="#认识ORM" class="headerlink" title="认识ORM"></a>认识ORM</h1><p>ORM是对象/关系映射。它提供了概念性的、易于理解的数据模型，将数据库中的表和内存中的对象建立映射关系。它是随着面向对象的软件开发方法的发展而产生的，面对对象的开发方法依然是当前主流的开发方法。<br>对象和关系型数据是业务实体的两种表现形式。业务实体在内存中表现为对象，在数据库中表现为关系型数据。内存中的对象不会被永久保存，只有关系型数据库（或NoSQL数据库，或文件）中的对象会被永久保存。<br>对象/关系映射（ORM）系统一般以中间件的形式存在，因为内存中的对象之间存在关联和继承关系，而在数据库中，关系型数据无法直接表达多对多的关联和继承关系。</p><h1 id="JPA——Java持久层API"><a href="#JPA——Java持久层API" class="headerlink" title="JPA——Java持久层API"></a>JPA——Java持久层API</h1><h2 id="认识SpringData"><a href="#认识SpringData" class="headerlink" title="认识SpringData"></a>认识SpringData</h2><p>SpringData是Spring的一个子项目，旨在统一和简化各类型数据的持久化存储方式，而不拘泥于是关系型数据库还是NoSQL数据库。<br>无论是哪种持久化存储方式，数据访问对象都会提供对对象的增加、删除、修改和查询的方法，以及排序和分页方法等。<br>SpringData提供了基于这些层面的统一接口，以实现持久化的存储。</p><h2 id="认识JPA"><a href="#认识JPA" class="headerlink" title="认识JPA"></a>认识JPA</h2><p>JPA是Java的持久化API，用于对象的持久化，它是一个非常强大的ORM持久化的解决方案，免去了使用JDBCTemplate开发的编写脚本工作。JPA通过简单约定好接口方法的规则自动生成相应的JPQL语句，然后映射成POJO对象。<br>JPA是一个规范化接口，封装了Hibernate的操作作为默认实现，让用户不通过任何配置即可完成数据库的操作。<br>Hibernate主要通过hibernate-annotation、hibernate-entitymanager和hibernate-core三个组件来操作数据。   </p><ul><li>hibernate-annotation:是Hibernate支持annotation方式配置的基础，它包括标准的JPAannotation、Hibernate自身特殊功能的annotation。</li><li>hibernate-entitymanager:是Hibernate的核心实现，提供了Hibernate所有的核心功能。</li><li>hibernate-core:实现了标准的JPA，它是hibernate-core和JPA之间的适配器，它不直接提供ORM的功能，而是对hibernate-core进行封装，是的Hibernate符合JPA的规范。</li></ul><h2 id="使用JPA"><a href="#使用JPA" class="headerlink" title="使用JPA"></a>使用JPA</h2><p>要使用JPA，只要加入它的starter依赖，然后配置数据库连接信息。</p><h3 id="添加JPA和MySQL数据库的依赖"><a href="#添加JPA和MySQL数据库的依赖" class="headerlink" title="添加JPA和MySQL数据库的依赖"></a>添加JPA和MySQL数据库的依赖</h3><p>下面以配置JPA和MySQL数据库的依赖为例，配置如下：</p><pre><code>&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;&lt;/dependency&gt;&lt;dependency&gt;    &lt;groupId&gt;mysql&lt;/groupId&gt;    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;    &lt;scope&gt;runtime&lt;/scope&gt;&lt;/dependency&gt;</code></pre><h3 id="配置数据库连接信息"><a href="#配置数据库连接信息" class="headerlink" title="配置数据库连接信息"></a>配置数据库连接信息</h3><p>SpringBoot项目使用MySQL等关系型数据库，需要配置连接信息，可以在application.properties文件中进行配置。以下代码配置了与MySQL数据库的连接信息：</p><pre><code>spring.datasource.url=jdbc:mysql://127.0.0.1/book&gt;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=truespring.datasource.username=rootspring.datasource.password=rootspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver//hibernate的配置属性，其主要作用是：自动创建、更新、验证数据库表结构spring.jpa.properties.hibernate.hbm2ddl.auto=updatespring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect//开发工具的控制台是否显示SQL的语句spring.jpa.show-sql=true</code></pre><center>Hibernate的配置属性</center><table><thead><tr><th>属性</th><th>说明</th></tr></thead><tbody><tr><td>create</td><td>每次加载Hibernate时都会删除上一次生成的表，然后根据Model类再重新生成新表，哪怕没有任何改变也会这样执行，这会导致数据库数据的丢失</td></tr><tr><td>create-drop</td><td>每次加载Hibernate时会根据Model类生成表，但是sessionFactory一旦关闭，表就会自动被删除</td></tr><tr><td>update</td><td>最常用的属性。第一次加载Hibernate时会根据Model类自动建立表的结构（前提是先建立好数据库）。以后加载Hibernate时，会根据Model类自动更新表结构，即使表结构改变了，但表中的数据依然存在，不会被删除。要注意的是，当部署到服务器后，表结构是不会被马上建立起来的，要等应用程序第一次运行起来后才会建立。Update表示如果Entity实体的字段发生了变化，那么直接在数据库中进行更新</td></tr><tr><td>validate</td><td>每次加载Hibernate时，会验证数据库的表结构，只会和数据库中的表进行比较，不会创建新表，但是会插入新值</td></tr></tbody></table><h2 id="了解JPA注解和属性"><a href="#了解JPA注解和属性" class="headerlink" title="了解JPA注解和属性"></a>了解JPA注解和属性</h2><center>JPA的常用注解</center><table><thead><tr><th>注解</th><th>说明</th></tr></thead><tbody><tr><td>@Entity</td><td>声明类为实体</td></tr><tr><td>@Table</td><td>声明表名，@Entity和@Table注解一般一块使用，如果表名和实体类名相同，那么@Table可以省略</td></tr><tr><td>@Basic</td><td>指定非约束明确的各个字段</td></tr><tr><td>@Embedded</td><td>用于注释属性，表示该属性的类是嵌入类（@embeddable用于注释Java类的，表示类是嵌入类）</td></tr><tr><td>@Id</td><td>指定的类的属性，一个表中的主键</td></tr><tr><td>@GeneratedValue</td><td>指定如何表示属性可以被初始化，如@GeneratedValue(Strategy=GenerationType.SEQUENCE,generator=”repair_seq”)：表示主键生成策略是sequence，还有Auto、Identity、Native等</td></tr><tr><td>@Transient</td><td>表示该属性并非一个数据库表的字段的映射，ORM框架将忽略该属性。如果一个属性并非数据库表的字段映射，就务必将其表示位@Transient，即它是不持久的，为虚拟字段</td></tr><tr><td>@Column</td><td>指定持久属性，即字段名。如果字段名与列名相同，则可以省略。使用方法如：@Column(length=11,name=”phone”,nullable=false,columnDefinition=”varchar(11) unique comment’电话号码’”)</td></tr><tr><td>@SequenceGenerator</td><td>指定在@GeneratedValue注解中指定的属性的值。它创建一个序列</td></tr><tr><td>@TableGenerator</td><td>在数据库生成一张表来管理主键生成策略</td></tr><tr><td>@AccessType</td><td>这种类型的注释用于设置访问类型。如果设置@AccessType(FIELD)，则可以直接访问变量，并且不需要使用Getter和Setter方法，但必须为public属性。如果设置@AccessType(PROPERTY)，则通过Getter和Setter方法访问Entity的变量</td></tr><tr><td>@UniqueConstraint</td><td>指定的字段和用于主要或辅助表的唯一约束</td></tr><tr><td>@ColumnResult</td><td>可以参考使用select字句的SQL查询中的列名</td></tr><tr><td>@NamedQueries</td><td>指定命名查询的列表</td></tr><tr><td>@NamedQuery</td><td>指定使用静态名称的查询</td></tr><tr><td>@Basic</td><td>指定实体属性的加载方式，如@Basic(fetch=FetchType.LAZY)</td></tr><tr><td>@JsonIgnore</td><td>作用是JSON序列化时将JavaBean中的一些属性忽略掉没序列化和反序列化都受影响</td></tr></tbody></table><center>映射关系的注解</center><table><thead><tr><th>注解</th><th>说明</th></tr></thead><tbody><tr><td>@JoinColumn</td><td>指定一个实体组织或实体集合。用在“多对一”和“一对多”的关联中</td></tr><tr><td>@OneToOne</td><td>定义表之间“一对一”的关系</td></tr><tr><td>@OneToMany</td><td>定义表之间“一对多”的关系</td></tr><tr><td>@ManyToOne</td><td>定义表之间“多对一”的关系</td></tr><tr><td>@ManyToMany</td><td>定义表之间“多对多”的关系</td></tr></tbody></table><center>映射关系的属性</center><table><thead><tr><th>属性名</th><th>说明</th></tr></thead><tbody><tr><td>targetEntity</td><td>表示默认关联的实体类型，默认为当前标注的实体类</td></tr><tr><td>cascade</td><td>表示与此实体一对一关联的实体的级联样式类型，以及当对实体进行操作时的策略。在定义关系时经常会涉及是否定义Cascade（级联处理）属性，如果担心级联处理容易造成负面影响，则可以不定义。它的类型包括CascadeType.PERSIST（级联新建）、CascadeType.REMOVE（级联删除）、CasCadeType.REFRESH（级联刷新）、CasCadeType.MERGE（级联更新）、CasCadeType.ALL（级联新建、更新、删除、刷新）</td></tr><tr><td>fetch</td><td>该实体的加载方式，包含LAZY和EAGER</td></tr><tr><td>optional</td><td>表示关联的实体是否能够存在null值。默认为true，表示可以存在null值。如果为false，则要同时配合使用@JoinColumn标记</td></tr><tr><td>mappedBy</td><td>双向关联实体时使用，标注在不保存关系的实体中</td></tr><tr><td>JoinColumn</td><td>关联指定列。该属性值可接受多个@JoinColumn。用于配置连接表中外键列的信息</td></tr><tr><td>JoinTable</td><td>两张表通过中间的关联表建立联系时使用，即多对多关系</td></tr><tr><td>PrimaryKeyJoinColumn</td><td>主键关联。在关联的两个实体中直接使用注解@PrimaryKeyJoinColumn注释</td></tr></tbody></table><p>懒加载LAZY和实时加载EAGER的目的是，实现关联数据的选择性加载。<br>懒加载是在属性被引用时才生成查询语句，抽取相关联数据。<br>实时加载则是执行完主查询后，不管是否被引用，都会马上执行后续的关联数据查询。<br>使用懒加载来调用关联数据，必须要保证主查询的Session的生命周期没有结束，否则是无法抽取到数据的。<br>在SpringDataJPA中，要控制Session的生命周期，否则会出现“could not initialize proxy[xxxx#18] - no Session”错误。可以在配置文件中配置以下代码来控制Session的生命周期：</p><pre><code>spring.jpa.open-in-view=truespring.jpa.properties.hibernate.enable_lazy_load_no_trans=true</code></pre><h2 id="认识JPA的接口"><a href="#认识JPA的接口" class="headerlink" title="认识JPA的接口"></a>认识JPA的接口</h2><p>JPA提供了操作数据库的接口。在开发过程中继承和使用这些接口，可简化下游的持久化开发工作。可以使Spring找到自定义接口，并生成代理类，后续可以把自定义接口注入Spring容器中进行管理。在自定义接口的过程中，可以不写相关的SQL操作，由代理类自动生成。</p><h3 id="JPA接口JpaRepository"><a href="#JPA接口JpaRepository" class="headerlink" title="JPA接口JpaRepository"></a>JPA接口JpaRepository</h3><p>JpaRepository继承自PagingAndSortingRepository。该接口提供了JPA的相关使用功能，以及通过Example进行查询的功能。Example对象是JPA提供用来构造查询条件的对象。该接口的关键代码如下：</p><pre><code>public interface JpaRepository&lt;T,ID&gt; extends PagingAndSortingRepository&lt;T,ID&gt;,QueryByExampleExecutor&lt;T&gt;{}</code></pre><p>在上述代码中，T表示实体对象，ID表示主键。ID必须实现序列化。</p><center>JpaRepository提供的方法</center><table><thead><tr><th>方法</th><th>描述</th></tr></thead><tbody><tr><td>List&lt;T&gt; findAll();</td><td>查找所有实体</td></tr><tr><td>List&lt;T&gt; findAll(Sort var1);</td><td>排序、查找所有实体</td></tr><tr><td>List&lt;T&gt; findAllById(Iterable&lt;ID&gt; var1);</td><td>返回指定一组ID的实体</td></tr><tr><td>&lt;S extends T&gt; List&lt;S&gt; saveAll(Iterable&lt;S&gt; var1);</td><td>保存集合</td></tr><tr><td>void flush();</td><td>执行缓存与数据库同步</td></tr><tr><td>&lt;S extends T&gt; S saveAndFlush(S var1);</td><td>强制执行持久化</td></tr><tr><td>void deleteInBatch(Iterable&lt;T&gt; var1);</td><td>删除一个实体集合</td></tr><tr><td>void deleteAllInBatch();</td><td>删除所有实体</td></tr><tr><td>T getOne(ID var1)</td><td>返回ID对应的实体，如果不存在，则返回空值</td></tr><tr><td>&lt;S extends T&gt; List&lt;S&gt; findAll(Example&lt;S&gt; var1)</td><td>查询满足Example的所有对象</td></tr><tr><td>&lt;S extends T&gt; List&lt;S&gt; findAll(Example&lt;S&gt; var1,Sort var2)</td><td>查询满足Example的所有对象，并且进行排序返回</td></tr></tbody></table><h3 id="分页排序接口PagingAndSortingRepository"><a href="#分页排序接口PagingAndSortingRepository" class="headerlink" title="分页排序接口PagingAndSortingRepository"></a>分页排序接口PagingAndSortingRepository</h3><p>PagingAndSortingRepository继承自CrudRepository提供的分页和排序方法。代码如下：</p><pre><code>@NoRepositoryBeanpublic interface PagingAndSortingRepository&lt;T,ID&gt; extends CrudRepository&lt;T,ID&gt;{    //排序功能。它按照“sort”指定的排序返回数据    Iterable&lt;T&gt; findAll(Sort var1);    //分页查询（含排序功能）    Page&lt;T&gt; findAll(Pageable var1);}</code></pre><h3 id="数据操作接口CrudRepository"><a href="#数据操作接口CrudRepository" class="headerlink" title="数据操作接口CrudRepository"></a>数据操作接口CrudRepository</h3><p>CrudRepository接口继承自Repository接口，并新增了增加、删除、修改和查询方法。</p><center>CrudRepository提供的方法</center><table><thead><tr><th>方法</th><th>描述</th></tr></thead><tbody><tr><td>&lt;S extends T&gt; S save(S entity);</td><td>保存实体。当实体中包含主键时，JPA会进行更新操作</td></tr><tr><td>&lt;S extends T&gt; Iterable&lt;S&gt; saveAll(Iterable&lt;S&gt; entities);</td><td>保存所有实体。实体必须不为空</td></tr><tr><td>“Optional&lt;T&gt; findById(Id id)</td><td>根据主键id检索实体</td></tr><tr><td>“boolean existsById(ID id)</td><td>根据主键id检索实体，返回是否存在。值为布尔类型</td></tr><tr><td>Iterable&lt;T&gt; findAll()</td><td>返回所有实体</td></tr><tr><td>Iterable&lt;T&gt; findAllById(Iterable&lt;ID&gt; ids)</td><td>根据给定的一组id值返回一组实体</td></tr><tr><td>long count()</td><td>返回实体的数量</td></tr><tr><td>void deleteById(ID id)</td><td>根据id删除数据</td></tr><tr><td>void delete(T entity)</td><td>删除给定的实体</td></tr><tr><td>void deleteAll(Iterable&lt;? extends T&gt; entities)</td><td>删除实体</td></tr><tr><td>void deleteAll()</td><td>删除所有实体</td></tr></tbody></table><h3 id="分页接口Pageable和Page"><a href="#分页接口Pageable和Page" class="headerlink" title="分页接口Pageable和Page"></a>分页接口Pageable和Page</h3><p>Pageable接口用于构造翻页查询，返回Page对象。Page从0开始分页。<br>例如，可以通过以下代码来构建文章的翻页查询参数。</p><pre><code>@RequestMapping(&quot;/article&quot;)public ModelAndView articleList(@RequestParam(value=&quot;start&quot;,defaultValue=&quot;0&quot;)Integer start,@RequestParam(value=&quot;limit&quot;,defaultValue=&quot;10&quot;)Integer limit){    start = start &lt; 0 ? 0 :start;    Sort sort = new Sort(Sort.Direction.DESC,&quot;id&quot;);    Pageable pageable = PageRequest.of(start,limit,sort);    Page&lt;Article&gt; page = articleRepository.findAll(pageable);    ModelAndView mav = new ModelAndView(&quot;admin/article/list&quot;);    mav.addObject(&quot;page&quot;,page);    return mav;}</code></pre><p>然后，再调用它的参数获取总页数、上一页、下一页和末页，见以下代码：</p><pre><code>&lt;div&gt;    &lt;a th:href=&quot;@{/article(start=0)}&quot;}【首页】&lt;/a&gt;    &lt;a th:if=&quot;${not page.isFirst()}&quot; th=&quot;@{/article(start=${page.number-1})}&quot;&gt;【上页】&lt;/a&gt;    &lt;a th:if=&quot;${not page.isLast()}&quot; th=&quot;@{/article(start=${page.number+1})}&quot;&gt;【下页】&lt;/a&gt;    &lt;a th:href=&quot;@{/article(start=${page.totalPages-1})}&quot;}【末页】&lt;/a&gt;&lt;/div&gt;</code></pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SpringBoot之SpringBoot进阶</title>
+      <link href="/2020/07/10/SpringBoot%E4%B9%8BSpringBoot%E8%BF%9B%E9%98%B6/"/>
+      <url>/2020/07/10/SpringBoot%E4%B9%8BSpringBoot%E8%BF%9B%E9%98%B6/</url>
+      
+        <content type="html"><![CDATA[<h1 id="静态资源访问"><a href="#静态资源访问" class="headerlink" title="静态资源访问"></a>静态资源访问</br></h1><h2 id="默认策略"><a href="#默认策略" class="headerlink" title="默认策略"></a>默认策略</h2><p>SpringBoot中对于SpringMVC的自动化配置都在WebMvcAutoConfiguration类中，因此对于默认的静态资源过滤策略可以从这个类中一窥究竟。在WebMvcAutoConfiguration类中有一个静态内部类WebMvcAutoConfigurationAdapter，实现了提到的WebMvcConfigurer接口。WebMvcConfigurer接口中有一个方法addResourceHandlers, 是用来配置静态资源过滤的方法在WebMvcAutoConfigurationAdapter类中得到了实现，部分核心代码如下：</p><pre><code> public void addResourceHandlers (ResourceHandlerRegistry registry) { .... .... String staticPathPattern = this.mvcProperties.getStaticPathPattern();    if(!registry. hasMappingForPattern(staticPathPattern)) {        custornizeResourceHandlerRegistration            registry.addResourceHandler(staticPathPattern)                .addResourceLocations(getResourceLocations(                    this.resourceProperties.getStaticLocations()))                .setCachePeriod(getSeconds(cachePeriod))                .setCacheControl(cacheControl));    }}</code></pre><p>SpringBoot在这里进行了默认的静态资源过滤配置，其中staticPathPattern默认定义在WebMvcProperties中，定义内容如下：</p><pre><code>private String staticPathPattern = &quot;/**&quot;,</code></pre><p>this.resourceProperties.getStaticLocations()获取到的默认静态资源位置定义在ResourceProperties中，代码如下：</p><pre><code>private static final String[] CLASSPATH_RESOURCE LOCATIONS = { &quot;classpath:/META-INF/resources/&quot;,&quot;classpath:/resources/&quot;, &quot;classpath:/static/&quot;,&quot;classpath:/public&quot;};</code></pre><p>在getResourceLocations方法中，对这4个静态资源位置做了扩充，代码如下：</p><pre><code>static String[] getResourceLocations(String[] staticLocations){String[] locations= new String[staticLocations.length+SERVLET_LOCATIONS.length];System.arraycopy(staticLocations,0,locations,0,staticLocations.length);System.arraycopy(SERVLET_LOCATIONS,0,locations,staticLocations.length,SERVLET_LOCATIONS.length);return locations;}</code></pre><p>其中，SERVLET_LOCATIONS的定义是一个{“/“}。<br>综上可以看到，SpringBoot默认会过滤所有的静态资源，而静态资源的位置一共有5个，分别是”classpath:/META-INF/resources/“、”classpath:/resources/“、”classpath:/static/“、”classpath:/public/“以及”/“也就是说，开发者可以将静态资源放到这5个位置中的任意一个。注意，按照定义的顺序5个静态资源位置的优先级依次降低。但是一般情况下，SpringBoot项目不需要webapp目录，所以第5个”/“可以暂不考虑。</br></p><h2 id="自定义策略"><a href="#自定义策略" class="headerlink" title="自定义策略"></a>自定义策略</h2><ol><li>在配置文件中定义</br>可以在application.properties中直接定义过滤规则和静态资源位置，代码如下：<pre><code>spring.mvc.static-path-pattern=/static/**spring.resources.static-locations=classpath:/static/</code></pre><p>过滤规则为/static/**，静态资源位置为classpath:/static/。 </p></li><li>Java编码定义</br>只需要实现WebMvcConfigurer接口即可，然后实现该接口的addResourceHandlers方法，代码如下：<pre><code>@Configurationpublic class MyWebMvcConfig implements WebMvcConfigurer {    @Override     public void addResourceHandlers(ResourceHandlerRegistry registry){        registry            .addResourceHandler(&quot;/static/**&quot;)            .addResourceLocations(&quot;classpath:/static/&quot;);    }}</code></pre></li></ol><h1 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</br></h1><p>SpringMVC对文件上传做了简化，在SpringBoot中对此做了更进一步的简化，文件上传更为方便。</br><br>Java中的文件上传一共涉及两个组件，一个是CommonsMultipartResolver，另一个是StandardServletMultipartResolver，其中CommonsMultipartResolver使用commons-fileupload来处理multipart请求，而StandardServletMultipartResolver则是基于Servlet3.0来处理multipart请求的，因此若使用StandardServletMultipartResolver则不需要添加额外的jar包。Tomcat7.0开始就支持Servlet3.0了，而SpringBoot2.0.4内嵌的Tomcat为Tomcat8.5.32，因此可以直接使用StandardServletMultipartResolver。而在SpringBoot提供的文件上传自动化配置类MultipartAutoConfiguration中，默认也是采用StandardServletMultipartResolver，部分源码如下：</p><pre><code>public class MultipartAutoConfiguration (......    @Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)     @ConditionalOnMissingBean(MultipartResolver.class)    public StandardServletMultipartResolver multipartResolver(){        StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();        multipartResolver.setResolveLazily(this.multipartProperties.isResolveLazily());         return multipartResolver;     }}</code></pre><p>根据这里的配置可以看出，如果开发者没有提供MultipartResolver，那么默认采用的MultipartResolver就是StandardServletMultipartResolver因此，在pringBoot中上传文件甚至可以做到零配置。下面来看具体上传过程。</p><h2 id="单文件上传"><a href="#单文件上传" class="headerlink" title="单文件上传"></a>单文件上传</h2><p>首先创建一个SpringBoot项目并添加spring-boot-starter-web依赖。</br><br>然后在resources目录下的static目录中创建一个upload.html文件，内容如下：</p><pre><code>&lt;!DOCTYPE html&gt; &lt;html lang＝&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;form action=&quot;/upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;&lt;input type＝&quot;file&quot; name=&quot;uploadFile&quot; value＝&quot;请选择文件&quot;&gt;&lt;input type=&quot;submit&quot; value＝&quot;上传&quot;&gt;&lt;/form&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p>这是一个很简单的文件上传页面，上传接口是/upload，注意请求方法是post,enctype是multipart/form-data。</br><br>接着创建文件上传处理接口，代码如下：</p><pre><code>@RestControllerpublic class FileUploadController{    SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy/MM/dd/&quot;);    @PostMapping(&quot;/upload&quot;)    public String upload(MultipartFile uploadFile , HttpServletRequest req) {        String realPath = req.getSession().getServletContext().getRealPath(&quot;/uploadFile/&quot;);        String format = sdf.format(new Date());        File folder = new File (realPath + format);        if(!folder.isDirectory()) {            folder.mkdirs();         }        String oldName = uploadFile.getOriginalFilename();         String newName = UUID.randomUUID().toString()+oldName.substring(oldName.lastIndexOf(&quot;.&quot;),oldName.length());         try{            uploadFile.transferTo(new File(folder,newName));            String filePath = req.getScheme()+&quot;://&quot;+req.getServerName()+&quot;:&quot;+req.getServerPort()+&quot;/uploadFile/&quot;+format+&quot;/&quot;+newName;            return filePath;         } catch (IOException e) {            e.printStackTrace();        }        return &quot;上传失败！&quot;;    }}</code></pre><p>代码解释：</p><ol><li>第6～12代码表示规划上传文件的保存路径为项目运行目录下的uploadFile文件夹，并在文件夹中通过日期对所上传的文件归类保存。</li><li>第13～15行代码表示给上传的文件重命名，这是为了避免文件重名。</li><li>第17行是文件保存操作。</li><li>第18～20行是生成上传文件的访问路径，并将访问路径返回。</li></ol><p>开发者需要对图片上传的细节进行配置，也是允许的，代码如下：</p><pre><code>spring.servlet.multipart.enabled=true spring.servlet.multipart.file-size-threshold=O spring.servlet.multipart.location=E:\\temp spring.servlet.multipart.max-file-size=lMB spring.servlet.multipart.max-request-size=lOMB spring.servlet.multipart.resolve-lazily=false </code></pre><p>代码解释：</p><ol><li>第l行表示是否开启文件上传支持，默认为true。</li><li>第2行表示文件写入磁盘的阈值，默认为0。</li><li>第3行表示上传文件的临时保存位置。</li><li>第4行表示上传的单个文件的最大大小，默认为1MB。 </li><li>第5行表示多文件上传时文件的总大小，默认为10MB。  </li><li>第6行表示文件是否延迟解析，默认为false。</li></ol><h2 id="多文件上传"><a href="#多文件上传" class="headerlink" title="多文件上传"></a>多文件上传</h2><p>多文件上传和单文件上传基本一致，首先修改HTML文件，代码如下：</p><pre><code>&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;form action=&quot;/uploads&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;&lt;input type＝&quot;file&quot; name=&quot;uploadFiles&quot; value＝&quot;请选择文件&quot; multiple&gt;&lt;input type＝&quot;submit&quot; value＝&quot;上传&quot;&gt;&lt;/form&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p>然后修改控制器，代码如下：</p><pre><code>@PostMapping(&quot;/uploads&quot;)public String upload(MultipartFile[] uploadFiles,HttpServletRequest req){   //遍历uploadFiles数组分别存储 }</code></pre><p>控制器里边的核心逻辑和单文件上传是一样的，只是多一个遍历的步骤。</p><h1 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h1><p>@ControllerAdvice就是@Controller的增强版。@ControllerAdvice主要用来处理全局数据，一般搭配@ExceptionHandler、@ModelAttribute以及@InitBinder 使用。</p><h2 id="全局异常处理"><a href="#全局异常处理" class="headerlink" title="全局异常处理"></a>全局异常处理</h2><p>@ControllerAdvice最常见的使用场景就是全局异常处理。如果用户上传的文件超过了限制大小，就会抛出异常，此时可以通过@Controller Advice 结合@ExceptionHandler定义全局异常捕获机制，代码如下：</p><pre><code>@ControllerAdvicepublic class CustomExceptionHandler {   @ExceptionHandler(MaxUploadSizeExceededException.class)   public void uploadException(MaxUploadSizeExceededException e,   HttpServletResponse resp) throws IOException {       resp.setContentType(&quot;text/html;charset=utf-8&quot;);       PrintWriter out = resp.getWriter();       out.write(&quot;上传文件大小超出限制！&quot;);       out.flush();       out.close();    }}</code></pre><p>只需在系统中定义CustomExceptionHandler类然后添加@ControllerAdvice注解即可。当系统启动时，该类就会被扫描到Spring容器中，然后定义uploadException方法，在该方法上添加了@ExceptionHandler注解，其中定义的MaxUploadSizeExceededException.class表明该方法用来处理MaxUploadSizeExceededException类型的异常。如果想让该方法处理所有类型的异常，只需将MaxUploadSizeExceededException改为Exception即可。方法的参数可以有异常实例、HttpServletResponse以及HttpServletRequest、 Model等，返回值可以是一段JSON、一个ModelAndView、一个逻辑视图名等。此时，上传一个超大文件会有错误提示给用户。</p><h2 id="添加全局数据"><a href="#添加全局数据" class="headerlink" title="添加全局数据"></a>添加全局数据</h2><p>@ControllerAdvice是一个全局数据处理组件，因此也可以在@ControllerAdvice中配置全局数据，使用@ModelAttribute注解进行配置，代码如下：</p><pre><code>@ControllerAdvicepublic class GlobalConfig{    @ModelAttribute(value = &quot;info&quot;)    public Map&lt;String,String&gt; userInfo(){        HashMap&lt;String,String&gt; map = new HashMap&lt;&gt;();        map.put(&quot;username&quot;,&quot;罗贯中&quot;);        map.put(&quot;gender&quot;,&quot;男&quot;);        return map;     }}</code></pre><p>代码解释：</p><ol><li>在全局配置中添加userlnfo方法，返回一个map。该方法有一个注解@ModelAttribute，其中的value属性表示这条返回数据的key，而方法的返回值是返回数据的value。</li><li>此时在任意请求的Controller中，通过方法参数中的Model都可以获取info的数据。</li></ol><h2 id="请求参数预处理"><a href="#请求参数预处理" class="headerlink" title="请求参数预处理"></a>请求参数预处理</h2><p>@ControllerAdvice结合@InitBinder还能实现请求参数预处理，即将表单中的数据绑定到实体类上时进行一些额外处理。</p><h1 id="自定义错误页"><a href="#自定义错误页" class="headerlink" title="自定义错误页"></a>自定义错误页</h1><p>SpringBoot中的全局异常处理。在处理异常时，开发者可以根据实际情况返回不同的页面，但是这种异常处理方式一般用来处理应用级别的异常，有一些容器级别的错误就处理不了，例如Filter中抛出异常，使用@ControllerAdvice 定义的全局异常处理机制就无法处理。<br>在SpringBoot中，默认情况下，如果用户在发起请求时发生了404错误，SpringBoot会有一个默认的页面展示给用户。<br>事实上，SpringBoot在返回错误信息时不一定返回HTML页面，而是根据实际情况返回HTML页面或者一段JSON（若开发者发起Ajax请求，则错误信息是一段JSON）。对于开发者而言，这一段HTML或者JSON都能够自由定制。<br>SpringBoot中的错误默认是由BasicErrorController类来处理的，该类中的核心方法主要有两个：</p><pre><code>@RequestMapping(produces = &quot;text/html&quot; )public ModelAndView errorHtml(HttpServletRequest request,HttpServletResponse response) {    HttpStatus status = getStatus (request);    Map&lt;String,Object&gt; model = Collections.unmodifiableMap(getErrorAttributes(        request,isIncludeStackTrace(request,MediaType.TEXT_HTML)));    response.setStatus(status.value());    ModelAndView modelAndView = resolveErrorView(request,response,status,model);    return(modelAndView != null ? modelAndView : new ModelAndView(&quot;error&quot;,model));}@RequestMapping@ResponseBody public ResponseEntity&lt;Map&lt;String,Object&gt; error(HttpServletRequest request) {    Map&lt;String,Object&gt; body = getErrorAttributes(request,        isIncludeStackTrace(request,MediaType.ALL));    HttpStatus status = getStatus(request);    return new ResponseEntity&lt;&gt; (body, status);}</code></pre><p>其中，errorHtml方法用来返回错误HTML页面，error用来返回错误JSON，具体返回的是HTML还是JSON，则要看请求头的Accept参数。返回JSON的逻辑很简单，不必过多介绍，返回HTML的逻辑稍微有些复杂，在errorHtml方法中，通过调用resolveErrorView方法来获取一个错误视图的ModelAndView。而resolveErrorView方法的调用最终会来到DefaultErrorViewResolver类中。<br>DefaultErrorViewResolver类是SpringBoot中默认的错误信息视图解析器，部分源码如下：</p><pre><code>public class DefaultErrorViewResolver implements ErrorViewResolver, Ordered {   private static final Map&lt;Series,String&gt; SERIES_VIEWS;   static{       Map&lt;Series,String&gt; views = new EnumMap&lt;&gt;(Series.class);       views.put(Series.CLIENT_ERROR,&quot;4xx&quot;);       views.put(Series.SERVER_ERROR,&quot;Sxx&quot;);       SERIES_VIEWS = Collections.unmodifiableMap(views);    }}......private ModelAndView resolve(String viewName,Map&lt;String,Object&gt; model) {   String errorViewName = &quot;error/&quot; + viewName;   TemplateAvailabilityProvider provider = this.templateAvailabilityProviders       .getProvider(errorViewName,this.applicationContext);   if (provider != null) {       return new ModelAndView(errorViewName,model);   }   return resolveResource(errorViewName , model);}</code></pre><p>从这一段源码中可以看到，SpringBoot默认是在error目录下查找4xx、5xx的文件作为错误视图，当找不到时会回到errorHtml方法中，然后使用error作为默认的错误页面视图名，如果名为error的视图也找不到，那么就会直接out在页面上。</p><h2 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h2><p>要自定义错误页面其实很简单，提供4xx和5xx页面即可。如果开发者不需要向用户展示详细的错误信息，那么可以把错误信息定义成静态页面，直接在resources/static目录下创建error目录，然后在error目录中创建错误展示页面。错误展示页面的命名规则有两种：一种是4xx.html、5xx.html；另一种是直接使用响应码命名文件，例如404.html、405.html、500.html。第二种命名方式划分得更细，当出错时，不同的错误会展示不同的错误页面。<br>这种定义都是使用了静态HTML页面，无法向用户展示完整的错误信息，若采用视图模板技术，则可以向用户展示更多的错误信息。如果要使用HTML模板，那么先引入模板相关的依赖，这里以Thymeleaf为例，Thymeleaf页面模板默认处于classpath:/templates/目录下，因此在该目录下先创建error目录，再创建错误展示页。<br>由于模板页面展示信息比较灵活，因此可以直接创建4xx.html、5xx.html。以4xx.html页面为例，其内容如下：</p><pre><code>&lt;!DOCTYPE html&gt;&lt;html lang＝&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org/&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;table border=&quot;1&quot;&gt;&lt;tr&gt;&lt;td&gt;timestamp&lt;/td&gt;&lt;td th:text＝&quot;{timestamp}&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;status&lt;/td&gt;&lt;td th:text=&quot;${status}&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;error&lt;/td&gt;&lt;td th:text=&quot;${error}&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;message&lt;/td&gt;&lt;td th:text=&quot;${message}&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;path&lt;/td&gt;&lt;td th:text＝&quot;${path}&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p>SpringBoot在这里一共返回了5条错误相关的信息，分别是timestamp、status、error、message以及path。<br>若用户定义了多个错误页面，则响应码.html页面的优先级高于4xx.html、5xx.html页面的优先级，即若当前是一个404错误，则优先展示404.html而不是4xx.html；动态页面的优先级高于静态页面，即若 resources/templates和resources/static下同时定义了4xx.html，则优先展示resources/templates/4xx.html。</p><h2 id="复杂配置"><a href="#复杂配置" class="headerlink" title="复杂配置"></a>复杂配置</h2><p>上面这种配置还是不够灵活，只能定义HTML页面，无法处理JSON的定制。SpringBoot中支持对Error信息的深度定制，接下来将从三个方面介绍深度定制：自定义Error数据、自定义Error视图以及完全自定义。</p><h3 id="自定义Error数据"><a href="#自定义Error数据" class="headerlink" title="自定义Error数据"></a>自定义Error数据</h3><p>自定义Error数据就是对返回的数据进行自定义。SpringBoot返回的Error信息一共有5条，分别是timestamp、status、error、message以及path。在BasicErrorController的errorHtml方法和error方法中，都是通过getErrorAttributes方法获取Error信息的。该方法最终会调用到DefaultErrorAttributes类的getErrorAttributes方法，而DefaultErrorAttributes类是在ErrorMvcAutoConfiguration中默认提供的。ErrorMvcAutoConfiguration类的errorAttributes 方法源码如下：</p><pre><code>@Bean@ConditionalOnMissingBean(value=ErrorAttributes.class,search=SearchStrategy.CURRENT) public DefaultErrorAttributes errorAttributes(){    return new DefaultErrorAttributes(this.serverProperties.getError().isIncludeException()); }</code></pre><p>从这段源码中可以看出，当系统没有提供ErrorAttributes时才会采用DefaultErrorAttributes。因此自定义错误提示时，只需要自己提供一个ErrorAttributes即可，而DefaultErrorAttributes是ErrorAttributes的子类，因此只需要继承DefaultErrorAttributes即可，代码如下：</p><pre><code>@Componentpublic class MyErrorAttribute extends DefaultErrorAttributes{    @Override    public Map&lt;String,Object&gt; getErrorAttributes(WebRequest webRequest,boolean includeStackTrace) {        Map&lt;String,Object&gt; errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);        errorAttributes.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);        errorAttributes.remove(&quot;error&quot;);         return errorAttributes;    }}</code></pre><p>代码解释：</p><ul><li>自定义MyErrorAttribute继承自DefaultErrorAttributes，重写DefaultErrorAttributes中的getErrorAttributes方法。MyErrorAttribute类添加@Component注解，该类将被注册到Spring容器中。 </li><li>第6、7行通过super.getErrorAttributes获取SpringBoot默认提供的错误信息，然后在此基础上添加Error信息或者移除Error信息。</li></ul><p>此时，当系统抛出异常时，错误信息将被修改。</p><h3 id="自定义Error视图"><a href="#自定义Error视图" class="headerlink" title="自定义Error视图"></a>自定义Error视图</h3><p>Error视图是展示给用户的页面，在BasicErrorController的errorHtml方法中调用resolveErrorView方法获取一个ModelAndView实例。resolveErrorView方法是由ErrorViewResolver提供的，通过ErrorMvcAutoConfiguration类的源码可以看到SpringBoot默认采用的ErrorViewResolver是DefaultErrorViewResolver。ErrorMvcAutoConfiguration部分源码如下：</p><pre><code>@Bean@ConditionalOnBean(DispatcherServlet.class)@ConditionalOnMissingBeanpublic DefaultErrorViewResolver conventionErrorViewResolver() {    return new DefaultErrorViewResolver(this.applicationContext,this.resourceProperties); }</code></pre><p>从这一段源码可以看到，如果用户没有定义ErrorViewResolver，那么默认使用的ErrorViewResolver是DefaultErrorViewResolver，正是在DefaultErrorViewResolver中配置了默认去error目录下寻找4xx.html、5xx.html。因此，开发者想要自定义Error视图，只需要提供自己的ErrorViewResolver即可，代码如下：</p><pre><code>@Componentpublic class MyErrorViewResolver implements ErrorViewResolver {    @Override    public ModelAndView resolveErrorView(HttpServletRequest request , HttpStatus        status, Map&lt;String,Object&gt; model) {       ModelAndView mv = new ModelAndView(&quot;errorPage&quot;);       mv.addObject(&quot;custommsg&quot;,&quot;出错啦！！&quot;);       mv.addAllObjects(model);       return mv;     }}</code></pre><p>代码解释：</p><ul><li>自定义MyErrorViewResolver实现ErrorViewResolver接口并实现接口中的resolveErrorView方法，使用@Component注解将该类注册到Spring容器中。 </li><li>在resolveErrorView方法中，最后一个Map参数就是SpringBoot提供的默认的5条Error信息（可以按照前面自定义Error数据的步骤对这5条消息进行修改）。在resolveErrorView方法中，返回一个ModelAndView，在ModelAndView中设置Error视图和Error数据。</li><li>理论上，开发者也可以通过实现ErrorViewResolver接口来实现Error数据的自定义，但是如果只是单纯地想自定义Error数据，还是建议继承DefaultErrorAttributes。</li></ul>此时，无论请求发生4xx的错误还是发生5xx的错误，都会来到errorPage.html页面。<h3 id="完全自定义"><a href="#完全自定义" class="headerlink" title="完全自定义"></a>完全自定义</h3><p>前面提到的两种自定义方式都是对BasicErrorController类中的某个环节进行修补。查看Error自动化配置类ErrorMvcAutoConfiguration，可以发现BasicErrorController本身只是一个默认的配置，相关源码如下：</p><pre><code>public class ErrorMvcAutoConfiguration {    ...    ...    @Bean    @ConditionalOnMissingBean(value=ErrorController.class,search=SearchStrategy.CURRENT)    public BasicErrorController basicErrorController(ErrorAttributes errorAttributes) {         return new BasicErrorController(errorAttributes, this.serverProperties.getError(),this.errorViewResolvers);     }    ...    ...}</code></pre><p>从这段源码中可以看到，若开发者没有提供自己的ErrorController，则SpringBoot提供BasicErrorController作为默认的ErrorController。因此，如果开发者需要更加灵活地对Error视图和数据进行处理，那么只需要提供自己的ErrorController即可。提供自己的ErrorController有两种方式：一种是实现ErrorController接口，另一种是直接继承BasicErrorController。由于ErrorController接口只提供一个待实现的方法，而BasicErrorController己经实现了很多功能，因此这里选择第二种方式，即通过继承BasicErrorController来实现自己的ErrorController。具体定义如下：</p><pre><code>@Controllerpublic class MyErrorController extends BasicErrorController {    @Autowired    public MyErrorController(ErrorAttributes errorAttributes,                               ServerProperties serverProperties,                               List&lt;ErrorViewResolver&gt; errorViewResolvers){       super(errorAttributes,serverProperties.getError(),errorViewResolvers);    }    @Override    public ModelAndView errorHtml(HttpServletRequest request,                                   HttpServletResponse response) {       HttpStatus status=getStatus(request);       Map&lt;String,Object&gt; model = getErrorAttributes(request,isIncludeStackTrace(request,MediaType.TEXT_HTML));       model.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);       ModelAndView modelAndView=new ModelAndView(&quot;myErrorPage&quot;,model,status);       return modelAndView;    }    @Override    public ResponseEntity&lt;Map&lt;String,Object&gt;&gt; error(HttpServletRequest request){       Map&lt;String,Object&gt; body=getErrorAttributes(request,isIncludeStackTrace(request,MediaType.ALL));       body.put(&quot;custommsg&quot;,&quot;出错啦！&quot;);       HttpStatus status = getStatus(request);       return new ResponseEntity&lt;&gt; (body,status);     }}</code></pre><p>代码解释：</p><ul><li>自定义MyErrorController继承自BasicErrorController并添加@Controller注解，将MyErrorController注册到SpringMVC 容器中。  </li><li>由于BasicErrorController没有无参构造方法，因此在创建BasicErrorController实例时需要传递参数，在MyErrorController的构造方法上添加@Autowired注解解注入所需参数。</li><li>参考BasicErrorController中的实现，重写errorHtml和error方法，对Error的视图和数据进行充分的自定义。</li></ul><h1 id="CORS支持"><a href="#CORS支持" class="headerlink" title="CORS支持"></a>CORS支持</h1><p>CORS(Cross-Origin Resource Sharing）是由W3C制定的一种跨域资源共享技术标准，其目的就是为了解决前端的跨域请求。在JavaEE开发中，最常见的前端跨域请求解决方案是JSONP，但是JSONP只支持GET请求，这是一个很大的缺陷，而CORS则支持多种HTTP请求方法。以CORS中的GET请求为例，当浏览器发起请求时，请求头中携带了如下信息：</p><pre><code>......Host:localhost:8080Origin:http://localhost:8081 Referer:http://localhost:8081/index.html ......</code></pre><p>假如服务端支持 CORS，则服务端给出的响应信息如下：</p><pre><code>......Access-Control-Allow-Origin:http://localhost:8081Content-Length:20Content-Type:text/plain;charset=UTF-8Date:Thu,12 Jul 2018 12:51:14 GMT......</code></pre><p>响应头中有一个Access-Control-Allow-Origin字段，用来记录可以访问该资源的域。当浏览器收到这样的响应头信息之后，提取出Access-Control-Allow-Origin字段中的值，发现该值包含当前页面所在的域，就知道这个跨域是被允许的，因此就不再对前端的跨域请求进行限制。这就是GET请求的整个跨域流程，在这个过程中，前端请求的代码不需要修改，主要是后端进行处理。这个流程主要是针对GET、POST以及HEAD请求，并且没有自定义请求头，如果用户发起一个DELETE请求、PUT请求或者自定义了请求头，流程就会稍微复杂一下。<br>以DELETE请求为例，当前端发起一个DELETE请求时，这个请求的处理会经过两个步骤。<br>第一步：发送一个OPTIONS请求。代码如下：</p><pre><code>......Access-Control-Request-Method DELETE Connection keep-alive Host localhost:8080 Origin http://localhost:8081 ......</code></pre><p>这个请求将向服务端询问是否具备该资源的DELETE权限，服务端会给浏览器一个响应，代码如下：</p><pre><code>......HTTP/1.1 200 Access-Control-Allow-Origin:http://localhost:8081 Access-Control-Allow-Methods:DELETE Access-Control-Max-Age:1800 Allow: GET,HEAD,POST,PUT,DELETE,OPTIONS,PATCH Content-Length:0 Date: Thu, 12 Jul 2018 13:20:26 GMT ......</code></pre><p>服务端给浏览器的响应，Allow头信息表示服务端支持的请求方法，这个请求相当于一个探测请求，当浏览器分析了请求头宇段之后，知道服务端支持本次请求，则进入第二步。<br>第二步：发送DELETE请求。接下来浏览器就会发送一个跨域的DELETE请求，代码如下：</p><pre><code>......Host:localhost:8080Origin:http://localhost:8081 Connection:keep-alive ......</code></pre><p>服务端给一个响应：</p><pre><code>......HTTP/1.1 200 Access-Control-Allow-Origin:http://localhost:8081 Content-Type:text/plain;charset=UTF-8 Date:Thu, 12 Jul 2018 13:20:26 GMT ......</code></pre><p>至此，一个跨域的DELETE请求完成。无论是简单请求还是需要先进行探测的请求，前端的写法都是不变的，额外的处理都是在服务端来完成的。在传统的JavaEE开发中，可以通过过滤器统一配置，而SpringBoot中对此则提供了更加简洁的解决方案。在SpringBoot中配置 CORS 的步骤如下：<br><strong>1.创建SpringBoot工程</strong><br><strong>2.创建控制器</strong><br>在新创建的SpringBoot工程中，添加一个BookController控制器，代码如下：</p><pre><code>@RestController @RequestMapping(&quot;/book&quot;) public class BookController {    @PostMapping(&quot;/&quot;)    public String addBook(String name){        return &quot;receive:&quot;+name;     }    @DeleteMapping(&quot;/{id)&quot;)    public String deleteBookByid(@PathVariable Long id) {        return String.valueOf(id);     }}</code></pre><p>BookController 中提供了两个接口 ： 一个是添加接口，另一个是删除接口。<br><strong>3.配置跨域</strong><br>跨域有两个地方可以配置。一个是直接在相应的请求方法上加注解：</p><pre><code>@RestController@RequestMapping(&quot;/book&quot;)public class BookController {    @PostMapping(&quot;/&quot;)    @CrossOrigin(value=&quot;http://localhost:8081&quot;,maxAge=1800,allowedHeaders=&quot;*&quot;)    public String addBook(String name){        return &quot;receive:&quot;+name;    }    @DeleteMapping(&quot;/{id}&quot;)    @CrossOrigin(value=&quot;http://localhost:8081&quot;,maxAge=1800,allowedHeaders=&quot;*&quot;)    public String deleteBookByid(@PathVariable Long id) {        return String.valueOf(id);    }}</code></pre><p>代码解释：</p><ul><li>全局配置需要自定义类实现WebMvcConfigurer接口，然后实现接口中的addCorsMappings方法。 </li><li>在addCorsMappings方法中，addMapping表示对哪种格式的请求路径进行跨域处理；allowedHeaders表示允许的请求头，默认允许所有的请求头信息；allowedMethods表示允许的请求方法，默认是GET、POST和HEAD；*表示支持所有的请求方法；maxAge表示探测 请求的有效期；allowedOrigins表示支持的域。</li></ul>这种配置方式是一种细粒度的配置，可以控制到每一个方法上。当然，也可以不在每个方法上添加@CrossOrigin注解，而是采用一种全局配置，代码如下：<pre><code> @Configuration public class MyWebMvcConfig implements WebMvcConfigurer{    @Override    public void addCorsMappings(CorsRegistry registry){        registry.addMapping{&quot;/book/**&quot;)            .allowedHeaders(&quot;*&quot;)            .allowedMethods(&quot;*&quot;)            .maxAge(1800)            .allowedOrigins(&quot;http://localhost:8081&quot;);     }}</code></pre><p>代码解释：</p><ul><li>全局配置需要自定义类实现WebMvcConfigurer接口，然后实现接口中的addCorsMappings方法。  </li><li>在addCorsMappings方法中，addMapping表示对哪种格式的请求路径进行跨域处理；allowedHeaders表示允许的请求头，默认允许所有的请求头信息；allowedMethods表示允许的请求方法，默认是GET、POST和HEAD；*表示支持所有的请求方法；maxAge表示探测请求的有效期；allowedOrigins表示支持的域。</li></ul>在上面的两种配置方式（@CrossOrigin注解配置和全局配置）中，选择其中一种即可，然后启动项目。<p><strong>4.测试</strong><br>新建一个SpringBoot项目，添加Web依赖，然后在resources/static目录下加入jquery.js，再在resources/static目录下创建一个index.html 文件，内容如下：</p><pre><code>&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Title&lt;/title&gt;&lt;script src=&quot;jquery3.3.1.js&quot;&gt;&lt;/script&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;contentDiv&quot;&gt;&lt;/div&gt;&lt;div id=&quot;deleteResult&quot;&gt;&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;提交数据&quot; onclick=&quot;getData()&quot;&gt;&lt;br&gt;&lt;input type=&quot;button&quot; value=&quot;删除数据&quot; onclick=&quot;deleteData()&quot;&gt;&lt;br&gt;&lt;script&gt;    function deleteData(){        $.ajax({            url:&quot;http://localhost:8080/book/99&quot;,            type:&quot;delete&quot;,            success:function(msg){                $(&quot;#deleteResult&quot;).html(msg);             }        })    }    function getData(){        $.ajax({             url:&quot;http://localhost:8080/book/&quot;,             type:&quot;post&quot;,             data:{name:&quot;三国演义&quot;},            success:function(msg){                $(&quot;#contentDiv&quot;).html(msg);             }        })    }&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p>两个普通的Ajax都发送了一个跨域请求。然后将项目的端口修改为8081，代码如下：</p><pre><code>server.port=8081</code></pre><h1 id="配置类与XML配置"><a href="#配置类与XML配置" class="headerlink" title="配置类与XML配置"></a>配置类与XML配置</h1><p>SpringBoot推荐使用Java来完成相关的配置工作。在项目中，不建议将所有的配置放在一个配置类中，可以根据不同的需求提供不同的配置类，例如专门处理SpringSecurity的配置类、提供Bean的配置类、SpringMVC相关的配置类。这些配置类上都需要添加＠Configuration注解，@ComponentScan注解会扫描所有的Spring组件，也包括@Configuration。@ComponentScan注解在项目入口类的@SpringBootApplication注解中己经提供，因此在实际项目中只需要按需提供相关配置类即可。<br>SpringBoot中并不推荐使用XML配置，建议尽量用Java配置代替XML配置。如果开发者需要使用XML配置，只需在resources目录下提供配置文件，然后通过@ImportResource加载配置文件即可。例如，有一个Hello类如下：</p><pre><code>public class Hello {    public String sayHello (String name) {         return &quot;hello&quot;+name;     }}    </code></pre><p>在resources目录下新建beans.xml文件配置该类：</p><pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;     xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt; &lt;bean class=&quot;org.sang.Hello&quot; id=&quot;hello&quot;/&gt;&lt;/beans&gt; </code></pre><p>然后创建Beans配置类，导入XML配置：</p><pre><code>@Configuration@ImportResource(&quot;classpath:beans.xml&quot;) public class Beans { }</code></pre><p>最后在Controller中就可以直接导入Hello类使用了：</p><pre><code>@RestController public class HelloController {     @Autowired     Hello hello;     @GetMapping(&quot;/hello&quot;)     public String hello(){         return hello.sayHello(&quot;江南一点雨&quot;);    }}</code></pre><h1 id="注册拦截器"><a href="#注册拦截器" class="headerlink" title="注册拦截器"></a>注册拦截器</h1><p>SpringMVC中提供了AOP风格的拦截器，拥有更加精细的拦截处理能力。SpringBoot中拦截器的注册更加方便，步骤如下：<br><strong>步骤01</strong>  创建一个 SpringBoot项目，添加spring-boot-starter－web依赖。<br><strong>步骤02</strong> 创建拦截器实现HandlerInterceptor接口，代码如下</p><pre><code>public class MyInterceptor1 implements HandlerInterceptor {     @Override     public boolean preHandle (HttpServletRequest request,                                HttpServletResponse response,                                 Object handler) {         System.out.println(&quot;Myinterceptorl&gt;&gt;&gt;preHandle&quot;);         return true;     }    @Override    public void postHandle(HttpServletRequest request,                             HttpServletResponse response,                             Object handler,                             ModelAndView modelAndView){         System.out.println(&quot;Mylnterceptorl&gt;&gt;&gt;postHandle&quot;);    }    @Override     public void afterCompletion(HttpServletRequest request,                                HttpServletResponse response,                                 Object handler,                                 Exception ex){        System.out.println(&quot;Mylnterceptorl&gt;&gt;&gt;afterCompletion&quot;);     }}</code></pre><p>拦截器中的方法将按preHandle-&gt;Controller-&gt;postHandle-&gt;afterCompletion的顺序执行。注意，只有preHandle方法返回true时后面的方法才会执行。当拦截器链内存在多个拦截器时，postHandler在拦截器链内的所有拦截器返回成功时才会调用，而afterCompletion只有preHandle返回true才调用，但若拦截器链内的第一个拦截器的preHandle方法返回false，则后面的方法都不会执行。<br><strong>步骤03</strong> 配置拦截器。定义配置类进行拦截器的配置，代码如下：</p><pre><code>@Configuration public class WebMvcConfig implements WebMvcConfigurer {    @Override     public void addInterceptors(InterceptorRegistry registry) {        registry.addInterceptor(new Mylnterceptor1())                 .addPathPatterns(&quot;/**&quot;)                 .excludePathPatterns(&quot;/hello&quot;);     }}</code></pre><p>自定义类实现WebMvcConfigurer接口实现接口中的addlnterceptors方法。其中，addPathPattems表示拦截路径，excludePathPattems表示排除的路径。</p><h1 id="启动系统任务"><a href="#启动系统任务" class="headerlink" title="启动系统任务"></a>启动系统任务</h1><p>有一些特殊的任务需要在系统启动时执行，例如配置文件加载、数据库初始化等操作。如果没有使用SpringBoot，这些问题可以在Listener中解决。SpringBoot对此提供了两种解决方案：CommandLineRunner和ApplicationRunner。CommandLineRunner和ApplicationRunner基本一致，差别主要体现在参数上。</p><h2 id="CommandlineRunner"><a href="#CommandlineRunner" class="headerlink" title="CommandlineRunner"></a>CommandlineRunner</h2><p>SpringBoot项目在启动时会遍历所有CommandLineRunner的实现类并调用其中的run方法，如果整个系统中有多个CommandLineRunner的实现类，那么可以使用@Order注解对这些实现类的调用顺序进行排序。<br>在一个SpringBootWeb项目中添加两个CommandLineRunner，分别如下：</p><pre><code>@Component@Order(1)public class MyCommandLineRunnerl implements CommandLineRunner {    @Override    public void run(String... args) throws Exception {        System.out.println(&quot;Runnerl&gt;&gt;&gt;&quot;+Arrays.toString(args));    )}@Component@Order(2)public class MyCommandLineRunner2 implements CommandLineRunner {    @Override    public void run(String... args) throws Exception {        System.out.println(&quot;Runner2&gt;&gt;&gt;&quot;+Arrays.toString(args));    )}</code></pre><p>代码解释：</p><ul><li>@Order(l)注解用来描述CommandLineRunner的执行顺序，数字越小越先执行。  </li><li>run方法中是调用的核心逻辑，参数是系统启动时传入的参数，即入口类中main方法的参数（在调用SpringApplication.run方法时被传入SpringBoot项目中）。</li></ul>在系统启动时，配置传入的参数。以IntelliJ IDEA为例，配置方式如下：<p><strong>步骤01</strong>单击右上角的编辑启动配置。</p><p><strong>步骤02</strong>在打开的新页面中编辑Program arguments，如果有多个参数，参数之间用空格隔开。</p><p><strong>步骤03</strong>启动项目。</p><h2 id="ApplicationRunner"><a href="#ApplicationRunner" class="headerlink" title="ApplicationRunner"></a>ApplicationRunner</h2><p>ApplicationRunner的用法和CommandLineRunner基本一致，区别主要体现在run方法的参数上。<br>在一个SpringBootWeb项目中新建两个ApplicationRunner，代码如下：</p><pre><code>@Component@Order(1)public class MyApplicationRunnerl implements ApplicationRunner {    @Override    public void run(ApplicationArguπtents args) throws Exception{        List&lt;String&gt; nonOptionArgs = args.getNonOptionArgs();        System.out.println(&quot;1-nonOptionArgs&gt;&gt;&gt;&quot;+nonOptionArgs);        Set&lt;String&gt; optionNames = args.getOptionNames();        for(String optionName : optionNames) {            System.out.println(&quot;1-key:&quot;+optionName+&quot;;value:&quot;+args.getOptionValues(optionName));         }    }}@Component@Order(2)public class MyApplicationRunner2 implements ApplicationRunner {    @Override    public void run(ApplicationArguπtents args) throws Exception{        List&lt;String&gt; nonOptionArgs = args.getNonOptionArgs();        System.out.println(&quot;2-nonOptionArgs&gt;&gt;&gt;&quot;+nonOptionArgs);        Set&lt;String&gt; optionNames = args.getOptionNames();        for(String optionName : optionNames) {            System.out.println(&quot;2-key:&quot;+optionName+&quot;;value:&quot;+args.getOptionValues(optionName));         }    }}</code></pre><p>代码解释：</p><ul><li>@Order注解依然是用来描述执行顺序的，数字越小越优先执行。  </li><li>不同于CommandLineRunner中run方法的数组参数，这里run方法的参数是一个ApplicationArguments对象，如果想从ApplicationArguments对象中获取入口类中main方法接收的参数，调用ApplicationArguments中的getNonOptionArgs方法即可。ApplicationArguments中的getOptionNames方法用来获取项目启动命令行中参数的key，例如将本项目打成jar包，运行java -jar xxx.jar name=Michael 命令来启动项目，此时getOptionNames方法获取到的就是name，而getOptionValues 方法则是获取相应的value。</li></ul>接下来运行mvnpackage命令对项目进行打包，代码如下：<pre><code>mvn package</code></pre><p>进入打包目录中，执行如下命令启动项目： </p><pre><code>Java -jar linerunner-0.0.1.jar --name=Michael --age=99 三国演义 罗贯中</code></pre><p>命令解释：</p><ul><li>--name=Michael --age=99 都属于getOptionNames/getOptionValues范畴。 </li><li>后面的“三国演义”“罗贯中”可以通过getNonOptionArgs方法获取，获取到的是一个数组，相当于上文提到的运行时配置的ProgramArguments。</li></ul>    <h1 id="整合Serviet、Filter和Listener"><a href="#整合Serviet、Filter和Listener" class="headerlink" title="整合Serviet、Filter和Listener"></a>整合Serviet、Filter和Listener</h1><p>一般情况下，使用Spring、SpringMVC这些框架之后，基本上就告别Serviet、Filter以及Listener了，但是有时在整合一些第三方框架时，可能还是不得不使用Serviet，比如在整合某报表插件时就需要使用Servlet。SpringBoot中对于整合这些基本的Web组件也提供了很好的支持。<br>在一个SpringBootWeb项目中添加如下三个组件：</p><pre><code>@WebServlet(&quot;/my&quot;)public class MyServlet extends HttpServlet {    @Override    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {        doPost(req,resp);    }        @Override    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {        System.out.println (&quot;name&gt;&gt;&gt;&quot;+req.getParameter(&quot;name&quot;));    }}@WebFilter(&quot;/*&quot;)public class MyFilter implements Filter {    @Override    public void init (FilterConfig filterConfig) {        System.out.println(&quot;MyFilter&gt;&gt;&gt;init&quot;);    }    @Override    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) {         System.out.println(&quot;MyFilter&gt;&gt;&gt;doFilter&quot;);         chain.doFilter(req,resp);     }    @Override     public void destroy() {         System.out.println (&quot;MyFilter&gt;&gt;&gt;destroy&quot;);    }}@WebListener public class MyListener implements ServletRequestListener {    @Override     public void requestDestroyed(ServletRequestEvent sre) {         System.out.println(&quot;MyListener&gt;&gt;&gt;requestDestroyed&quot;);    }    @Override     public void requestInitialized (ServletRequestEvent sre) {         System.out.println (&quot;MyListener&gt;&gt;&gt;requestIn工tialized&quot;);    }}</code></pre><p>代码解释：</p><ul><li>这里定义了三个基本的组件，分别使用@WebServlet、@WebFilter和@WebListener三个注解进行标记。 </li><li>这里以ServletRequestListener为例，但是对于其他的Listener，例如HttpSessionListener、ServletContextListener等也是支持的。</li></ul>在项目入口类上添加@ServletComponentScan注解，实现对Serviet、Filter以及Listener的扫描，代码如下：<pre><code>@SpringBootApplication @ServletComponentScan public class ServletApplication {     public static void main(String[] args) {         SpringApplication.run(ServletApplication.class,args);     }}</code></pre><h1 id="路径映射"><a href="#路径映射" class="headerlink" title="路径映射"></a>路径映射</h1><p>一般情况下，使用了页面模板后，用户需要通过控制器才能访问页面。有一些页面需要在控制器中加载数据，然后渲染，才能显示出来；还有一些页面在控制器中不需要加载数据，只是完成简单的跳转，对于这种页面，可以直接配置路径映射，提高访问速度。例如，有两个Thymeleaf做模板的页面login.html和index.html，直接在MVC配置中重写addViewController方法配置映射关系即可：</p><pre><code>@Configuration public class WebMvcConfig implements WebMvcConfigurer {     @Override     public void addViewControllers(ViewControllerRegistry registry) {        registry.addViewController(&quot;/login&quot;).setViewName(&quot;login&quot;);         registry.addViewController(&quot;/index&quot;).setViewName(&quot;index&quot;);     }}</code></pre><h1 id="配置AOP"><a href="#配置AOP" class="headerlink" title="配置AOP"></a>配置AOP</h1><p>在AOP中，有一些常见的概念：</p><ul><li>Joinpoint（连接点）：类里面可以被增强的方法即为连接点。例如，想修改哪个方法的功能，那么该方法就是一个连接点。 </li><li>Pointcut（切入点）：对Joinpoint进行拦截的定义即为切入点，例如，拦截所有以insert开始的方法，这个定义即为切入点。  </li><li>Advice（通知）：拦截到Joinpoint之后所要做的事情就是通知。例如，上文说到的打印日志 监控。通知分为前置通知、后置通知、异常通知、最终通知和环绕通知。   </li><li>Aspect（切面）：Pointcut和Advice的结合。   </li><li>Target（目标对象）：要增强的类称为Target。</li></ul><h2 id="SpringBoot支持"><a href="#SpringBoot支持" class="headerlink" title="SpringBoot支持"></a>SpringBoot支持</h2><p>SpringBoot在Spring的基础上对AOP的配置提供了自动化配置解决方案spring-boot-starter-aop，使开发者能够更加便捷地在SpringBoot项目中使用AOP。配置步骤如下。<br>首先在SpringBootWeb项目中引入spring-boot-starter-aop依赖，代码如下：</p><pre><code>&lt;dependency&gt;&lt;groupid&gt;org.springframework.boot&lt;/groupid&gt;&lt;artifactid&gt;spring-boot-starter-aop&lt;/artifactid&gt;&lt;/dependency&gt;</code></pre><p>然后在org.sang.aop.service包下创建UserService类，代码如下：</p><pre><code>@Servicepublic class UserService {    public String getUserByid (Integer id){        System.out.println(&quot;get...&quot;);        return &quot;user&quot;;    }    public void deleteUserByid(Integer id){        System.out.println(&quot;delete...&quot;);     }}</code></pre><p>接下来创建切面，代码如下： </p><pre><code>@Component@Aspect public class LogAspect {    @Pointcut(&quot;execution(* org.sang.aop.service.*.*(..))&quot;)    public void pcl(){    }    @Before(value=&quot;pcl()&quot;)    public void before(JoinPoint jp) {        String name = jp.getSignature().getName();        System.out.println(name+&quot;方法开始执行．．．&quot;);    }    @After(value=&quot;pcl()&quot;)        public void after (JoinPoint jp) {        String name = jp.getSignature().getName();        System.out.println(name+&quot;方法执行结束．．．&quot;);    }    @AfterReturning(value=&quot;pcl()&quot;,returning=&quot;result&quot;)    public void afterReturning(JoinPoint jp,Object result) {        String name = jp.getSignature().getName();        System.out.println(name+&quot;方法返回值为：&quot;+result);    }    @AfterThrowing(value=&quot;pcl()&quot;,throwing=&quot;e&quot;)    public void afterThrowing(JoinPoint jp,Exception e) {        String name = jp.getSignature().getName();        System.out.println(name+&quot;方法抛异常了，异常是：&quot;+e.getMessage());    }    @Around(&quot;pcl()&quot;)    public Object around(ProceedingJoinPoint pjp) throws Throwable {        return pjp.proceed();    }}</code></pre><p>代码解释：</p><ul><li>@Aspect注解表明这是一个切面类。  </li><li>第4～6行定义的pcl方法使用了@Pointcut注解，这是一个切入点定义。execution中的第一个*表示方法返回任意值，第二个*表示service包下的任意类，第三个*表示类中的任意方法，括号中的两个点表示方法参数任意，即这里描述的切入点为service包下所有类中的所有方法。   </li><li>第7～11行定义的方法使用了@Before注解，表示这是一个前置通知，该方法在目标方法执行之前执行。通过JoinPoint参数可以获取目标方法的方法名、修饰符等信息。    </li><li>第12～16行定义的方法使用了@After注解，表示这是一个后置通知，该方法在目标方法执行之后执行。    </li><li>第17～21行定义的方法使用了@AfterReturning注解，表示这是一个返回通知，在该方法中可以获取目标方法的返回值。@AfterReturning注解的returning参数是指返回值的变量名，对应方法的参数。注意，在方法参数中定义了result的类型为Object，表示目标方法的返回值可以是任意类型，若result参数的类型为Long，则该方法只能处理目标方法返回值为Long的情况。</li><li>第22～26行定义的方法使用了@AfterThrowing注解，表示这是一个异常通知，即当目标方法发生异常时，该方法会被调用，异常类型为Exception表示所有的异常都会进入该方法中执行，若异常类型为ArithmeticException，则表示只有目标方法抛出的ArithmeticException异常才会进入该方法中处理。 </li><li>第27～30行定义的方法使用了@Around注解，表示这是一个环绕通知。环绕通知是所有通知里功能最为强大的通知，可以实现前置通知、后置通知、异常通知以及返回通知的功能。目标方法进入环绕通知后，通过调用ProceedingJoinPoint对象的proceed方法使目标方法继续执行，开发者可以在此修改目标方法的执行参数、返回值等，并且可以在此处理目标方法的异常。 </li></ul>配置完成后，接下来在Controller中创建接口，分别调用UserService中的两个方法，即可看到LogAspect中的代码动态地嵌入目标方法中执行了。UserController类的定义如下：<pre><code>@RestControllerpublic class UserController {    @Autowired    UserService userService;    @GetMapping(&quot;/getUserById&quot;)    public String getUserByid(Integer id) {        return userService.getUserById(id);    }    @GetMapping(&quot;/deleteUserById&quot;)    public void deleteUserByid(Integer id) {        userService.deleteUserById(id);     }}</code></pre><h1 id="除去某个自动配置"><a href="#除去某个自动配置" class="headerlink" title="除去某个自动配置"></a>除去某个自动配置</h1><p>SpringBoot中提供了大量的自动化配置类，例如上文提到过的ErrorMvcAutoConfiguration、ThymeleafAutoConfiguration、FreeMarkerAutoConfiguration、MultipartAutoConfiguration 等，这些自动化配置可以减少相应操作的配置，达到开箱即用的效果。在SpringBoot的入口类上有一个@SpringBootApplication注解。该注解是一个组合注解，由@SpringBootConfiguration、@EnableAutoConfiguration以及@ComponentScan组成，其中@EnableAutoConfiguration注解开启自动化配置，相关的自动化配置类就会被使用。如果开发者不想使用某个自动化配置，按如下方式除去相关配置即可：</p><pre><code> @Spring BootApplication @EnableAutoConfiguration(exclude={ErrorMvcAutoConfiguration.class}) public class OtherApplication {    public static void main (String[] args) {         SpringApplication(OtherApplication.class,args);    }}</code></pre><p>在@EnableAutoConfiguration注解中使用exclude属性除去Error的自动化配置类，这时如果在resources/static/error目录下创建4xx.html、5xx.html，访问出错时就不会自动跳转了。由于@EnableAutoConfiguration注解的exclude属性值是一个数组，因此有多个要排除的自动化配置类时只需继续添加即可。除了这种配置方式外，开发者也可以在application.properties配置文件中进行配置，代码如下：</p><pre><code>spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration</code></pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SpringBoot之分层开发Web应用程序</title>
+      <link href="/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/"/>
+      <url>/2020/07/04/SpringBoot%E4%B9%8B%E5%88%86%E5%B1%82%E5%BC%80%E5%8F%91Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</url>
+      
+        <content type="html"><![CDATA[<h1 id="了解MVC模式"><a href="#了解MVC模式" class="headerlink" title="了解MVC模式"></a>了解MVC模式</br></h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot开发Web应用程序主要使用<font color=red>MVC模式</font>。MVC是Model（模型）、View（视图）、Controller（控制器）的简写。</br></p><ul><li><font color=red>Model</font>:是Java的实体Bean，代表可存取数据的对象或POJO（Plain Ordinary Java Objects，简单的Java对象），也可以带有逻辑。其作用是在内存中暂时存储数据，并在数据变化时更新控制器（如果要持久化，则需要把它写入数据库或者磁盘文件中）。</li><li><font color=red>View</font>:主要用来解析、处理、显示内容，并进行模板的渲染。</li><li><font color=red>Controller</font>:主要用来处理视图中的响应。它决定如何调用Model（模型）的实体Bean、如何调用业务层的数据增加、删除、修改和查询等业务操作，以及如何将结果返给视图进行渲染。建议在控制器中尽量不放业务逻辑代码。</li></ul>&#8194;&#8194;&#8194;&#8194;这样分层的好处是：将应用程序的用户界面和业务逻辑分离，使得代码具备良好的可扩展性、可复用性、可维护性和灵活性。</br>&#8194;&#8194;&#8194;&#8194;在整个SpringMVC框架中，<font color=red>DispatcherServlet处于核心位置，继承自HttpServlet</font>。它负责协调和组织不同组件，以完成请求处理并返回相应工作。</br>&#8194;&#8194;&#8194;&#8194;整个工程流程如下：</br><ol><li>客户端（用户）发出的请求由Tomcat（服务器）接收，然后Tomcat将请求转交给DispatcherServlet处理。</li><li>DispatcherServlet匹配控制器中配置的映射路径，进行下一步处理。</li><li>ViewResolver将ModelAndView或Exception解析成View。然后View会调用render()方法，并根据ModelAndView中的数据渲染出页面。</li></ol><h1 id="MVC和三层架构的关系"><a href="#MVC和三层架构的关系" class="headerlink" title="MVC和三层架构的关系"></a>MVC和三层架构的关系</br></h1><p>&#8194;&#8194;&#8194;&#8194;三层架构，就是将整个应用程序划分为表现层（UI）、业务逻辑层（Service）、数据访问层（DAO/Repository）。</p><ul><li><font color=red>表现层</font>：用于展示界面。主要对用户的请求进行接收，以及进行数据的返回。它为客户端（用户）提供应用程序的访问接口（界面）。</li><li><font color=red>业务逻辑层</font>：是三层架构的服务层，负责业务逻辑处理，主要是调用DAO层对数据进行增加、删除、修改和查询等操作。</li><li><font color=red>数据访问层</font>：与数据库进行交互的持久层，被Service调用。在SpringDataJPA中由Hibernate来实现。</li></ul>&#8194;&#8194;&#8194;&#8194;MVC是三层架构中的UI层。通过MVC把三层架构中的UI层又进行分层。由此可见，三层架构是基于业务逻辑或功能来划分的，而MVC是基于页面或功能来划分的。</br><h1 id="使用视图技术Thymeleaf"><a href="#使用视图技术Thymeleaf" class="headerlink" title="使用视图技术Thymeleaf"></a>使用视图技术Thymeleaf</br></h1><p><font size=4>认识Thymeleaf</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot主要支持Thymeleaf、FreeMarker、Mustache、Groovy Templates等模板引擎。<br>&#8194;&#8194;&#8194;&#8194;Thymeleaf可以轻易地与SpringMVC等Web框架进行集成。</br><br><font size=4>使用Thymeleaf</font></p><ol><li>要使用Thymeleaf，首先需要引如依赖。直接在pom.xml文件中加入以下依赖即可。<pre><code>&lt;dependency&gt;    &lt;groupId&gt;org.dpringframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;&lt;dependency&gt;</code></pre></li><li>在模板中加入解析</br>再加入依赖后，还需要再HTML文件中加入“<font color=red>&lt;html lang="en" xmlns:th="http://www.thymeleaf.org"&gt;</font>”命名空间。这样就能完成Thymeleaf的标签的渲染</li></ol><p><font size=4>配置视图解析器</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot默认的页面映射路径（即模板文件存放的位置）为“<font color=red>classpath:/templates/*.html</font>”。静态文件路径为“<font color=red>classpath:/statics/</font>”，其中可以存放层叠样式表CSS、JS等模板公用的静态文件。<br>&#8194;&#8194;&#8194;&#8194;在application.properties文件中，可以配置Thymeleaf模板解析器属性。</p><h1 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</br></h1><ol><li>引用命名空间</br>要使用Thymeleaf，则需要引入依赖，然后在模板文件中引用命名空间，如下：<pre><code>&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</code></pre><p>之后，会进行Thymeleaf模板标签的渲染。如果用SpringSecurity作为安全认证，且需要显示登录用户的信息，则可以现在视图中加入额外的thymeleaf-extras-springsecurity依赖，然后在模板文件中加入thymeleaf-extras-springsecurity命名空间，具体见以下代码：</p><pre><code>&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;        xmlns:sec=&quot;http://www.thymeleaf,org/thymeleaf-extras-springsecurity5&quot;&gt;//省略部分HTML标签&lt;span sec:authentivation=&quot;name&quot;&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_ADMIN&apos;)&quot;&gt;管理员&lt;/span&gt;&lt;span sec:authorze=&quot;hasRole(&apos;ROLE_USER&apos;)&quot;&gt;普通用户&lt;/span&gt;//省略部分HTML标签</code></pre><p>这里特别要注意查看<font color=red>spring-boot-starter-thymeleaf依赖和thymeleaf-extras-springsecurity依赖的版本是否兼容。如果不兼容，则无法调用登录用户的信息</font>。</p></li><li>常用th标签<ol><li><font color=red>th:text</font><pre><code>&lt;div th:text=&quot;${name}&quot;&gt;name&lt;/div&gt;</code></pre><p>它用于显示控制器传入的name值。<br>如果name不存在，要显示默认值，则使用以下代码：</p><pre><code>&lt;span th:text=&quot;${name}?:&apos;默认值&apos;&quot;&gt;&lt;/span&gt;</code></pre></li><li><font color=red>th:object</font></br>它用于接收后台传过来的对象，如以下代码：<pre><code>th:object=&quot;${user}&quot;</code></pre></li><li><font color=red>th:action</font></br>它用来指定表单提交地址。<pre><code>&lt;form th:action=&quot;@{/article/}+${article.id}&quot; method=&quot;post&quot;&gt;&lt;/form&gt;</code></pre></li><li><font color=red>th:value</font></br>它用对象将id的值替换为value的属性。<pre><code>&lt;input type=&quot;text&quot; th:value=&quot;${article.id}&quot; name=&quot;id&quot;/&gt;</code></pre></li><li><font color=red>th:field</font></br>它用来绑定后台对象和表单数据。Thymeleaf里的“th:field”等同于“th:name”和“th:value”，其具体使用方法见以下代码：<pre><code>&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;${article.title}&quot;/&gt;&lt;input type=&quot;text&quot; id=&quot;title&quot; name=&quot;title&quot; th:field=&quot;*{title}&quot;/&gt;</code></pre></li></ol></li><li>Thymeleaf中的URL写法</br>Thymeleaf是通过语法@{...}来处理URL的，需要使用“th:href”和“th:src”等属性，如以下代码：<pre><code>&lt;a th:href=&quot;@{http://eg.com/}&quot;&gt;绝对路径&lt;/a&gt;&lt;a th:href=&quot;@{/}&quot;&gt;相对路径&lt;/a&gt;&lt;a th:href=&quot;@{css/bootstrap.min.css}&quot;&gt;默认访问static下的css文件&lt;/a&gt;</code></pre></li><li>用Thymeleaf进行条件求值</br>Thymeleaf通过“th:if”和“th:unless”属性进行条件判断。</br>“th:unless”和“th:if”恰好相反——只有当表达式中的条件不成立时才显示其内容。</li><li>SwitchThymeleaf支持Switch结构，如以下代码：<pre><code>&lt;div th:switch=&quot;${user.role}&quot;&gt;    &lt;p th:case=&quot;admin&quot;&gt;管理员&lt;/p&gt;    &lt;p th:case=&quot;vip&quot;&gt;vip会员&lt;/p&gt;    &lt;p th:case=&quot;*&quot;&gt;普通会员&lt;/p&gt;&lt;/div&gt;</code></pre></li><li>Thymeleaf中的字符串替换</br>有时需要对文字中的某一处地方进行替换，可以通过字符串拼接操作完成，如以下代码：<pre><code>&lt;span th:text=&quot;&apos;欢迎您，&apos;+${name}+&apos;！&apos;&quot;&gt;&lt;/span&gt;或&lt;span th:text=&quot;|欢迎您，${name}！|&quot;&gt;&lt;/span&gt;</code></pre><p>上面的第二种形式限制比较多，|…|中只能包含变量表达式${…}，不能包含其他常量、条件表达式等。</p></li><li>Thymeleaf的运算符<ol><li>算术运算符。</br>如果要在模板中进行算术运算，则可以用下面的写法。以下代码表示求加和取余运算。<pre><code>&lt;span th:text=&quot;1+3&quot;&gt;1+3&lt;/span&gt;&lt;/br&gt;&lt;span th:text=&quot;9%2&quot;&gt;9%2&lt;/span&gt;&lt;/br&gt;</code></pre></li><li>条件运算符 th:if。</br>下方代码演示了if判断，表示：如果从控制器传来的role值等于“admin”，则显示“欢迎您，管理员”；如果role值等于“vip”，则显示“欢迎您，vim会员”。<pre><code>&lt;div th:if=&quot;${role} eq admin&quot;&gt;    &lt;span&gt;欢迎您，管理员&lt;/span&gt;&lt;/div&gt;&lt;div th:if=&quot;${role} eq vip&quot;&gt;    &lt;span&gt;欢迎您，vip会员&lt;/span&gt;&lt;/div&gt;</code></pre><p>eq是判断表达式，代表等于。其他的判断表达式如下。</p><ul><li>gt：大于</li><li>ge：大于或等于</li><li>eq：等于</li><li>lt：小于</li><li>le：小于或等于</li><li>ne：不等于</li></ul></li><li>判断控制。</br>可以使用if来判断值是否为空，如以下代码：<ul><li>判断不为空：<pre><code>&lt;span ht:if=&quot;${name}!=null&quot;&gt;不为空&lt;/span&gt;</code></pre></li><li>判断为空：<pre><code>&lt;span ht:if=&quot;${name}==null&quot;&gt;为空&lt;/span&gt;</code></pre></li></ul></li></ol></li><li>Thymeleaf共用对象</br>Thymeleaf还提供了一系列公用（utility）对象，可以通过“#”直接访问，如以下用法。<ul><li>格式化时间<pre><code>&lt;td th:text=&quot;${#dates.format(item.createTime,&apos;yyyy-MM-dd HH:mm:ss&apos;)}&quot;&gt;格式化时间&lt;/td&gt;</code></pre></li><li>判断是不是空字符串：<pre><code>&lt;span ht:if=&quot;${#strings.isEmpty(name)}&quot;&gt;空的&lt;/span&gt;</code></pre></li><li>是否包含（分大小写）：<pre><code>&lt;span ht:if=&quot;${#strings.contains(name,&apos;long&apos;)}&quot;&gt;包含long&lt;/span&gt;</code></pre></li></ul></li></ol><h1 id="处理循环遍历"><a href="#处理循环遍历" class="headerlink" title="处理循环遍历"></a>处理循环遍历</br></h1><ol><li>遍历对象（object）</br>通过“th:each="Object:${Objects}"”标签来处理遍历对象。以下代码是遍历从控制器中传来的文章对象。<pre><code>&lt;div th:each=&quot;article:${articles}&quot;&gt;    &lt;li th:text=&quot;${article.title}&quot;&gt;文章标题&lt;/li&gt;    &lt;li th:text=&quot;${article.body}&quot;&gt;文章内容&lt;/li&gt;&lt;/div&gt;</code></pre></li><li>遍历分页（page）</br>通过“th:each="item:${page.content}"”标签来处理page对象。如以下代码：<pre><code>&lt;div th:each=&quot;item:${page.content}&quot;&gt;    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;    &lt;li th:text=&quot;${item.title}&quot;&gt;title&lt;/li&gt;&lt;/div&gt;</code></pre></li><li>遍历列表（list）</br>要处理list，也使用“th:each="item:${list}"”标签来实现。</br>如果list中只有一个元素，则使用以下代码：<pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;    &lt;li th:text=&quot;${item}&quot;&gt;id&lt;/li&gt;&lt;/div&gt;</code></pre><p>如果list中有多个元素，则使用以下代码：</p><pre><code>&lt;div th:each=&quot;item:${list}&quot;&gt;    &lt;li th:text=&quot;${item.id}&quot;&gt;id&lt;/li&gt;    &lt;li th:text=&quot;${item.name}&quot;&gt;name&lt;/li&gt;&lt;/div&gt;</code></pre></li><li>遍历数组（array）</br>使用“th:each="item:${arrays}"”标签来遍历数组，如以下代码：<pre><code>&lt;div th:each=&quot;item:${arrays}&quot;&gt;    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;&lt;/div&gt;</code></pre></li><li>遍历集合（map）</br>集合通过“th:text="${item.key}"”显示集合的key，通过“th:text="${item.value}"”显示集合的值，如以下代码：<pre><code>//遍历key&lt;div th:each=&quot;item:${map}&quot;&gt;    &lt;li th:text=&quot;${item.key}&quot;&gt;&lt;/li&gt;&lt;/div&gt;//遍历value&lt;div th:each=&quot;item:${map}&quot;&gt;    &lt;li th:text=&quot;${item.value}&quot;&gt;&lt;/li&gt;&lt;/div&gt;//遍历key-value&lt;div th:each=&quot;item:${map}&quot;&gt;    &lt;li th:text=&quot;${item}&quot;&gt;&lt;/li&gt;&lt;/div&gt;</code></pre></li></ol><h1 id="处理公共代码块"><a href="#处理公共代码块" class="headerlink" title="处理公共代码块"></a>处理公共代码块</br></h1><ol><li>用fragment标记重复代码块</br>可以通过“th:fragment="header"”标签来标记重复代码块，如以下代码：<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;&lt;body&gt;    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;header&quot;&gt;        公共header    &lt;/div&gt;    &lt;div class=&quot;footer&quot; id=&quot;header&quot; th:fragment=&quot;footer&quot;&gt;        公共footer    &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></li><li>调用重复代码块</br>在需要调用的地方，用“th:include”或“th:replace”标签根据fragment值来调用，如以下代码：<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;&lt;body&gt;    &lt;div&gt;replace调用方式：&lt;/div&gt;    &lt;div th:replace=&quot;~common::header&quot;&gt;&lt;/div&gt;    &lt;div&gt;body&lt;/div&gt;    &lt;div&gt;include调用方式：&lt;/div&gt;    &lt;div th:include=&quot;~common::footer&quot;&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><p>“th:include”和“th:replace”标签都可以调用公共代码。它们的区别如下。</p><ul><li>th:replace：替换当前标签为模板中的标签。</li><li>th:include：只加载模板的内容。</li></ul></li></ol><h1 id="处理分页"><a href="#处理分页" class="headerlink" title="处理分页"></a>处理分页</br></h1><ol><li>用控制器传入page对象<pre><code>Pageable pageable = PageRequest.of(start,limit,sort);Page&lt;Article&gt; page = articleRepository,findAll(pageable);ModelAndView mav = new ModelAndView(&quot;article/list&quot;);mav.addObject(&quot;page&quot;,page);return mav;</code></pre></li><li>用Thymeleaf接收page对象并处理<pre><code>&lt;div&gt;    &lt;a th:href=&quot;@{/article(start=0)}&quot;&gt;【首页】&lt;/a&gt;    &lt;a th:if=&quot;@{not page.isFirst()}&quot; th:href=&quot;@{/article(start=${page.number-1})}&quot;&gt;【上页】&lt;/a&gt;    &lt;a th:if=&quot;@{not page.isLast()}&quot; th:href=&quot;@{/article(start=${page.number+1})}&quot;&gt;【下页】&lt;/a&gt;    &lt;a th:href=&quot;@{/article(start=${page.totalPages-1})}&quot;&gt;【末页】&lt;/a&gt;&lt;/div&gt;</code></pre></li><li>处理路径多参数</br>&#8194;&#8194;&#8194;&#8194;如果分页URI中有多个参数，则一定要注意格式，中间用“，”隔开，而不是用“&”。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SpringBoot之SpringBoot基础</title>
+      <link href="/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/"/>
+      <url>/2020/07/03/SpringBoot%E4%B9%8BSpringBoot%E5%9F%BA%E7%A1%80/</url>
+      
+        <content type="html"><![CDATA[<h1 id="SpringBoot项目结构"><a href="#SpringBoot项目结构" class="headerlink" title="SpringBoot项目结构"></a>SpringBoot项目结构</h1><ol><li><font color=red>src/main/java</font>:入口（启动）类及程序的开发目录。在这个目录下进行业务开发、创建实体层、控制器层、数据连接层等</li><li><font color=red>src/main/resources</font>:资源文件目录，主要用于存放静态文件和配置文件。<ul><li><font color=red>static</font>:用于存放静态资源，如层叠样式表 CSS文件（Cascading Style Sheets）文件、JavaScript文件、图片等</li><li><font color=red>templates</font>:用于存放模板文件</li><li><font color=red>application.properties</font>:用于配置项目运行所需的配置数据。如果用YAML方式管理配置，则YAML文件也放在这个目录中</li></ul></li><li><font color=red>src/test/java</font>:测试程序所在的目录</li></ol><h1 id="SpringBoot依赖模块"><a href="#SpringBoot依赖模块" class="headerlink" title="SpringBoot依赖模块"></a>SpringBoot依赖模块</h1><ul><li>核心模块<font color=red>spring-boot-starter</font>:用于支持自动配置、日志和YAML</li><li>测试模块<font color=red>spring-boot-starter-test</font>:包括JUnit、Hamcrest和Mockito，用于测试</li></ul>  <h1 id="SpringBoot入口类"><a href="#SpringBoot入口类" class="headerlink" title="SpringBoot入口类"></a>SpringBoot入口类</h1><p>&#8194;&#8194;&#8194;&#8194;在创建SpringBoot项目时，会自动创建一个用于启动的、名为“项目名+Application”的入口类，它是项目的启动入口。在IDEA中打开入口类后，可以单击类或“main”方法左侧的三角形按钮，通过弹出的选项来运行或调试SpringBoot应用程序。<br>&#8194;&#8194;&#8194;&#8194;加上注解<font color=red>@SpringBootApplication</font>，以标注这是SpringBoot项目的入口类。</p><h1 id="SpringBoot的自动配置"><a href="#SpringBoot的自动配置" class="headerlink" title="SpringBoot的自动配置"></a>SpringBoot的自动配置</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot会根据配置的依赖信息进行自动配置，从而减轻开发者搭建环境和配置的负担。如果在项目中依赖了<font color=red>spring-boot-starter-web</font>，则SpringBoot会自动配置Web环境（配置Tomcat、WebMVC、Validator、JSON等）。<br>&#8194;&#8194;&#8194;&#8194;SpringBoot自动配置是通过注解<font color=red>@EnableAutoConfiguration</font>来实现的，具有非侵入性。<br>&#8194;&#8194;&#8194;&#8194;如果不需要某些自动配置，则可以通过注解<font color=red>@EnableAutoConfiguration</font>的“<font color=red>exclude</font>或<font color=red>excludeName</font>”属性来指定，或在配置文件（<font color=red>application.properties</font>或<font color=red>application.yml</font>）中指定“<font color=red>spring.autoconfigure.exclude</font>”的值。</p><h1 id="SpringBoot热部署"><a href="#SpringBoot热部署" class="headerlink" title="SpringBoot热部署"></a>SpringBoot热部署</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot热部署是为了更好的支持调试，在项目进行修改后不需要耗费时间重启，在应用程序正常运行的情况下即可实时生效，以节约时间和操作。要实现热部署，则需要添加下方的热部署的依赖：</p><pre><code>&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;    &lt;optional&gt;true&lt;/optional&gt;&lt;/dependency&gt;</code></pre><h1 id="SpringBoot的常用注解"><a href="#SpringBoot的常用注解" class="headerlink" title="SpringBoot的常用注解"></a>SpringBoot的常用注解</br></h1><p><font size=4>什么是注解式编程</font><br>&#8194;&#8194;&#8194;&#8194;注解（annotations）用来定义一个类、属性或一些方法、以便程序能被编译处理。它相当于一个说明文件，告诉应用程序某个被注解的类或属性是什么，要怎么处理。注解可以用于标注包、类、方法和变量等。</li></p><center><font size=4>系统注解</font></center><table><thead><tr><th>注解</th><th>说明</th></tr></thead><tbody><tr><td>@Override</td><td>用于修饰方法，表示此方法重写了父类方法</td></tr><tr><td>@Deprecated</td><td>用于修饰方法，表示此方法已经过时。经常在版本升级后会遇到</td></tr><tr><td>@SuppressWarnnings</td><td>告诉编译器忽视某类编译警告</td></tr></tbody></table><p>下面重点介绍一下<font color=red>@SuppressWarnnings</font>注解。它有以下几种属性。</p><ul><li><font color=red>unchecked</font>:未检查的转化。</li><li><font color=red>unused</font>:未使用的变量。</li><li><font color=red>resource</font>:泛型，即未指定类型。</li><li><font color=red>path</font>:在类中的路径。原文件路径中有不存在的路径。</li><li><font color=red>deprecation</font>:使用了某些不赞成使用的类和方法</li><li><font color=red>fallthrough</font>:switch语句执行到底，不会遇到break关键字。</li><li><font color=red>serial</font>:实现了Serializable，但未定义serialVersionUID。</li><li><font color=red>rawtypes</font>:没有传递带有泛型的参数。</li><li><font color=red>all</font>:代表全部类型的警告。</li></ul><center><font size=4>使用在类名上的注解</font></center><table><thead><tr><th>注解</th><th>使用位置</th><th>说明</th></tr></thead><tbody><tr><td>@RestController</td><td>类名上</td><td>作用相当于@ResponseBody加@Controller</td></tr><tr><td>@Controller</td><td>类名上</td><td>声明此类是一个SpringMVC Controller对象</td></tr><tr><td>@Service</td><td>类名上</td><td>声明一个业务处理类（实现非接口类）</td></tr><tr><td>@Repository</td><td>类名上</td><td>声明数据库访问类（实现非接口类）</td></tr><tr><td>@Component</td><td>类名上</td><td>代表其是Spring管理类，常用在无法用@Service、@Repository描述的Spring管理的类上，相当于通用的注解</td></tr><tr><td>@Configuration</td><td>类名上</td><td>声明此类是一个配置类，常与@Bean配合使用</td></tr><tr><td>@Resource</td><td>类名上、属性或构造函数参数上</td><td>默认按byName自动注入</td></tr><tr><td>@Autowired</td><td>类名上、属性或构造函数参数上</td><td>默认按byType自动注入</td></tr><tr><td>@RequestMapping</td><td>类名或方法上</td><td>如果用在类上，则表示所有响应请求的方法都是以该地址作为父路径的</td></tr><tr><td>@Transactional</td><td>类名或方法上</td><td>用于处理事务</td></tr><tr><td>@Qualifier</td><td>类名或属性上</td><td>为Bean指定名称，随后再通过名字引用Bean</td></tr></tbody></table><p>下面进一步讲解各个注解的知识点和用法</p><ol><font size=4>1</font>.<font color=red>@RestController</font></br>&#8194;&#8194;&#8194;&#8194;它用于返回JSON（JavaScript Object Notation，JS对象简谱）、XML（eXtensible Markup Language）等数据，但不能返回HTML（HyperText Markup Language）页面。相当于注解@ResponseBody和注解@Controller合在一起的作用。</br><font size=4>2</font>.<font color=red>@Controller</font></br>&#8194;&#8194;&#8194;&#8194;它用于标注控制器曾，在MVC开发模式中代表C（控制器）</br>&#8194;&#8194;&#8194;&#8194;@Controller主要用于构建MVC模式的程序</br><font size=4>3</font>.<font color=red>@Service</font></br>&#8194;&#8194;&#8194;&#8194;它用于声明一个业务处理类（实现非接口类），用于标注服务层，处理业务逻辑。</br><font size=4>4</font>.<font color=red>@Repository</font></br>&#8194;&#8194;&#8194;&#8194;它用于标注数据访问层</br><font size=4>5</font>.<font color=red>@Component</font></br>&#8194;&#8194;&#8194;&#8194;它用于把普通POJO（Plain Ordinary Java Objects，简单的Java对象）实例化到Spring容器中。当类不属于注解@Controller和@Service等时，就可以使用注解@Component来标注这个类。它可配合CommandLineRunner使用，以便在程序启动后执行一些基础任务。</br><font size=4>6</font>.<font color=red>@Configuration</font></br>&#8194;&#8194;&#8194;&#8194;他用于标注配置类，并且可以由Spring容器自动处理。它作为Bean的载体，用来指示一个类声明、一个或多个@Bean方法，在运行时为这些Bean生成BeanDefinition和服务请求</br><font size=4>7</font>.<font color=red>@Resource</font></br>&#8194;&#8194;&#8194;&#8194;@Autowired与@Resource都可以用来装配Bean，也都可以写在字段上或Setter方法上。</br><font size=4>8</font>.<font color=red>@Autowired</font></br>&#8194;&#8194;&#8194;&#8194;它表示被修饰的类需要注入对象。Spring会扫描所有被@Autowired标注的类，然后根据类型在IoC容器中找到匹配的类进行注入。被@Autowired注解后的类不需要再导入文件。</br><font size=4>9</font>.<font color=red>@RequestMapping</font></br>&#8194;&#8194;&#8194;&#8194;它用来请求地址映射，用在类或方法上。如果用在类上，则表示类中的所有响应请求的方法都是以该地址作为父路径的。该注解有6个属性。</br><ul>    <li><font color=red>Params</font>:指定Request中必须包含某些参数值，才让该方法处理。</li>    <li><font color=red>Headers</font>:指定Request中必须包含某些指定的header值，才能让该方法处理。</li>    <li><font color=red>Value</font>:指定请求的实际地址，指定的地址可以是URI Template模式。</li>    <li><font color=red>Method</font>:指定请求的Method类型，如GET、POST、PUT、DELETE等。</li>    <li><font color=red>Consumes</font>:指定处理请求的提交内容类型Content-Type，如“application/json,text/html”。</li>    <li><font color=red>Produces</font>:指定返回的内容类型。只有当Request请求头中的Accept类型中包含该指定类型时才返回。</li></ul><font size=4>10</font>.<font color=red>@Transactional</font></br>&#8194;&#8194;&#8194;&#8194;它可以用在接口、接口方法、类及类方法上。</br>&#8194;&#8194;&#8194;&#8194;但Spring不建议在接口或者接口方法上使用该注解，因为该注解只有在使用基于接口的代理时才会生效。如果异常被捕获（try{}catch{}）了，则事务就不回滚了。如果想让事务回滚，则必须再往外抛出异常（try{}catch{throw Exception}）。</br><font size=4>11</font>.<font color=red>@Qualifier</font></br>&#8194;&#8194;&#8194;&#8194;它的意思是“合格者”，用于标注哪一个实现类才是需要注入的。需要注意的是，@Qualifier的参数名称为被注入的类中的注解@Service标注的名称。</br>&#8194;&#8194;&#8194;&#8194;@Qualifier常和@Autowired一起使用。而@Resource和它不同，@Resource自带name属性。</br></ol><center><font size=4>使用在方法上的主要注解</font></center><table><thead><tr><th>注解</th><th>使用位置</th><th>说明</th></tr></thead><tbody><tr><td>@RequestBody</td><td>方法参数前</td><td>常用来处理application/json、application/xml等Content-Type类型的数据，意味着HTTP消息是JSON/XML格式，需将其转化为指定类型参数</td></tr><tr><td>@PathVariable</td><td>方法参数前</td><td>将URL获取的参数映射到方法参数上</td></tr><tr><td>@Bean</td><td>方法上</td><td>声明该方法的返回结果是一个由Spring容器管理的Bean</td></tr><tr><td>@ResponsetBody</td><td>方法上</td><td>通过适当的HttpMessageConverter将控制器中方法返回的对象转换为指定格式（JSON/XML）后，写入Response对象的body数据区</td></tr></tbody></table><ol><font size=4>1</font>.<font color=red>@RequestBody</font></br>&#8194;&#8194;&#8194;&#8194;它常用来处理JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。<font size=4>2</font>.<font color=red>@PathVariable</font></br>&#8194;&#8194;&#8194;&#8194;用于获取路径中的参数</br><font size=4>3</font>.<font color=red>@Bean</font></br>&#8194;&#8194;&#8194;&#8194;它代表产生一个Bean，并交给Spring管理。用于封装数据，一般有Setter、Getter方法。在MVC模型中，对应的是M（模型）。</br><font size=4>4</font>.<font color=red>@ResponsetBody</font></br>&#8194;&#8194;&#8194;&#8194;它的作用是通过转换器将控制器方法返回的对象转换为指定的格式，然后写入Response对象的body区。它常用来返回JSON/XML格式的数据。通过@RequestBody可以将请求体中的（JSON/XML）字符串绑定到相应的Bean上，也可以将其分别绑定到对应的字符串上。</br>&#8194;&#8194;&#8194;&#8194;使用此注解后，数据直接写入输入流中，不需要进行视图渲染。</br></ol><center><font size=4>其他常用注解</font></center>。<table><thead><tr><th>注解</th><th>使用位置</th><th>说明</th></tr></thead><tbody><tr><td>@EnableAutoConfiguration</td><td>入口类/类名上</td><td>用来提供自动配置</td></tr><tr><td>@SpringBootApplication</td><td>入口类/类名上</td><td>用来启动入口类Application</td></tr><tr><td>@EnableScheduling</td><td>入口类/类名上</td><td>用来开启计划任务。Spring通过@Scheduled支持多种类型的计划任务，包含cron、fixDelay、fixRate等</td></tr><tr><td>@EnableAsync</td><td>入口类/类名上</td><td>用来开启异步注解功能</td></tr><tr><td>@ComponentScan</td><td>入口类/类名上</td><td>用来扫描组件，可自动发现和装配一些Bean。它根据定义的扫描路径，把符合扫描规则的类装配到Spring容器中，告诉Spring那个包（package）的类会被Spring自动扫描并且装入IoC容器。它对应XML配置中的元素。可以通过basePackages等属性来细粒度地定制自动扫描的范围，默认会从声明@ComponentScan所在类的包进行扫描</td></tr><tr><td>@Aspec</td><td>入口类/类名上</td><td>标注切面，可以用来配置事务、日志、权限验证，在用户请求时做一些处理等</td></tr><tr><td>@ControllerAdvice</td><td>类名上</td><td>包含@ComponentScan，可以被扫描到。统一处理异常</td></tr><tr><td>@ExceptionHandler</td><td>方法上</td><td>用在方法上，表示遇到异常就执行该方法</td></tr><tr><td>@Value</td><td>属性上</td><td>用于获取配置文件中的值</td></tr></tbody></table><h1 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h1><p>&#8194;&#8194;&#8194;&#8194;SpringBoot支持使用Properties和YAML两种配置方式。两者功能类似，都能完成SpringBoot的配置，但是<font color=red>Properties的优先级要高于YAML</font>。<br>&#8194;&#8194;&#8194;&#8194;YAML文件的好处是——它采用的是树状结构，一目了然。但是，使用YAML配置方式时要注意以下几点。</p><ul><li>原来以“.”分隔的key会变成树状结构</li><li>在key后的冒号后一定要跟一个空格</li><li>如果把原有的application.properties删除，则建议执行以下“<font color=red>maven -X clean install</font>”命令</li><li>YAML格式不支持用注解<font color=red>@PropertySource</font>导入配置</li></ul><h1 id="SpringBoot的Starter"><a href="#SpringBoot的Starter" class="headerlink" title="SpringBoot的Starter"></a>SpringBoot的Starter</br></h1><p><font size=4>了解Starter</font><br>&#8194;&#8194;&#8194;&#8194;SpringBoot为了简化配置，提供了非常多的Starter。它先打包好与常用模块相关的所有JAR包，并完成自动配置，然后组装成Starter（如把Web相关的SpringMVC、容器等打包好后组装成spring-boot-starter-web）。这使得在开发业务代码是不需要过多关注框架的配置，只需关注逻辑即可。</p><center><font size=4>常用的Starter</font></center><table><thead><tr><th>Starter</th><th>说明</th></tr></thead><tbody><tr><td>spring-boot-stater-web</td><td>用于构建Web。包含RESTful风格框架、SpringMVC和默认的嵌入式容器Tomcat</td></tr><tr><td>spring-boot-stater-test</td><td>用于测试</td></tr><tr><td>spring-boot-stater-data-jpa</td><td>带有Hibernate的SpringDataJPA</td></tr><tr><td>spring-boot-stater-jdbc</td><td>传统的JDBC。轻量级应用可以使用，学习成本低，但最好使用JPA或Mybatis</td></tr><tr><td>spring-boot-stater-thymeleaf</td><td>支持Thymeleaf</td></tr><tr><td>spring-boot-stater-mail</td><td>支持JavaMail、SpringMail发送邮件</td></tr><tr><td>spring-boot-stater-integration</td><td>Spring框架创建的一个API，面向企业应用集成（EAI）</td></tr><tr><td>spring-boot-stater-mobile</td><td>SpringMVC的扩展，用来简化手机上的Web应用程序开发</td></tr><tr><td>spring-boot-stater-data-redis</td><td>通过SpringDataRedis、RedisClient使用Redis</td></tr><tr><td>spring-boot-stater-validation</td><td>BeanValidation是一个数据验证的规范，HibernateValidator是一个数据验证框架</td></tr><tr><td>spring-boot-stater-websocket</td><td>相对于非持久的协议HTTP，Websocket是一个持久化的协议</td></tr><tr><td>spring-boot-stater-web-services</td><td>SOAPWebServices</td></tr><tr><td>spring-boot-stater-hateoas</td><td>为服务添加HATEOAS功能</td></tr><tr><td>spring-boot-stater-security</td><td>用SpringSecurity进行身份验证和授权</td></tr><tr><td>spring-boot-stater-data-rest</td><td>用SpringDateREST公布简单的REST服务</td></tr></tbody></table>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
